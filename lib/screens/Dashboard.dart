@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
+import 'dart:math';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -14,6 +18,51 @@ class _DashboardState extends State<Dashboard> {
   containerWidth() {
     var width = (MediaQuery.of(context).size.width - 50) / 2;
     return width;
+  }
+
+  String memory = "0%";
+  String temperature = "0°";
+
+  extractData() async {
+    final response = await http.Client().get(Uri.parse('http://192.168.0.26/admin/'));
+    if(response.statusCode == 200){
+      var document = parser.parse(response.body);
+      try{
+        var temp = document.getElementsByClassName('pull-left info')[0];
+
+        LineSplitter ls = new LineSplitter();
+        List<String> lines = ls.convert(temp.text.trim());
+
+        for(var i = 0; i < lines.length; i++){
+          if(i == 4){
+            var ext = lines[i].replaceAll(new RegExp(r'[^\.0-9]'),'');
+            setState(() {
+              var mytemp = double.parse(ext);
+              assert(mytemp is double);
+              temperature = mytemp.toStringAsFixed(1);
+            });
+          }
+
+          if(i == 3){
+            var ext2 = lines[i].replaceAll(new RegExp(r'[^\.0-9]'),'');
+            setState(() {
+              memory = '$ext2%';
+            });
+          }
+        }
+
+      } catch(e){
+        print(e);
+        return e;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    extractData();
   }
 
   @override
@@ -100,24 +149,32 @@ class _DashboardState extends State<Dashboard> {
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Icon(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(
                                 CupertinoIcons.check_mark_circled_solid,
                                 color: Color(0xff3FB950),
                                 size: 20.0,
                               ),
-                              SizedBox(width: 10.0),
-                              Text(
-                                "Pi 4",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "SFD-Bold",
-                                  fontSize: 18.0,
-                                ),
+                              const SizedBox(width: 10.0),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Pi 4",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "SFD-Bold",
+                                      fontSize: 18.0,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
+                        const SizedBox(height: 10.0),
+                        Stats(temperature: temperature, memoryUsage: memory),
                         const SizedBox(height: 15.0),
                         Panels(
                           firstLabel: "Total Queries",
@@ -169,6 +226,55 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class Stats extends StatelessWidget {
+  final String memoryUsage;
+  final String temperature;
+
+  Stats({
+    required this.memoryUsage,
+    required this.temperature,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Icon(
+          Icons.device_thermostat_outlined,
+          size: 16.0,
+          color: Colors.white,
+        ),
+        SizedBox(width: 5.0),
+        Text(
+          '$temperature°',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "SFT-Regular",
+            fontSize: 12.0,
+          ),
+        ),
+        SizedBox(width: 10.0),
+        Icon(
+          Icons.storage,
+          size: 16.0,
+          color: Colors.white,
+        ),
+        SizedBox(width: 5.0),
+        Text(
+          memoryUsage,
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "SFT-Regular",
+            fontSize: 12.0,
+          ),
+        ),
+      ],
     );
   }
 }
