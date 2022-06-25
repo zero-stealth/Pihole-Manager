@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:piremote/database/database_helper.dart';
 
 import '../models/QueryModel.dart';
 import '../widgets/Panels.dart';
@@ -32,7 +33,6 @@ class _DashboardState extends State<Dashboard> {
   String queriesBlocked = "0";
   String percentBlocked = "0";
   String blocklist = "0";
-  
 
   extractData() async {
     final response =
@@ -69,11 +69,11 @@ class _DashboardState extends State<Dashboard> {
   }
 
   fetchQueries() async {
+    final dbHelper = DatabaseHelper.instance;
     final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
       QueryModel queryModel = QueryModel.fromMap(parsed);
-      print('Blocked: ${queryModel.domains_being_blocked}');
 
       setState(() {
         totalQueries = queryModel.dns_queries_today;
@@ -81,6 +81,27 @@ class _DashboardState extends State<Dashboard> {
         percentBlocked = queryModel.ads_percentage_today;
         blocklist = queryModel.domains_being_blocked;
       });
+
+      Map<String, dynamic> row = {
+        "totalQueries": totalQueries.toString(),
+        "queriesBlocked":queriesBlocked.toString(),
+        "percentBlocked": percentBlocked.toString(),
+        "blocklist": blocklist.toString()
+      };
+
+      try {
+        var queries = await dbHelper.queryAllRows('querystats');
+
+        if(queries.length >= 1){
+          await dbHelper.deleteTable('querystats');
+          await dbHelper.insert(row, 'querystats');
+        } else {
+          await dbHelper.insert(row, 'querystats');
+        }
+        
+      } catch (e) {
+        print('[error] $e');
+      }
     } else {
       throw Exception("Unable to fetch query data");
     }
