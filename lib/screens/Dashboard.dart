@@ -33,6 +33,8 @@ class _DashboardState extends State<Dashboard> {
   String queriesBlocked = "0";
   String percentBlocked = "0";
   String blocklist = "0";
+  String status = "";
+  String clients_ever_seen = "";
 
   extractData() async {
     final response =
@@ -80,13 +82,17 @@ class _DashboardState extends State<Dashboard> {
         queriesBlocked = queryModel.ads_blocked_today;
         percentBlocked = queryModel.ads_percentage_today;
         blocklist = queryModel.domains_being_blocked;
+        status = queryModel.status;
+        clients_ever_seen = queryModel.clients_ever_seen;
       });
 
       Map<String, dynamic> row = {
         "totalQueries": totalQueries.toString(),
         "queriesBlocked":queriesBlocked.toString(),
         "percentBlocked": percentBlocked.toString(),
-        "blocklist": blocklist.toString()
+        "blocklist": blocklist.toString(),
+        "status": status.toString(),
+        "clients_ever_seen": clients_ever_seen.toString()
       };
 
       try {
@@ -98,7 +104,7 @@ class _DashboardState extends State<Dashboard> {
         } else {
           await dbHelper.insert(row, 'querystats');
         }
-        
+
       } catch (e) {
         print('[error] $e');
       }
@@ -210,7 +216,7 @@ class _DashboardState extends State<Dashboard> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Pi 4",
+                                    "Raspberry Pi 4",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: "SFD-Bold",
@@ -226,16 +232,22 @@ class _DashboardState extends State<Dashboard> {
                         Stats(temperature: temperature, memoryUsage: memory),
                         const SizedBox(height: 15.0),
                         Panels(
-                          firstLabel: "Total Queries",
+                          firstLabel: "Total queries",
                           firstValue: totalQueries,
-                          secondLabel: "Queries Blocked",
+                          secondLabel: "Queries blocked",
                           secondValue: queriesBlocked,
                         ),
                         Panels(
-                          firstLabel: "Percent Blocked",
+                          firstLabel: "Percent blocked",
                           firstValue: '$percentBlocked%',
                           secondLabel: "Blocklist",
                           secondValue: blocklist,
+                        ),
+                        Panels(
+                          firstLabel: "Status",
+                          firstValue: '$status',
+                          secondLabel: "Clients",
+                          secondValue: clients_ever_seen,
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width - 40,

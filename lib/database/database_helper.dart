@@ -36,7 +36,9 @@ class DatabaseHelper {
           totalQueries TEXT NOT NULL,
           queriesBlocked TEXT NOT NULL,
           percentBlocked TEXT NOT NULL,
-          blocklist TEXT NOT NULL
+          blocklist TEXT NOT NULL,
+          status TEXT NOT NULL,
+          clientsEverSeen TEXT NOT NULL
         )
         ''');
   }
