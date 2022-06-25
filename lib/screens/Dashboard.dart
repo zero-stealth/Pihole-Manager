@@ -1,11 +1,13 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
-import 'dart:math';
+
+import '../models/QueryModel.dart';
+import '../widgets/Panels.dart';
+import '../widgets/Stats.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -22,20 +24,30 @@ class _DashboardState extends State<Dashboard> {
 
   String memory = "0%";
   String temperature = "0°";
+  String apitoken =
+      "25aa34070a75ce79dcf2496484ad2301de3daa2b80581c9b265eaadb79685303";
+  String url = "http://192.168.0.26";
+
+  String totalQueries = "0";
+  String queriesBlocked = "0";
+  String percentBlocked = "0";
+  String blocklist = "0";
+  
 
   extractData() async {
-    final response = await http.Client().get(Uri.parse('http://192.168.0.26/admin/'));
-    if(response.statusCode == 200){
+    final response =
+        await http.Client().get(Uri.parse('http://192.168.0.26/admin/'));
+    if (response.statusCode == 200) {
       var document = parser.parse(response.body);
-      try{
+      try {
         var temp = document.getElementsByClassName('pull-left info')[0];
 
         LineSplitter ls = new LineSplitter();
         List<String> lines = ls.convert(temp.text.trim());
 
-        for(var i = 0; i < lines.length; i++){
-          if(i == 4){
-            var ext = lines[i].replaceAll(new RegExp(r'[^\.0-9]'),'');
+        for (var i = 0; i < lines.length; i++) {
+          if (i == 4) {
+            var ext = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
             setState(() {
               var mytemp = double.parse(ext);
               assert(mytemp is double);
@@ -43,26 +55,42 @@ class _DashboardState extends State<Dashboard> {
             });
           }
 
-          if(i == 3){
-            var ext2 = lines[i].replaceAll(new RegExp(r'[^\.0-9]'),'');
+          if (i == 3) {
+            var ext2 = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
             setState(() {
               memory = '$ext2%';
             });
           }
         }
-
-      } catch(e){
+      } catch (e) {
         print(e);
-        return e;
       }
+    }
+  }
+
+  fetchQueries() async {
+    final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
+    if (response.statusCode == 200) {
+      final parsed = json.decode(response.body);
+      QueryModel queryModel = QueryModel.fromMap(parsed);
+      print('Blocked: ${queryModel.domains_being_blocked}');
+
+      setState(() {
+        totalQueries = queryModel.dns_queries_today;
+        queriesBlocked = queryModel.ads_blocked_today;
+        percentBlocked = queryModel.ads_percentage_today;
+        blocklist = queryModel.domains_being_blocked;
+      });
+    } else {
+      throw Exception("Unable to fetch query data");
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     extractData();
+    fetchQueries();
   }
 
   @override
@@ -178,15 +206,15 @@ class _DashboardState extends State<Dashboard> {
                         const SizedBox(height: 15.0),
                         Panels(
                           firstLabel: "Total Queries",
-                          firstValue: "45,334",
+                          firstValue: totalQueries,
                           secondLabel: "Queries Blocked",
-                          secondValue: "5,333",
+                          secondValue: queriesBlocked,
                         ),
                         Panels(
                           firstLabel: "Percent Blocked",
-                          firstValue: "8.8%",
+                          firstValue: '$percentBlocked%',
                           secondLabel: "Blocklist",
-                          secondValue: "133,556",
+                          secondValue: blocklist,
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width - 40,
@@ -226,144 +254,6 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class Stats extends StatelessWidget {
-  final String memoryUsage;
-  final String temperature;
-
-  Stats({
-    required this.memoryUsage,
-    required this.temperature,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Icon(
-          Icons.device_thermostat_outlined,
-          size: 16.0,
-          color: Colors.white,
-        ),
-        SizedBox(width: 5.0),
-        Text(
-          '$temperature°',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: "SFT-Regular",
-            fontSize: 12.0,
-          ),
-        ),
-        SizedBox(width: 10.0),
-        Icon(
-          Icons.storage,
-          size: 16.0,
-          color: Colors.white,
-        ),
-        SizedBox(width: 5.0),
-        Text(
-          memoryUsage,
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: "SFT-Regular",
-            fontSize: 12.0,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class Panels extends StatelessWidget {
-  final String firstLabel;
-  final String firstValue;
-  final String secondLabel;
-  final String secondValue;
-
-  Panels(
-      {required this.firstLabel,
-      required this.firstValue,
-      required this.secondLabel,
-      required this.secondValue});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: (MediaQuery.of(context).size.width - 50) / 2,
-              padding: const EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: const Color(0xFF161B22),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    firstLabel,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontFamily: "SFD-Bold",
-                      color: Color(0xff3FB950),
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    firstValue,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: "SFT-Regular",
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: (MediaQuery.of(context).size.width - 50) / 2,
-              padding: const EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: const Color(0xFF161B22),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    secondLabel,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontFamily: "SFD-Bold",
-                      color: Color(0xff3FB950),
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    secondValue,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: "SFT-Regular",
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 10.0)
-      ],
     );
   }
 }
