@@ -294,7 +294,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(
-                  bottom: 20.0,
+                  bottom: 10.0,
                   left: 0.0,
                   right: 0.0,
                 ),
@@ -317,6 +317,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
                     test_ip(namecontroller.text, ipcontroller.text,
                         tokencontroller.text);
+                  },
+                ),
+              ),
+              SizedBox(height: 0.0),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(
+                  bottom: 20.0,
+                  left: 0.0,
+                  right: 0.0,
+                ),
+                child: CupertinoButton(
+                  borderRadius: BorderRadius.circular(6.0),
+                  color: Colors.transparent,
+                  child: Text(
+                    'Proceed',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Color(0xff3FB950),
+                      fontFamily: "SFD-Bold",
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
+                    );
                   },
                 ),
               ),

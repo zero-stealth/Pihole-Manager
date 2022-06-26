@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
 
 import '../models/QueryModel.dart';
@@ -35,6 +36,8 @@ class _DashboardState extends State<Dashboard> {
   String blocklist = "0";
   String status = "";
   String clients_ever_seen = "";
+
+  var devices_data = [];
 
   extractData() async {
     final response =
@@ -72,43 +75,175 @@ class _DashboardState extends State<Dashboard> {
 
   fetchQueries() async {
     final dbHelper = DatabaseHelper.instance;
-    final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
-    if (response.statusCode == 200) {
-      final parsed = json.decode(response.body);
-      QueryModel queryModel = QueryModel.fromMap(parsed);
+    var devices = await dbHelper.queryAllRows('devices');
 
-      setState(() {
-        totalQueries = queryModel.dns_queries_today;
-        queriesBlocked = queryModel.ads_blocked_today;
-        percentBlocked = queryModel.ads_percentage_today;
-        blocklist = queryModel.domains_being_blocked;
-        status = queryModel.status;
-        clients_ever_seen = queryModel.clients_ever_seen;
-      });
+    for (var i = 0; i < devices.length; i++) {
+      final resp = await http.Client()
+          .get(Uri.parse('http://${devices[i]['ip']}/admin/'));
+      if (resp.statusCode == 200) {
+        var document = parser.parse(resp.body);
+        try {
+          var temp = document.getElementsByClassName('pull-left info')[0];
 
-      Map<String, dynamic> row = {
-        "totalQueries": totalQueries.toString(),
-        "queriesBlocked":queriesBlocked.toString(),
-        "percentBlocked": percentBlocked.toString(),
-        "blocklist": blocklist.toString(),
-        "status": status.toString(),
-        "clients_ever_seen": clients_ever_seen.toString()
-      };
+          LineSplitter ls = new LineSplitter();
+          List<String> lines = ls.convert(temp.text.trim());
 
-      try {
-        var queries = await dbHelper.queryAllRows('querystats');
+          for (var i = 0; i < lines.length; i++) {
+            if (i == 4) {
+              var ext = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
+              setState(() {
+                var mytemp = double.parse(ext);
+                assert(mytemp is double);
+                temperature = mytemp.toStringAsFixed(1);
+              });
+            }
 
-        if(queries.length >= 1){
-          await dbHelper.insert(row, 'querystats');
-        } else {
-          await dbHelper.insert(row, 'querystats');
+            if (i == 3) {
+              var ext2 = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
+              setState(() {
+                memory = '$ext2%';
+              });
+            }
+          }
+        } catch (e) {
+          print(e);
         }
+      }
 
-      } catch (e) {
-        print('[error] $e');
+      var myurl = "http://${devices[i]['ip']}";
+      final response =
+          await http.get(Uri.parse('$myurl/admin/api.php?summary'));
+
+      if (response.statusCode == 200) {
+        final parsed = json.decode(response.body);
+        QueryModel queryModel = QueryModel.fromMap(parsed);
+
+        var data = {
+          "name": devices[i]['name'],
+          "ip": devices[i]['ip'],
+          "temperature": temperature,
+          "memory": memory,
+          "totalQueries": queryModel.dns_queries_today,
+          "queriesBlocked": queryModel.ads_blocked_today,
+          "percentBlocked": queryModel.ads_percentage_today,
+          "blocklist": queryModel.domains_being_blocked,
+          "status": queryModel.status,
+          "allClients": queryModel.clients_ever_seen,
+        };
+
+        setState(() {
+          devices_data.add(data);
+        });
+      } else {
+        throw Exception("Unable to fetch query data");
+      }
+    }
+  }
+
+  devices_list() {
+    print(devices_data.length);
+    if (devices_data.length > 0) {
+      for (var i = 0; i < devices_data.length; i++) {
+        return Column(
+          children: [
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    CupertinoIcons.check_mark_circled_solid,
+                    color: Color(0xff3FB950),
+                    size: 20.0,
+                  ),
+                  const SizedBox(width: 10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        devices_data[i]['name'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "SFD-Bold",
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            Stats(
+              temperature: devices_data[i]['temperature'],
+              memoryUsage: devices_data[i]['memory'],
+            ),
+            const SizedBox(height: 15.0),
+            Panels(
+              firstLabel: "Total queries",
+              firstValue: devices_data[i]['totalQueries'],
+              secondLabel: "Queries blocked",
+              secondValue: devices_data[i]['queriesBlocked'],
+            ),
+            Panels(
+              firstLabel: "Percent blocked",
+              firstValue: '${devices_data[i]['percentBlocked']}%',
+              secondLabel: "Blocklist",
+              secondValue: devices_data[i]['blocklist'],
+            ),
+            Panels(
+              firstLabel: "Status",
+              firstValue: '${devices_data[i]['status']}',
+              secondLabel: "All Clients",
+              secondValue: devices_data[i]['allClients'],
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 40,
+              child: CupertinoButton(
+                padding: const EdgeInsets.all(10.0),
+                color: const Color(0xFF161B22),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    // Icon(
+                    //   CupertinoIcons.stop,
+                    //   color: Colors.white,
+                    //   size: 16.0,
+                    // ),
+                    // SizedBox(width: 10.0),
+                    Text(
+                      'Disable',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 14.0,
+                        fontFamily: 'SFT-Regular',
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  // Navigator.pop(context);
+                },
+              ),
+            ),
+          ],
+        );
       }
     } else {
-      throw Exception("Unable to fetch query data");
+      return Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            LoadingAnimationWidget.staggeredDotsWave(
+              color: Color(0xff3FB950),
+              size: 50.0,
+            )
+          ],
+        ),
+      );
     }
   }
 
@@ -198,87 +333,7 @@ class _DashboardState extends State<Dashboard> {
                       left: 20.0,
                       right: 20.0,
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                CupertinoIcons.check_mark_circled_solid,
-                                color: Color(0xff3FB950),
-                                size: 20.0,
-                              ),
-                              const SizedBox(width: 10.0),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Raspberry Pi 4",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: "SFD-Bold",
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        Stats(temperature: temperature, memoryUsage: memory),
-                        const SizedBox(height: 15.0),
-                        Panels(
-                          firstLabel: "Total queries",
-                          firstValue: totalQueries,
-                          secondLabel: "Queries blocked",
-                          secondValue: queriesBlocked,
-                        ),
-                        Panels(
-                          firstLabel: "Percent blocked",
-                          firstValue: '$percentBlocked%',
-                          secondLabel: "Blocklist",
-                          secondValue: blocklist,
-                        ),
-                        Panels(
-                          firstLabel: "Status",
-                          firstValue: '$status',
-                          secondLabel: "Clients",
-                          secondValue: clients_ever_seen,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 40,
-                          child: CupertinoButton(
-                            padding: const EdgeInsets.all(10.0),
-                            color: const Color(0xFF161B22),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                // Icon(
-                                //   CupertinoIcons.stop,
-                                //   color: Colors.white,
-                                //   size: 16.0,
-                                // ),
-                                // SizedBox(width: 10.0),
-                                Text(
-                                  'Disable',
-                                  style: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontSize: 14.0,
-                                    fontFamily: 'SFT-Regular',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onPressed: () {
-                              // Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: devices_list(),
                   ),
                 ],
               ),
