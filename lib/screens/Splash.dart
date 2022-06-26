@@ -18,6 +18,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   TextEditingController ipcontroller = TextEditingController();
   TextEditingController tokencontroller = TextEditingController();
+  TextEditingController namecontroller = TextEditingController();
 
   String buttonState = "notloading";
 
@@ -38,9 +39,13 @@ class _SplashScreenState extends State<SplashScreen> {
     tokencontroller.addListener(() {
       print(tokencontroller.text);
     });
+
+    namecontroller.addListener(() {
+      print(namecontroller.text);
+    });
   }
 
-  test_ip(ip, token) async {
+  test_ip(name, ip, token) async {
     try {
       var url = 'http://$ip';
       // /admin/api.php?getAllQueries=100&auth=
@@ -50,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
           piholeStatus = true;
           piholeStatusMessage = "Pihole ip is active.";
         });
-        test_token(ip, token);
+        test_token(name, ip, token);
       } else {
         setState(() {
           piholeStatus = false;
@@ -68,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  test_token(ip, token) async {
+  test_token(name, ip, token) async {
     final dbHelper = DatabaseHelper.instance;
 
     var url = 'http://$ip';
@@ -85,7 +90,6 @@ class _SplashScreenState extends State<SplashScreen> {
           buttonState = "notloading";
         });
       } else {
-        await dbHelper.deleteTable('devices');
         var devices = await dbHelper.queryAllRows('devices');
         print(devices);
 
@@ -100,7 +104,14 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         }
 
-        Map<String, dynamic> row = {"ip": ip, "apitoken": token};
+        Map<String, dynamic> row = {
+          "name": name,
+          "ip": ip,
+          "apitoken": token,
+        };
+
+        await dbHelper.insert(row, "devices");
+
         setState(() {
           tokenStatus = true;
           tokenStatusMessage = "Api token is functional.";
@@ -165,6 +176,44 @@ class _SplashScreenState extends State<SplashScreen> {
               //     ),
               //   ),
               // ),
+              SizedBox(height: 15.0),
+              Container(
+                width: double.infinity,
+                child: Text(
+                  'Device Name',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Color(0xff3FB950),
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF161B22),
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                child: CupertinoTextField(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF161B22),
+                  ),
+                  scrollPhysics: BouncingScrollPhysics(),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                  controller: namecontroller,
+                  onChanged: (text) {},
+                  maxLines: 1,
+                  placeholder: "Mainframe",
+                  placeholderStyle: TextStyle(
+                    color: Colors.grey.withOpacity(0.2),
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ),
               SizedBox(height: 15.0),
               Container(
                 width: double.infinity,
@@ -266,7 +315,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       tokenStatusMessage = "";
                     });
 
-                    test_ip(ipcontroller.text, tokencontroller.text);
+                    test_ip(namecontroller.text, ipcontroller.text,
+                        tokencontroller.text);
                   },
                 ),
               ),
