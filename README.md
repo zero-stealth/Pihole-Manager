@@ -1,5 +1,5 @@
 <p align="start">
-  <img src="https://github.com/Inffinite/pihole-remote/blob/main/remote%20logo%20transparent.png?raw=true" height="300">
+  <img src="https://github.com/Inffinite/pihole-remote/blob/main/remote%20logo%20transparent.png?raw=true" height="200">
 </p>
 
 # Pihole Remote for Android
