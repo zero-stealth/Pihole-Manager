@@ -27,9 +27,6 @@ class _DashboardState extends State<Dashboard> {
 
   String memory = "0%";
   String temperature = "0°";
-  String apitoken =
-      "25aa34070a75ce79dcf2496484ad2301de3daa2b80581c9b265eaadb79685303";
-  String url = "http://192.168.0.26";
 
   String totalQueries = "0";
   String queriesBlocked = "0";
@@ -39,40 +36,6 @@ class _DashboardState extends State<Dashboard> {
   String clients_ever_seen = "";
 
   var devices_data = [];
-
-  extractData() async {
-    final response =
-        await http.Client().get(Uri.parse('http://192.168.0.26/admin/'));
-    if (response.statusCode == 200) {
-      var document = parser.parse(response.body);
-      try {
-        var temp = document.getElementsByClassName('pull-left info')[0];
-
-        LineSplitter ls = new LineSplitter();
-        List<String> lines = ls.convert(temp.text.trim());
-
-        for (var i = 0; i < lines.length; i++) {
-          if (i == 4) {
-            var ext = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
-            setState(() {
-              var mytemp = double.parse(ext);
-              assert(mytemp is double);
-              temperature = mytemp.toStringAsFixed(1);
-            });
-          }
-
-          if (i == 3) {
-            var ext2 = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
-            setState(() {
-              memory = '$ext2%';
-            });
-          }
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
-  }
 
   fetchQueries() async {
     final dbHelper = DatabaseHelper.instance;
@@ -251,7 +214,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    extractData();
     fetchQueries();
   }
 
