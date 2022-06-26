@@ -99,7 +99,6 @@ class _DashboardState extends State<Dashboard> {
         var queries = await dbHelper.queryAllRows('querystats');
 
         if(queries.length >= 1){
-          await dbHelper.deleteTable('querystats');
           await dbHelper.insert(row, 'querystats');
         } else {
           await dbHelper.insert(row, 'querystats');

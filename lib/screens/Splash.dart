@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/Dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -68,6 +69,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   test_token(ip, token) async {
+    final dbHelper = DatabaseHelper.instance;
+
     var url = 'http://$ip';
     // /admin/api.php?getAllQueries=100&auth=
     final resp = await http
@@ -82,11 +85,32 @@ class _SplashScreenState extends State<SplashScreen> {
           buttonState = "notloading";
         });
       } else {
+        await dbHelper.deleteTable('devices');
+        var devices = await dbHelper.queryAllRows('devices');
+        print(devices);
+
+        for (var i = 0; i < devices.length; i++) {
+          if (devices[i]['ip'] == ip) {
+            return setState(() {
+              piholeStatus = false;
+              piholeStatusMessage = "Pihole ip is already saved.";
+              buttonState = "notloading";
+            });
+            break;
+          }
+        }
+
+        Map<String, dynamic> row = {"ip": ip, "apitoken": token};
         setState(() {
           tokenStatus = true;
           tokenStatusMessage = "Api token is functional.";
           buttonState = "notloading";
         });
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+        );
       }
     } else {
       setState(() {

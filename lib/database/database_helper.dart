@@ -41,6 +41,14 @@ class DatabaseHelper {
           clientsEverSeen TEXT NOT NULL
         )
         ''');
+
+    await db.execute('''
+        CREATE TABLE devices (
+          _id INTEGER PRIMARY KEY,
+          ip TEXT NOT NULL,
+          apitoken TEXT NOT NULL
+        )
+        ''');
   }
 
   Future<int> insert(Map<String, dynamic> row, mytable) async {
