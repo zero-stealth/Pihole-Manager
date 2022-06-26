@@ -38,6 +38,7 @@ dependencies:
   html: ^0.15.0
   sqflite: ^2.0.2+1
   path_provider: ^2.0.9
+  loading_animation_widget: ^1.2.0+2
 
 dev_dependencies:
   flutter_test:

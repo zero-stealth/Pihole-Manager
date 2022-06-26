@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/screens/Dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -9,15 +15,104 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  TextEditingController controller = TextEditingController();
+  TextEditingController ipcontroller = TextEditingController();
+  TextEditingController tokencontroller = TextEditingController();
+
+  String buttonState = "notloading";
+
+  bool piholeStatus = false;
+  String piholeStatusMessage = "";
+
+  bool tokenStatus = false;
+  String tokenStatusMessage = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller.addListener(() {
-      print(controller.text);
+    ipcontroller.addListener(() {
+      print(ipcontroller.text);
     });
+
+    tokencontroller.addListener(() {
+      print(tokencontroller.text);
+    });
+  }
+
+  test_ip(ip, token) async {
+    try {
+      var url = 'http://$ip';
+      // /admin/api.php?getAllQueries=100&auth=
+      final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
+      if (response.statusCode == 200) {
+        setState(() {
+          piholeStatus = true;
+          piholeStatusMessage = "Pihole ip is active.";
+        });
+        test_token(ip, token);
+      } else {
+        setState(() {
+          piholeStatus = false;
+          piholeStatusMessage = "Pihole not found on ip $ip";
+          buttonState = "notloading";
+        });
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        piholeStatus = false;
+        piholeStatusMessage = "Pihole not found on ip $ip";
+        buttonState = "notloading";
+      });
+    }
+  }
+
+  test_token(ip, token) async {
+    var url = 'http://$ip';
+    // /admin/api.php?getAllQueries=100&auth=
+    final resp = await http
+        .get(Uri.parse('$url/admin/api.php?getAllQueries=100&auth=$token'));
+
+    if (resp.statusCode == 200) {
+      final parsed = json.decode(resp.body);
+      if (parsed.length == 0) {
+        setState(() {
+          tokenStatus = false;
+          tokenStatusMessage = "Invalid Api token";
+          buttonState = "notloading";
+        });
+      } else {
+        setState(() {
+          tokenStatus = true;
+          tokenStatusMessage = "Api token is functional.";
+          buttonState = "notloading";
+        });
+      }
+    } else {
+      setState(() {
+        tokenStatus = false;
+        tokenStatusMessage = "Invalid Api token";
+        buttonState = "notloading";
+      });
+    }
+  }
+
+  buttonStatus(buttonState) {
+    switch (buttonState) {
+      case "loading":
+        return LoadingAnimationWidget.staggeredDotsWave(
+          color: Colors.white,
+          size: 25.0,
+        );
+      default:
+        return Text(
+          'Save',
+          style: TextStyle(
+            fontSize: 16.0,
+            fontFamily: "SFD-Bold",
+          ),
+        );
+    }
   }
 
   @override
@@ -55,11 +150,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     fontSize: 12.0,
                     color: Color(0xff3FB950),
-                    fontFamily: "SFD-Bold",
+                    fontFamily: "SFT-Regular",
                   ),
                 ),
               ),
-              SizedBox(height: 5.0),
+              SizedBox(height: 8.0),
               Container(
                 padding: EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
@@ -74,10 +169,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     color: Colors.white,
                   ),
-                  controller: controller,
-                  onChanged: (text){
-
-                  },
+                  controller: ipcontroller,
+                  onChanged: (text) {},
                   maxLines: 1,
                   placeholder: "Pihole ip address",
                   placeholderStyle: TextStyle(
@@ -95,11 +188,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     fontSize: 12.0,
                     color: Color(0xff3FB950),
-                    fontFamily: "SFD-Bold",
+                    fontFamily: "SFT-Regular",
                   ),
                 ),
               ),
-              SizedBox(height: 5.0),
+              SizedBox(height: 8.0),
               Container(
                 padding: EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
@@ -114,10 +207,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     color: Colors.white,
                   ),
-                  controller: controller,
-                  onChanged: (text){
-
-                  },
+                  controller: tokencontroller,
+                  onChanged: (text) {},
                   maxLines: 1,
                   placeholder: "Api token",
                   placeholderStyle: TextStyle(
@@ -137,22 +228,104 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: CupertinoButton(
                   borderRadius: BorderRadius.circular(6.0),
                   color: Color(0xff3FB950),
-                  child: Text(
-                    'Save',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontFamily: "SFD-Bold",
-                    ),
-                  ),
+                  child: buttonStatus(buttonState),
                   onPressed: () {
-                    print('TEXT: ${controller.text}');
+                    print(
+                      'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
+                    );
+
+                    setState(() {
+                      buttonState = "loading";
+                      piholeStatus = false;
+                      tokenStatus = false;
+                      piholeStatusMessage = "";
+                      tokenStatusMessage = "";
+                    });
+
+                    test_ip(ipcontroller.text, tokencontroller.text);
                   },
                 ),
+              ),
+              SizedBox(height: 15.0),
+              Notifier(
+                active: piholeStatus,
+                message: piholeStatusMessage,
+              ),
+              Notifier(
+                active: tokenStatus,
+                message: tokenStatusMessage,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class Notifier extends StatelessWidget {
+  final bool active;
+  final String message;
+
+  Notifier({
+    required this.active,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (active == true) {
+      return Container(
+        // padding: EdgeInsets.all(15.0),
+        margin: EdgeInsets.only(bottom: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.check_mark_circled,
+              color: Color(0xff3FB950),
+              size: 20.0,
+            ),
+            SizedBox(width: 10.0),
+            Text(
+              message,
+              style: TextStyle(
+                color: Color(0xff3FB950),
+                fontFamily: "SFT-Regular",
+                fontSize: 14.0,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (active == false && message.length > 0) {
+        return Container(
+          // padding: EdgeInsets.all(15.0),
+          margin: EdgeInsets.only(bottom: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                CupertinoIcons.xmark_circle,
+                color: Colors.redAccent,
+                size: 20.0,
+              ),
+              SizedBox(width: 10.0),
+              Text(
+                message,
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontFamily: "SFT-Regular",
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Container();
+      }
+    }
   }
 }
