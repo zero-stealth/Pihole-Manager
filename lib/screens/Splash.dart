@@ -245,7 +245,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   controller: ipcontroller,
                   onChanged: (text) {},
                   maxLines: 1,
-                  placeholder: "Pihole ip address",
+                  placeholder: "192.168.0.1",
                   placeholderStyle: TextStyle(
                     color: Colors.grey.withOpacity(0.2),
                     fontFamily: "SFT-Regular",
@@ -283,7 +283,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   controller: tokencontroller,
                   onChanged: (text) {},
                   maxLines: 1,
-                  placeholder: "Api token",
+                  placeholder: "token",
                   placeholderStyle: TextStyle(
                     color: Colors.grey.withOpacity(0.2),
                     fontFamily: "SFT-Regular",
@@ -307,16 +307,28 @@ class _SplashScreenState extends State<SplashScreen> {
                       'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
                     );
 
-                    setState(() {
-                      buttonState = "loading";
-                      piholeStatus = false;
-                      tokenStatus = false;
-                      piholeStatusMessage = "";
-                      tokenStatusMessage = "";
-                    });
+                    if (ipcontroller.text.length == 0 ||
+                        tokencontroller.text.length == 0 ||
+                        namecontroller.text.length == 0) {
+                      setState(() {
+                        piholeStatus = false;
+                        piholeStatusMessage = "Fill all fields idiot!";
+                      });
+                    } else {
+                      setState(() {
+                        buttonState = "loading";
+                        piholeStatus = false;
+                        tokenStatus = false;
+                        piholeStatusMessage = "";
+                        tokenStatusMessage = "";
+                      });
 
-                    test_ip(namecontroller.text, ipcontroller.text,
-                        tokencontroller.text);
+                      test_ip(
+                        namecontroller.text,
+                        ipcontroller.text,
+                        tokencontroller.text,
+                      );
+                    }
                   },
                 ),
               ),
@@ -332,18 +344,25 @@ class _SplashScreenState extends State<SplashScreen> {
                   borderRadius: BorderRadius.circular(6.0),
                   color: Colors.transparent,
                   child: Text(
-                    'Proceed',
+                    'Never mind',
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Color(0xff3FB950),
                       fontFamily: "SFD-Bold",
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
-                    );
+                  onPressed: () async {
+                    final dbHelper = DatabaseHelper.instance;
+                    var d = await dbHelper.queryAllRows('devices');
+
+                    if (d.length > 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Dashboard()),
+                      );
+                    } else {
+                      print("[+] No devices in database");
+                    }
                   },
                 ),
               ),

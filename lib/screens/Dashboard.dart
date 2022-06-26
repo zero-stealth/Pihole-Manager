@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
+import 'package:piremote/screens/Splash.dart';
 
 import '../models/QueryModel.dart';
 import '../widgets/Panels.dart';
@@ -284,23 +285,23 @@ class _DashboardState extends State<Dashboard> {
               Padding(
                 padding: const EdgeInsets.only(
                   top: 5.0,
+                  right: 28.0,
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => Notifications()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => super.widget),
+                    );
                   },
                   child: const Icon(
-                    CupertinoIcons.plus,
+                    CupertinoIcons.arrow_counterclockwise,
                     color: Colors.white,
                     size: 23.0,
                   ),
                 ),
               ),
-              const SizedBox(width: 28.0),
+              // SizedBox(width: 20.0),
               Padding(
                 padding: const EdgeInsets.only(
                   top: 5.0,
@@ -308,18 +309,18 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => Settings()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SplashScreen()),
+                    );
                   },
                   child: const Icon(
-                    CupertinoIcons.settings_solid,
+                    CupertinoIcons.add_circled,
                     color: Colors.white,
                     size: 23.0,
                   ),
                 ),
-              )
+              ),
             ],
           ),
           SliverList(
