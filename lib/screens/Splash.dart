@@ -143,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen> {
         return Text(
           'Save',
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 14.0,
             fontFamily: "SFD-Bold",
           ),
         );
@@ -290,7 +290,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 15.0),
+              SizedBox(height: 25.0),
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(
@@ -342,7 +342,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 child: CupertinoButton(
                   borderRadius: BorderRadius.circular(6.0),
-                  color: Colors.transparent,
+                  color: Color.fromARGB(255, 16, 21, 27),
                   child: Text(
                     'Never mind',
                     style: TextStyle(
@@ -366,7 +366,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 15.0),
+              SizedBox(height: 4.0),
               Notifier(
                 active: piholeStatus,
                 message: piholeStatusMessage,
