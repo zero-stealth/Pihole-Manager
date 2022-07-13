@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:piremote/screens/Dashboard.dart';
 import 'package:piremote/screens/Splash.dart';
 
@@ -16,6 +17,18 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primaryColor: const Color(0xFF161B22),
+        bottomAppBarColor: const Color(0xFF161B22),
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: const Color(0xFF161B22),
+        ),
+        appBarTheme: AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            systemNavigationBarColor: const Color(0xFF161B22),
+            statusBarColor: const Color(0xFF161B22),
+            systemNavigationBarDividerColor: const Color(0xFF161B22),
+          ),
+        ),
         primarySwatch: Colors.blue,
       ),
       home: const SplashScreen(),

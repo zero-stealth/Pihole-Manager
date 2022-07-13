@@ -221,86 +221,157 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1117),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            backgroundColor: const Color(0xFF161B22),
-            elevation: 1.0,
-            centerTitle: false,
-            automaticallyImplyLeading: false,
-            title: const Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                left: 5.0,
-              ),
-              child: Text(
-                'Pihole Remote',
-                style: TextStyle(
-                  fontFamily: 'SFD-Bold',
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 5.0,
-                  right: 28.0,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => super.widget),
-                    );
-                  },
-                  child: const Icon(
-                    CupertinoIcons.arrow_counterclockwise,
-                    color: Colors.white,
-                    size: 23.0,
+      body: Stack(
+        children: [
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                backgroundColor: const Color(0xFF161B22),
+                elevation: 1.0,
+                centerTitle: false,
+                automaticallyImplyLeading: false,
+                title: const Padding(
+                  padding: EdgeInsets.only(
+                    top: 5.0,
+                    left: 5.0,
+                  ),
+                  child: Text(
+                    'Pihole Remote',
+                    style: TextStyle(
+                      fontFamily: 'SFD-Bold',
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
                   ),
                 ),
-              ),
-              // SizedBox(width: 20.0),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 5.0,
-                  right: 20.0,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SplashScreen()),
-                    );
-                  },
-                  child: const Icon(
-                    CupertinoIcons.add_circled,
-                    color: Colors.white,
-                    size: 23.0,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                actions: [
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 15.0,
-                      left: 20.0,
+                      top: 5.0,
+                      right: 28.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => super.widget),
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.arrow_counterclockwise,
+                        color: Colors.white,
+                        size: 23.0,
+                      ),
+                    ),
+                  ),
+                  // SizedBox(width: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
                       right: 20.0,
                     ),
-                    child: devices_list(),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SplashScreen()),
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.add_circled,
+                        color: Colors.white,
+                        size: 23.0,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ]),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 15.0,
+                          left: 20.0,
+                          right: 20.0,
+                        ),
+                        child: devices_list(),
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(bottom: 15.0),
+                  padding: EdgeInsets.only(
+                    top: 15.0,
+                    bottom: 15.0,
+                    left: 28.0,
+                    right: 28.0,
+                  ),
+                  width: MediaQuery.of(context).size.width - 60,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF161B22),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Icon(
+                            CupertinoIcons.house_fill,
+                            size: 20.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5.0),
+                      Column(
+                        children: [
+                          Icon(
+                            CupertinoIcons.graph_square_fill,
+                            size: 22.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5.0),
+                      Column(
+                        children: [
+                          Icon(
+                            CupertinoIcons.square_list_fill,
+                            size: 22.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5.0),
+                      Column(
+                        children: [
+                          Icon(
+                            CupertinoIcons.settings_solid,
+                            size: 22.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

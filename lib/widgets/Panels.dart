@@ -23,7 +23,7 @@ class Panels extends StatelessWidget {
               width: (MediaQuery.of(context).size.width - 50) / 2,
               padding: const EdgeInsets.all(15.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(6.0),
                 color: const Color(0xFF161B22),
               ),
               child: Column(
@@ -54,7 +54,7 @@ class Panels extends StatelessWidget {
               width: (MediaQuery.of(context).size.width - 50) / 2,
               padding: const EdgeInsets.all(15.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(6.0),
                 color: const Color(0xFF161B22),
               ),
               child: Column(
