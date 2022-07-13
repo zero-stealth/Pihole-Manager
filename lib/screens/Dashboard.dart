@@ -37,6 +37,8 @@ class _DashboardState extends State<Dashboard> {
 
   var devices_data = [];
 
+  var selectedMenuItem = "home";
+
   fetchQueries() async {
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
@@ -315,10 +317,10 @@ class _DashboardState extends State<Dashboard> {
                 Container(
                   margin: EdgeInsets.only(bottom: 15.0),
                   padding: EdgeInsets.only(
-                    top: 15.0,
-                    bottom: 15.0,
-                    left: 28.0,
-                    right: 28.0,
+                    top: 5.0,
+                    bottom: 5.0,
+                    left: 20.0,
+                    right: 20.0,
                   ),
                   width: MediaQuery.of(context).size.width - 60,
                   decoration: BoxDecoration(
@@ -330,40 +332,102 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Column(
                         children: [
-                          Icon(
-                            CupertinoIcons.house_fill,
-                            size: 20.0,
-                            color: Colors.white,
+                          InkWell(
+                            focusColor: Colors.blue,
+                            splashColor: Colors.blue,
+                            onTap: () {
+                              if (selectedMenuItem != "home") {
+                                setState(() {
+                                  selectedMenuItem = "home";
+                                });
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.house_fill,
+                                size: 24.0,
+                                color: selectedMenuItem == "home"
+                                    ? Color(0xff3FB950)
+                                    : Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(width: 5.0),
                       Column(
                         children: [
-                          Icon(
-                            CupertinoIcons.graph_square_fill,
-                            size: 22.0,
-                            color: Colors.white,
+                          InkWell(
+                            focusColor: Colors.blue,
+                            splashColor: Colors.blue,
+                            onTap: () {
+                              if (selectedMenuItem != "stats") {
+                                setState(() {
+                                  selectedMenuItem = "stats";
+                                });
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.graph_square_fill,
+                                size: 24.0,
+                                color: selectedMenuItem == "stats"
+                                    ? Color(0xff3FB950)
+                                    : Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(width: 5.0),
                       Column(
                         children: [
-                          Icon(
-                            CupertinoIcons.square_list_fill,
-                            size: 22.0,
-                            color: Colors.white,
+                          InkWell(
+                            onTap: () {
+                              if (selectedMenuItem != "logs") {
+                                setState(() {
+                                  selectedMenuItem = "logs";
+                                });
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.square_list_fill,
+                                size: 24.0,
+                                color: selectedMenuItem == "logs"
+                                    ? Color(0xff3FB950)
+                                    : Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(width: 5.0),
                       Column(
                         children: [
-                          Icon(
-                            CupertinoIcons.settings_solid,
-                            size: 22.0,
-                            color: Colors.white,
+                          InkWell(
+                            focusColor: Colors.blue,
+                            splashColor: Colors.blue,
+                            onTap: () {
+                              if (selectedMenuItem != "settings") {
+                                setState(() {
+                                  selectedMenuItem = "settings";
+                                });
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.settings_solid,
+                                size: 24.0,
+                                color: selectedMenuItem == "settings"
+                                    ? Color(0xff3FB950)
+                                    : Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),
