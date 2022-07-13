@@ -106,6 +106,54 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  pageHandler() {
+    switch (selectedMenuItem) {
+      case 'home':
+        return devices_list();
+
+      case 'stats':
+        return Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Statistics")
+            ],
+          ),
+        );
+
+      case 'logs':
+        return Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Logs")
+            ],
+          ),
+        );
+
+      case 'settings':
+        return Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Settings")
+            ],
+          ),
+        );
+
+      default:
+    }
+  }
+
   devices_list() {
     print(devices_data.length);
     if (devices_data.length > 0) {
@@ -301,7 +349,7 @@ class _DashboardState extends State<Dashboard> {
                           left: 20.0,
                           right: 20.0,
                         ),
-                        child: devices_list(),
+                        child: pageHandler(),
                       ),
                     ],
                   ),
