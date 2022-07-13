@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -44,6 +45,26 @@ class _DashboardState extends State<Dashboard> {
     var devices = await dbHelper.queryAllRows('devices');
 
     for (var i = 0; i < devices.length; i++) {
+      // FIGURE OUT HOW TO PARSE
+      // THE TERRIBLY FORMATTED OBJECTS
+      // WITH DART
+
+      // final res = await http.Client().get(Uri.parse(
+      //     'http://${devices[i]['ip']}/admin/api.php?topClients&auth=25aa34070a75ce79dcf2496484ad2301de3daa2b80581c9b265eaadb79685303'));
+      // if (res.statusCode == 200) {
+      //   Map pars = jsonDecode(res.body);
+      //   // print('CLIENTS: $pars');
+      //   print(pars['top_sources']);
+
+      //   pars.entries.map((e) {
+      //     print('KEY: ${e.key}');
+      //     print('VALUE: ${e.value}');
+      //   });
+      // } else {
+      //   print('ERROR');
+      //   print(res);
+      // }
+
       final resp = await http.Client()
           .get(Uri.parse('http://${devices[i]['ip']}/admin/'));
       if (resp.statusCode == 200) {
@@ -97,9 +118,14 @@ class _DashboardState extends State<Dashboard> {
           "allClients": queryModel.clients_ever_seen,
         };
 
-        setState(() {
-          devices_data.add(data);
-        });
+        var timer = Timer(
+          Duration(seconds: 1),
+          () => setState(() {
+            devices_data.add(data);
+          }),
+        );
+
+        // timer.cancel();
       } else {
         throw Exception("Unable to fetch query data");
       }
@@ -118,9 +144,7 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Statistics")
-            ],
+            children: [Text("Statistics")],
           ),
         );
 
@@ -131,9 +155,7 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Logs")
-            ],
+            children: [Text("Logs")],
           ),
         );
 
@@ -144,10 +166,64 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Settings")
-            ],
+            children: [Text("Settings")],
           ),
+        );
+
+      default:
+    }
+  }
+
+  void _showActionSheet(BuildContext context, name) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContextcontext) => Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: CupertinoActionSheet(
+          title: Text('Disable Pi-hole blocking'),
+          message: Text('How long do you want to disable blocking for $name'),
+          actions: <CupertinoActionSheetAction>[
+            CupertinoActionSheetAction(
+              onPressed: () {},
+              child: Text('1 minute'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {},
+              child: Text('5 minutes'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {},
+              child: Text('1 hour'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {},
+              child: Text('8 hours'),
+            ),
+            CupertinoActionSheetAction(
+              isDestructiveAction: true,
+              onPressed: () {},
+              child: Text('Until Turned on'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  deviceStatusIcon(status) {
+    switch (status) {
+      case 'enabled':
+        return const Icon(
+          CupertinoIcons.check_mark_circled_solid,
+          color: Color(0xff3FB950),
+          size: 20.0,
+        );
+
+      case 'disabled':
+        return const Icon(
+          CupertinoIcons.xmark_circle_fill,
+          color: Colors.redAccent,
+          size: 20.0,
         );
 
       default:
@@ -165,11 +241,7 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(
-                    CupertinoIcons.check_mark_circled_solid,
-                    color: Color(0xff3FB950),
-                    size: 20.0,
-                  ),
+                  deviceStatusIcon(devices_data[i]['status']),
                   const SizedBox(width: 10.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,6 +309,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 onPressed: () {
                   // Navigator.pop(context);
+                  _showActionSheet(context, devices_data[i]['name']);
                 },
               ),
             ),
