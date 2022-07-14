@@ -28,10 +28,13 @@ class _SplashScreenState extends State<SplashScreen> {
   bool tokenStatus = false;
   String tokenStatusMessage = "";
 
+  var screenState = 'loading';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    checkDevices();
     ipcontroller.addListener(() {
       print(ipcontroller.text);
     });
@@ -43,6 +46,260 @@ class _SplashScreenState extends State<SplashScreen> {
     namecontroller.addListener(() {
       print(namecontroller.text);
     });
+  }
+
+  checkDevices() async {
+    final dbHelper = DatabaseHelper.instance;
+    var devices = await dbHelper.queryAllRows('devices');
+
+    if (devices.length != 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+    } else {
+      setState(() {
+        screenState = 'notloading';
+      });
+    }
+  }
+
+  splashScreenState() {
+    switch (screenState) {
+      case 'loading':
+        return Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoadingAnimationWidget.staggeredDotsWave(
+                color: Color(0xff3FB950),
+                size: 50.0,
+              )
+            ],
+          ),
+        );
+        break;
+      default:
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Container(
+            //   width: double.infinity,
+            //   child: Text(
+            //     'Config',
+            //     textAlign: TextAlign.start,
+            //     style: TextStyle(
+            //       fontSize: 16.0,
+            //       color: Color(0xff3FB950),
+            //       fontFamily: "SFD-Bold",
+            //     ),
+            //   ),
+            // ),
+            SizedBox(height: 15.0),
+            Container(
+              width: double.infinity,
+              child: Text(
+                'Device Name',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Color(0xff3FB950),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161B22),
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+              child: CupertinoTextField(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF161B22),
+                ),
+                scrollPhysics: BouncingScrollPhysics(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                controller: namecontroller,
+                onChanged: (text) {},
+                maxLines: 1,
+                placeholder: "Mainframe",
+                placeholderStyle: TextStyle(
+                  color: Colors.grey.withOpacity(0.2),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+            ),
+            SizedBox(height: 15.0),
+            Container(
+              width: double.infinity,
+              child: Text(
+                'Pihole ip address',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Color(0xff3FB950),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161B22),
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+              child: CupertinoTextField(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF161B22),
+                ),
+                scrollPhysics: BouncingScrollPhysics(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                controller: ipcontroller,
+                onChanged: (text) {},
+                maxLines: 1,
+                placeholder: "192.168.0.1",
+                placeholderStyle: TextStyle(
+                  color: Colors.grey.withOpacity(0.2),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+            ),
+            SizedBox(height: 15.0),
+            Container(
+              width: double.infinity,
+              child: Text(
+                'Pihole api token',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Color(0xff3FB950),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161B22),
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+              child: CupertinoTextField(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF161B22),
+                ),
+                scrollPhysics: BouncingScrollPhysics(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                controller: tokencontroller,
+                onChanged: (text) {},
+                maxLines: 1,
+                placeholder: "token",
+                placeholderStyle: TextStyle(
+                  color: Colors.grey.withOpacity(0.2),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+            ),
+            SizedBox(height: 25.0),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(
+                bottom: 10.0,
+                left: 0.0,
+                right: 0.0,
+              ),
+              child: CupertinoButton(
+                borderRadius: BorderRadius.circular(6.0),
+                color: Color(0xff3FB950),
+                child: buttonStatus(buttonState),
+                onPressed: () {
+                  print(
+                    'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
+                  );
+
+                  if (ipcontroller.text.length == 0 ||
+                      tokencontroller.text.length == 0 ||
+                      namecontroller.text.length == 0) {
+                    setState(() {
+                      piholeStatus = false;
+                      piholeStatusMessage = "Fill all fields idiot!";
+                    });
+                  } else {
+                    setState(() {
+                      buttonState = "loading";
+                      piholeStatus = false;
+                      tokenStatus = false;
+                      piholeStatusMessage = "";
+                      tokenStatusMessage = "";
+                    });
+
+                    test_ip(
+                      namecontroller.text,
+                      ipcontroller.text,
+                      tokencontroller.text,
+                    );
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: 0.0),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(
+                bottom: 20.0,
+                left: 0.0,
+                right: 0.0,
+              ),
+              child: CupertinoButton(
+                borderRadius: BorderRadius.circular(6.0),
+                color: Color.fromARGB(255, 16, 21, 27),
+                child: Text(
+                  'Never mind',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xff3FB950),
+                    fontFamily: "SFD-Bold",
+                  ),
+                ),
+                onPressed: () async {
+                  final dbHelper = DatabaseHelper.instance;
+                  var d = await dbHelper.queryAllRows('devices');
+
+                  if (d.length > 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
+                    );
+                  } else {
+                    print("[+] No devices in database");
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: 4.0),
+            Notifier(
+              active: piholeStatus,
+              message: piholeStatusMessage,
+            ),
+            Notifier(
+              active: tokenStatus,
+              message: tokenStatusMessage,
+            ),
+          ],
+        );
+    }
   }
 
   test_ip(name, ip, token) async {
@@ -158,226 +415,10 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Align(
         alignment: Alignment.center,
         child: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Container(
-              //   width: double.infinity,
-              //   child: Text(
-              //     'Config',
-              //     textAlign: TextAlign.start,
-              //     style: TextStyle(
-              //       fontSize: 16.0,
-              //       color: Color(0xff3FB950),
-              //       fontFamily: "SFD-Bold",
-              //     ),
-              //   ),
-              // ),
-              SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Device Name',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF161B22),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: CupertinoTextField(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                  ),
-                  scrollPhysics: BouncingScrollPhysics(),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: namecontroller,
-                  onChanged: (text) {},
-                  maxLines: 1,
-                  placeholder: "Mainframe",
-                  placeholderStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.2),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Pihole ip address',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF161B22),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: CupertinoTextField(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                  ),
-                  scrollPhysics: BouncingScrollPhysics(),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: ipcontroller,
-                  onChanged: (text) {},
-                  maxLines: 1,
-                  placeholder: "192.168.0.1",
-                  placeholderStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.2),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Pihole api token',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF161B22),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: CupertinoTextField(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                  ),
-                  scrollPhysics: BouncingScrollPhysics(),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: tokencontroller,
-                  onChanged: (text) {},
-                  maxLines: 1,
-                  placeholder: "token",
-                  placeholderStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.2),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 25.0),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(
-                  bottom: 10.0,
-                  left: 0.0,
-                  right: 0.0,
-                ),
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(6.0),
-                  color: Color(0xff3FB950),
-                  child: buttonStatus(buttonState),
-                  onPressed: () {
-                    print(
-                      'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
-                    );
-
-                    if (ipcontroller.text.length == 0 ||
-                        tokencontroller.text.length == 0 ||
-                        namecontroller.text.length == 0) {
-                      setState(() {
-                        piholeStatus = false;
-                        piholeStatusMessage = "Fill all fields idiot!";
-                      });
-                    } else {
-                      setState(() {
-                        buttonState = "loading";
-                        piholeStatus = false;
-                        tokenStatus = false;
-                        piholeStatusMessage = "";
-                        tokenStatusMessage = "";
-                      });
-
-                      test_ip(
-                        namecontroller.text,
-                        ipcontroller.text,
-                        tokencontroller.text,
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(height: 0.0),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 0.0,
-                  right: 0.0,
-                ),
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(6.0),
-                  color: Color.fromARGB(255, 16, 21, 27),
-                  child: Text(
-                    'Never mind',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Color(0xff3FB950),
-                      fontFamily: "SFD-Bold",
-                    ),
-                  ),
-                  onPressed: () async {
-                    final dbHelper = DatabaseHelper.instance;
-                    var d = await dbHelper.queryAllRows('devices');
-
-                    if (d.length > 0) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Dashboard()),
-                      );
-                    } else {
-                      print("[+] No devices in database");
-                    }
-                  },
-                ),
-              ),
-              SizedBox(height: 4.0),
-              Notifier(
-                active: piholeStatus,
-                message: piholeStatusMessage,
-              ),
-              Notifier(
-                active: tokenStatus,
-                message: tokenStatusMessage,
-              ),
-            ],
-          ),
-        ),
+            margin: EdgeInsets.symmetric(
+              horizontal: 20.0,
+            ),
+            child: splashScreenState()),
       ),
     );
   }
