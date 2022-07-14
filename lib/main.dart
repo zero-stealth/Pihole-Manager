@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:piremote/screens/Dashboard.dart';
-import 'package:piremote/screens/Splash.dart';
+import 'package:piremote/screens/SplashScreen.dart';
 
 void main() {
   runApp(const MyApp());

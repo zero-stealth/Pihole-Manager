@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
-import 'package:piremote/screens/Splash.dart';
+import 'package:piremote/screens/AddDevices.dart';
 
 import '../models/QueryModel.dart';
 import '../widgets/Panels.dart';
@@ -459,7 +459,7 @@ class _DashboardState extends State<Dashboard> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SplashScreen()),
+                              builder: (context) => AddDevices()),
                         );
                       },
                       child: const Icon(
