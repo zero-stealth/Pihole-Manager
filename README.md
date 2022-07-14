@@ -11,6 +11,7 @@ Pihole Applications for android on google playstore are either disfunctional, po
 | Feature | Status |
 | :--- | :--- |
 | Multi-Device support | :white_check_mark: |
+| Disable blocking | :white_check_mark: |
 | Statistics graphs |  |
 | Query log |  |
 | Popular services blocking |  |
