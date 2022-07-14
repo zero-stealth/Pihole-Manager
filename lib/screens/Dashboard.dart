@@ -40,6 +40,34 @@ class _DashboardState extends State<Dashboard> {
 
   var selectedMenuItem = "home";
 
+  enableBlocking(ip, token) async {
+    var url = 'http://$ip';
+    final response =
+        await http.get(Uri.parse('$url/admin/api.php?enable&auth=$token'));
+
+    if (response.statusCode == 200) {
+      print('ENABLED BLOCKING SUCCESSFULLY');
+      refreshScreen();
+    }
+  }
+
+  disableBlocking(ip, token, seconds) async {
+    var url = 'http://$ip';
+    final response = await http
+        .get(Uri.parse('$url/admin/api.php?disable=$seconds&auth=$token'));
+
+    if (response.statusCode == 200) {
+      refreshScreen();
+    }
+  }
+
+  refreshScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => super.widget),
+    );
+  }
+
   fetchQueries() async {
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
@@ -116,6 +144,7 @@ class _DashboardState extends State<Dashboard> {
           "blocklist": queryModel.domains_being_blocked,
           "status": queryModel.status,
           "allClients": queryModel.clients_ever_seen,
+          "apitoken": devices[i]['apitoken'],
         };
 
         var timer = Timer(
@@ -174,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  void _showActionSheet(BuildContext context, name) {
+  void _showActionSheet(BuildContext context, name, ip, token) {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContextcontext) => Padding(
@@ -182,26 +211,42 @@ class _DashboardState extends State<Dashboard> {
         child: CupertinoActionSheet(
           title: Text('Disable Pi-hole blocking'),
           message: Text('How long do you want to disable blocking for $name'),
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
-              onPressed: () {},
+              onPressed: () {
+                disableBlocking(ip, token, 60);
+              },
               child: Text('1 minute'),
             ),
             CupertinoActionSheetAction(
-              onPressed: () {},
+              onPressed: () {
+                disableBlocking(ip, token, 300);
+              },
               child: Text('5 minutes'),
             ),
             CupertinoActionSheetAction(
-              onPressed: () {},
+              onPressed: () {
+                disableBlocking(ip, token, 3600);
+              },
               child: Text('1 hour'),
             ),
             CupertinoActionSheetAction(
-              onPressed: () {},
+              onPressed: () {
+                disableBlocking(ip, token, 28800);
+              },
               child: Text('8 hours'),
             ),
             CupertinoActionSheetAction(
               isDestructiveAction: true,
-              onPressed: () {},
+              onPressed: () {
+                disableBlocking(ip, token, 0);
+              },
               child: Text('Until Turned on'),
             ),
           ],
@@ -290,26 +335,41 @@ class _DashboardState extends State<Dashboard> {
                 color: const Color(0xFF161B22),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    // Icon(
-                    //   CupertinoIcons.stop,
-                    //   color: Colors.white,
-                    //   size: 16.0,
-                    // ),
-                    // SizedBox(width: 10.0),
-                    Text(
-                      'Disable',
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 14.0,
-                        fontFamily: 'SFT-Regular',
-                      ),
-                    ),
+                  children: [
+                    devices_data[i]['status'] == 'enabled'
+                        ? const Text(
+                            'Disable',
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 14.0,
+                              fontFamily: 'SFT-Regular',
+                            ),
+                          )
+                        : const Text(
+                            'Enable',
+                            style: TextStyle(
+                              color: Color(0xff3FB950),
+                              fontSize: 14.0,
+                              fontFamily: 'SFT-Regular',
+                            ),
+                          ),
                   ],
                 ),
                 onPressed: () {
                   // Navigator.pop(context);
-                  _showActionSheet(context, devices_data[i]['name']);
+                  if (devices_data[i]['status'] == 'disabled') {
+                    enableBlocking(
+                      devices_data[i]['ip'],
+                      devices_data[i]['apitoken'],
+                    );
+                  } else {
+                    _showActionSheet(
+                      context,
+                      devices_data[i]['name'],
+                      devices_data[i]['ip'],
+                      devices_data[i]['apitoken'],
+                    );
+                  }
                 },
               ),
             ),
