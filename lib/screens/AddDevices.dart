@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/Dashboard.dart';
+import 'package:piremote/widgets/InputWidget.dart';
 
 class AddDevices extends StatefulWidget {
   const AddDevices({Key? key}) : super(key: key);
@@ -158,7 +159,7 @@ class _AddDevicesState extends State<AddDevices> {
       body: Align(
         alignment: Alignment.center,
         child: Container(
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             horizontal: 20.0,
           ),
           child: Column(
@@ -176,140 +177,44 @@ class _AddDevicesState extends State<AddDevices> {
               //     ),
               //   ),
               // ),
-              SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Device Name',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF161B22),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: CupertinoTextField(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                  ),
-                  scrollPhysics: BouncingScrollPhysics(),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: namecontroller,
-                  onChanged: (text) {},
-                  maxLines: 1,
-                  placeholder: "Mainframe",
-                  placeholderStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.2),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
+              const SizedBox(height: 15.0),
+              InputWidget(
+                namecontroller: namecontroller,
+                label: "Device Name",
+                placeholder: "Mainframe",
               ),
               SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Pihole ip address',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
+              InputWidget(
+                namecontroller: ipcontroller,
+                label: "Pihole ip address",
+                placeholder: "192.168.0.1",
               ),
-              SizedBox(height: 8.0),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF161B22),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: CupertinoTextField(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                  ),
-                  scrollPhysics: BouncingScrollPhysics(),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: ipcontroller,
-                  onChanged: (text) {},
-                  maxLines: 1,
-                  placeholder: "192.168.0.1",
-                  placeholderStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.2),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Pihole api token',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF161B22),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: CupertinoTextField(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                  ),
-                  scrollPhysics: BouncingScrollPhysics(),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: tokencontroller,
-                  onChanged: (text) {},
-                  maxLines: 1,
-                  placeholder: "token",
-                  placeholderStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.2),
-                    fontFamily: "SFT-Regular",
-                  ),
-                ),
+              const SizedBox(height: 15.0),
+              InputWidget(
+                namecontroller: tokencontroller,
+                label: "Pihole api token",
+                placeholder: "token",
               ),
               SizedBox(height: 25.0),
               Container(
                 width: double.infinity,
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   bottom: 10.0,
                   left: 0.0,
                   right: 0.0,
                 ),
                 child: CupertinoButton(
                   borderRadius: BorderRadius.circular(6.0),
-                  color: Color(0xff3FB950),
+                  color: const Color(0xff3FB950),
                   child: buttonStatus(buttonState),
                   onPressed: () {
                     print(
                       'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
                     );
 
-                    if (ipcontroller.text.length == 0 ||
-                        tokencontroller.text.length == 0 ||
-                        namecontroller.text.length == 0) {
+                    if (ipcontroller.text.isEmpty ||
+                        tokencontroller.text.isEmpty ||
+                        namecontroller.text.isEmpty) {
                       setState(() {
                         piholeStatus = false;
                         piholeStatusMessage = "Fill all fields idiot!";
@@ -335,15 +240,15 @@ class _AddDevicesState extends State<AddDevices> {
               SizedBox(height: 0.0),
               Container(
                 width: double.infinity,
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   bottom: 20.0,
                   left: 0.0,
                   right: 0.0,
                 ),
                 child: CupertinoButton(
                   borderRadius: BorderRadius.circular(6.0),
-                  color: Color.fromARGB(255, 16, 21, 27),
-                  child: Text(
+                  color: const Color.fromARGB(255, 16, 21, 27),
+                  child: const Text(
                     'Never mind',
                     style: TextStyle(
                       fontSize: 14.0,
@@ -366,7 +271,7 @@ class _AddDevicesState extends State<AddDevices> {
                   },
                 ),
               ),
-              SizedBox(height: 4.0),
+              const SizedBox(height: 4.0),
               Notifier(
                 active: piholeStatus,
                 message: piholeStatusMessage,
@@ -382,6 +287,7 @@ class _AddDevicesState extends State<AddDevices> {
     );
   }
 }
+
 
 class Notifier extends StatelessWidget {
   final bool active;
