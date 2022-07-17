@@ -8,6 +8,7 @@ import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/AddDevices.dart';
+import 'package:piremote/screens/Statistics.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 
 import '../models/QueryModel.dart';
@@ -78,26 +79,6 @@ class _DashboardState extends State<Dashboard> {
     var devices = await dbHelper.queryAllRows('devices');
 
     for (var i = 0; i < devices.length; i++) {
-      // FIGURE OUT HOW TO PARSE
-      // THE TERRIBLY FORMATTED OBJECTS
-      // WITH DART
-
-      // final res = await http.Client().get(Uri.parse(
-      //     'http://${devices[i]['ip']}/admin/api.php?topClients&auth=25aa34070a75ce79dcf2496484ad2301de3daa2b80581c9b265eaadb79685303'));
-      // if (res.statusCode == 200) {
-      //   Map pars = jsonDecode(res.body);
-      //   // print('CLIENTS: $pars');
-      //   print(pars['top_sources']);
-
-      //   pars.entries.map((e) {
-      //     print('KEY: ${e.key}');
-      //     print('VALUE: ${e.value}');
-      //   });
-      // } else {
-      //   print('ERROR');
-      //   print(res);
-      // }
-
       final resp = await http.Client()
           .get(Uri.parse('http://${devices[i]['ip']}/admin/'));
       if (resp.statusCode == 200) {
@@ -279,15 +260,7 @@ class _DashboardState extends State<Dashboard> {
         return devices_list();
 
       case 'stats':
-        return Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text("Statistics")],
-          ),
-        );
+        return Statistics();
 
       case 'logs':
         return Container(
@@ -423,7 +396,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   Container(
                     padding: EdgeInsets.only(
-                      right: 0.0,
+                      right:  0.0,
                       top: 8.0,
                     ),
                     child: InkWell(
@@ -551,6 +524,8 @@ class _DashboardState extends State<Dashboard> {
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBar(
+                floating: true,
+                // pinned: true,
                 backgroundColor: const Color(0xFF161B22),
                 elevation: 1.0,
                 centerTitle: false,
