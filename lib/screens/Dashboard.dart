@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -396,11 +397,10 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   Container(
                     padding: EdgeInsets.only(
-                      right:  0.0,
+                      right: 0.0,
                       top: 8.0,
                     ),
                     child: InkWell(
-                      
                       borderRadius: BorderRadius.circular(50.0),
                       onTap: () {
                         deviceSettingsModal(context, devices_data[i]['name'],
@@ -509,6 +509,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     fetchQueries();
@@ -610,124 +616,181 @@ class _DashboardState extends State<Dashboard> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 15.0),
-                  padding: EdgeInsets.only(
-                    top: 5.0,
-                    bottom: 5.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  width: MediaQuery.of(context).size.width - 60,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
+                ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 0.0),
+                      padding: EdgeInsets.only(
+                        top: 5.0,
+                        bottom: 5.0,
+                        left: 20.0,
+                        right: 20.0,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        // color: Color.fromARGB(255, 12, 15, 19),
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFF161B22).withOpacity(0.9),
+                            const Color(0xFF161B22).withOpacity(0.9)
+                          ],
+                          begin: AlignmentDirectional.topStart,
+                          end: AlignmentDirectional.bottomEnd,
+                        ),
+                        // borderRadius: BorderRadius.circular(50.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                            focusColor: Colors.blue,
-                            splashColor: Colors.blue,
-                            onTap: () {
-                              if (selectedMenuItem != "home") {
-                                setState(() {
-                                  selectedMenuItem = "home";
-                                });
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                CupertinoIcons.house_fill,
-                                size: 24.0,
-                                color: selectedMenuItem == "home"
-                                    ? Color(0xff3FB950)
-                                    : Colors.white,
+                          Column(
+                            children: [
+                              InkWell(
+                                focusColor: Colors.blue,
+                                splashColor: Colors.blue,
+                                onTap: () {
+                                  if (selectedMenuItem != "home") {
+                                    setState(() {
+                                      selectedMenuItem = "home";
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        CupertinoIcons.house_fill,
+                                        size: 24.0,
+                                        color: selectedMenuItem == "home"
+                                            ? Color(0xff3FB950)
+                                            : Color.fromARGB(255, 161, 161, 161),
+                                      ),
+                                      SizedBox(height: 5.0),
+                                      Text(
+                                        'Home',
+                                        style: TextStyle(fontSize: 10.0,
+                                        color: selectedMenuItem == "home" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
+                          SizedBox(width: 5.0),
+                          Column(
+                            children: [
+                              InkWell(
+                                focusColor: Colors.blue,
+                                splashColor: Colors.blue,
+                                onTap: () {
+                                  if (selectedMenuItem != "stats") {
+                                    setState(() {
+                                      selectedMenuItem = "stats";
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        CupertinoIcons.graph_square_fill,
+                                        size: 24.0,
+                                        color: selectedMenuItem == "stats"
+                                            ? Color(0xff3FB950)
+                                            : Color.fromARGB(255, 161, 161, 161),
+                                      ),
+                                      SizedBox(height: 5.0),
+                                      Text(
+                                        'Stats',
+                                        style: TextStyle(fontSize: 10.0,
+                                        color: selectedMenuItem == "stats" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 5.0),
+                          Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (selectedMenuItem != "logs") {
+                                    setState(() {
+                                      selectedMenuItem = "logs";
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        CupertinoIcons.square_list_fill,
+                                        size: 25.0,
+                                        color: selectedMenuItem == "logs"
+                                            ? Color(0xff3FB950)
+                                            : Color.fromARGB(255, 161, 161, 161),
+                                      ),
+                                      SizedBox(height: 5.0),
+                                      Text(
+                                        'Logs',
+                                        style: TextStyle(fontSize: 10.0,
+                                        color: selectedMenuItem == "logs" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 5.0),
+                          Column(
+                            children: [
+                              InkWell(
+                                focusColor: Colors.blue,
+                                splashColor: Colors.blue,
+                                onTap: () {
+                                  if (selectedMenuItem != "settings") {
+                                    setState(() {
+                                      selectedMenuItem = "settings";
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        CupertinoIcons.settings_solid,
+                                        size: 24.0,
+                                        color: selectedMenuItem == "settings"
+                                            ? Color(0xff3FB950)
+                                            : Color.fromARGB(255, 161, 161, 161),
+                                      ),
+                                      SizedBox(height: 5.0),
+                                      Text(
+                                        'Settings',
+                                        style: TextStyle(fontSize: 10.0,
+                                        color: selectedMenuItem == "settings" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(width: 5.0),
-                      Column(
-                        children: [
-                          InkWell(
-                            focusColor: Colors.blue,
-                            splashColor: Colors.blue,
-                            onTap: () {
-                              if (selectedMenuItem != "stats") {
-                                setState(() {
-                                  selectedMenuItem = "stats";
-                                });
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                CupertinoIcons.graph_square_fill,
-                                size: 24.0,
-                                color: selectedMenuItem == "stats"
-                                    ? Color(0xff3FB950)
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 5.0),
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              if (selectedMenuItem != "logs") {
-                                setState(() {
-                                  selectedMenuItem = "logs";
-                                });
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                CupertinoIcons.square_list_fill,
-                                size: 24.0,
-                                color: selectedMenuItem == "logs"
-                                    ? Color(0xff3FB950)
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 5.0),
-                      Column(
-                        children: [
-                          InkWell(
-                            focusColor: Colors.blue,
-                            splashColor: Colors.blue,
-                            onTap: () {
-                              if (selectedMenuItem != "settings") {
-                                setState(() {
-                                  selectedMenuItem = "settings";
-                                });
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                CupertinoIcons.settings_solid,
-                                size: 24.0,
-                                color: selectedMenuItem == "settings"
-                                    ? Color(0xff3FB950)
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],

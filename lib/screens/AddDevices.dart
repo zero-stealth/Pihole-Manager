@@ -30,6 +30,12 @@ class _AddDevicesState extends State<AddDevices> {
   String tokenStatusMessage = "";
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
