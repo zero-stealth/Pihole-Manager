@@ -42,13 +42,16 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
-                          fontFamily: "SFD-Bold",
+                          fontSize: 13.0,
+                          fontFamily: "SFT-Regular",
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
                         clients[index][1]['requests'].toString(),
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 13.0,
                           fontFamily: "SFT-Regular",
                         ),
                       ),
@@ -94,19 +97,25 @@ class _StatisticsState extends State<Statistics> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          topQueries[index][0]['url'].toString(),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: "SFT-Regular",
-                            fontWeight: FontWeight.w600,
+                        Flexible(
+                          child: Container(
+                            child: Text(
+                              topQueries[index][0]['url'].toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "SFT-Regular",
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                         Text(
                           topQueries[index][1]['requests'].toString(),
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 13.0,
                             fontFamily: "SFT-Regular",
                           ),
                         ),
@@ -159,6 +168,7 @@ class _StatisticsState extends State<Statistics> {
                             topAds[index][0]['url'].toString(),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
+                              fontSize: 13.0,
                               color: Colors.white,
                               fontFamily: "SFT-Regular",
                               fontWeight: FontWeight.w600,
@@ -170,6 +180,7 @@ class _StatisticsState extends State<Statistics> {
                         topAds[index][1]['requests'].toString(),
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 13.0,
                           fontFamily: "SFT-Regular",
                         ),
                       ),
