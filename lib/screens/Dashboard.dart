@@ -9,6 +9,8 @@ import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/AddDevices.dart';
+import 'package:piremote/screens/Logs.dart';
+import 'package:piremote/screens/Settings.dart';
 import 'package:piremote/screens/Statistics.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 
@@ -264,27 +266,28 @@ class _DashboardState extends State<Dashboard> {
         return Statistics();
 
       case 'logs':
-        return Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text("Logs")],
-          ),
-        );
+        return Logs();
 
       case 'settings':
-        return Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text("Settings")],
-          ),
-        );
+        return Settings();
 
+      default:
+    }
+  }
+
+  appBarName() {
+    switch (selectedMenuItem) {
+      case "home":
+        return "Home";
+
+      case "stats":
+        return "Statistics";
+
+      case "logs":
+        return "Logs";
+
+      case "settings":
+        return "Settings";
       default:
     }
   }
@@ -536,13 +539,13 @@ class _DashboardState extends State<Dashboard> {
                 elevation: 1.0,
                 centerTitle: false,
                 automaticallyImplyLeading: false,
-                title: const Padding(
+                title: Padding(
                   padding: EdgeInsets.only(
                     top: 5.0,
                     left: 5.0,
                   ),
                   child: Text(
-                    'Pihole Remote',
+                    appBarName(),
                     style: TextStyle(
                       fontFamily: 'SFD-Bold',
                       color: Colors.white,
@@ -664,13 +667,18 @@ class _DashboardState extends State<Dashboard> {
                                         size: 24.0,
                                         color: selectedMenuItem == "home"
                                             ? Color(0xff3FB950)
-                                            : Color.fromARGB(255, 161, 161, 161),
+                                            : Color.fromARGB(
+                                                255, 161, 161, 161),
                                       ),
                                       SizedBox(height: 5.0),
                                       Text(
                                         'Home',
-                                        style: TextStyle(fontSize: 10.0,
-                                        color: selectedMenuItem == "home" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        style: TextStyle(
+                                          fontSize: 10.0,
+                                          color: selectedMenuItem == "home"
+                                              ? Color(0xff3FB950)
+                                              : Color.fromARGB(
+                                                  255, 161, 161, 161),
                                         ),
                                       ),
                                     ],
@@ -701,13 +709,18 @@ class _DashboardState extends State<Dashboard> {
                                         size: 24.0,
                                         color: selectedMenuItem == "stats"
                                             ? Color(0xff3FB950)
-                                            : Color.fromARGB(255, 161, 161, 161),
+                                            : Color.fromARGB(
+                                                255, 161, 161, 161),
                                       ),
                                       SizedBox(height: 5.0),
                                       Text(
                                         'Stats',
-                                        style: TextStyle(fontSize: 10.0,
-                                        color: selectedMenuItem == "stats" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        style: TextStyle(
+                                          fontSize: 10.0,
+                                          color: selectedMenuItem == "stats"
+                                              ? Color(0xff3FB950)
+                                              : Color.fromARGB(
+                                                  255, 161, 161, 161),
                                         ),
                                       ),
                                     ],
@@ -736,13 +749,18 @@ class _DashboardState extends State<Dashboard> {
                                         size: 25.0,
                                         color: selectedMenuItem == "logs"
                                             ? Color(0xff3FB950)
-                                            : Color.fromARGB(255, 161, 161, 161),
+                                            : Color.fromARGB(
+                                                255, 161, 161, 161),
                                       ),
                                       SizedBox(height: 5.0),
                                       Text(
                                         'Logs',
-                                        style: TextStyle(fontSize: 10.0,
-                                        color: selectedMenuItem == "logs" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        style: TextStyle(
+                                          fontSize: 10.0,
+                                          color: selectedMenuItem == "logs"
+                                              ? Color(0xff3FB950)
+                                              : Color.fromARGB(
+                                                  255, 161, 161, 161),
                                         ),
                                       ),
                                     ],
@@ -773,13 +791,18 @@ class _DashboardState extends State<Dashboard> {
                                         size: 24.0,
                                         color: selectedMenuItem == "settings"
                                             ? Color(0xff3FB950)
-                                            : Color.fromARGB(255, 161, 161, 161),
+                                            : Color.fromARGB(
+                                                255, 161, 161, 161),
                                       ),
                                       SizedBox(height: 5.0),
                                       Text(
                                         'Settings',
-                                        style: TextStyle(fontSize: 10.0,
-                                        color: selectedMenuItem == "settings" ? Color(0xff3FB950) : Color.fromARGB(255, 161, 161, 161),
+                                        style: TextStyle(
+                                          fontSize: 10.0,
+                                          color: selectedMenuItem == "settings"
+                                              ? Color(0xff3FB950)
+                                              : Color.fromARGB(
+                                                  255, 161, 161, 161),
                                         ),
                                       ),
                                     ],
