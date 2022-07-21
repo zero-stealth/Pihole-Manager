@@ -9,11 +9,13 @@ class InputWidget extends StatelessWidget {
     required this.namecontroller,
     required this.label,
     required this.placeholder,
+    required this.lines,
   }) : super(key: key);
 
   final TextEditingController namecontroller;
   final String label;
   final String placeholder;
+  final int lines;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class InputWidget extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8.0),
+        SizedBox(height: 12.0),
         Container(
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
@@ -48,11 +50,12 @@ class InputWidget extends StatelessWidget {
             ),
             controller: namecontroller,
             onChanged: (text) {},
-            maxLines: 1,
+            maxLines: lines,
             placeholder: placeholder,
             placeholderStyle: TextStyle(
               color: Colors.grey.withOpacity(0.2),
               fontFamily: "SFT-Regular",
+              fontSize: 14.0,
             ),
           ),
         ),

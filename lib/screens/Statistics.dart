@@ -351,10 +351,10 @@ class _StatisticsState extends State<Statistics> {
                         ),
                       ],
                     ),
-                    Icon(
-                      CupertinoIcons.chevron_forward,
-                      color: Color(0xff3FB950),
-                    ),
+                    // Icon(
+                    //   CupertinoIcons.chevron_forward,
+                    //   color: Color(0xff3FB950),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 12.0),
@@ -399,10 +399,10 @@ class _StatisticsState extends State<Statistics> {
                         ),
                       ],
                     ),
-                    Icon(
-                      CupertinoIcons.chevron_forward,
-                      color: Color(0xff3FB950),
-                    ),
+                    // Icon(
+                    //   CupertinoIcons.chevron_forward,
+                    //   color: Color(0xff3FB950),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 12.0),
@@ -447,10 +447,10 @@ class _StatisticsState extends State<Statistics> {
                         ),
                       ],
                     ),
-                    Icon(
-                      CupertinoIcons.chevron_forward,
-                      color: Colors.redAccent,
-                    ),
+                    // Icon(
+                    //   CupertinoIcons.chevron_forward,
+                    //   color: Colors.redAccent,
+                    // ),
                   ],
                 ),
                 SizedBox(height: 12.0),

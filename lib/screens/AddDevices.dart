@@ -188,18 +188,21 @@ class _AddDevicesState extends State<AddDevices> {
                 namecontroller: namecontroller,
                 label: "Device Name",
                 placeholder: "Mainframe",
+                lines: 1,
               ),
               SizedBox(height: 15.0),
               InputWidget(
                 namecontroller: ipcontroller,
                 label: "Pihole ip address",
                 placeholder: "192.168.0.1",
+                lines: 1,
               ),
               const SizedBox(height: 15.0),
               InputWidget(
                 namecontroller: tokencontroller,
                 label: "Pihole api token",
                 placeholder: "token",
+                lines: 1,
               ),
               SizedBox(height: 25.0),
               Container(
