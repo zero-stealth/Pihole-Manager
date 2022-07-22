@@ -259,7 +259,7 @@ class _SettingsState extends State<Settings> {
                   InputWidget(
                     namecontroller: messagecontroller,
                     label: "Feedback",
-                    placeholder: 'Add a peanut dispenser.',
+                    placeholder: 'Add a peanut butter dispenser.',
                     lines: 5,
                   ),
                   const SizedBox(height: 15.0),
