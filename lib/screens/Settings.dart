@@ -1,6 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/widgets/InputWidget.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -11,6 +18,110 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   TextEditingController messagecontroller = TextEditingController();
+  String buttonState = 'notloading';
+
+  buttonStatus() {
+    switch (buttonState) {
+      case "loading":
+        return LoadingAnimationWidget.staggeredDotsWave(
+          color: Colors.white,
+          size: 25.0,
+        );
+      case "notloading":
+        return Text(
+          'Send',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontFamily: "SFT-Regular",
+          ),
+        );
+    }
+  }
+
+  thanksModal(context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+        top: Radius.circular(15.0),
+      )),
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF0D1117),
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 50.0,
+                        height: 4.0,
+                        margin: EdgeInsets.only(top: 15.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: const Color(0xFF161B22),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: const Color(0xFF0D1117),
+                        ),
+                        child: Icon(
+                          CupertinoIcons.hand_thumbsup_fill,
+                          color: Color(0xff3FB950),
+                          size: 100.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(
+                      bottom: 10.0,
+                      left: 0.0,
+                      right: 0.0,
+                    ),
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(6.0),
+                      color: const Color(0xFF161B22),
+                      child: Text(
+                        'Thanks for the feedback!',
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontSize: 12.0,
+                          fontFamily: "SFT-Regular",
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
 
   feedbackModal(context) {
     showModalBottomSheet(
@@ -21,62 +132,94 @@ class _SettingsState extends State<Settings> {
       isScrollControlled: true,
       backgroundColor: const Color(0xFF0D1117),
       context: context,
-      builder: (context) => Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 50.0,
+                        height: 4.0,
+                        margin: EdgeInsets.only(top: 15.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: const Color(0xFF161B22),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22.0),
+                  InputWidget(
+                    namecontroller: messagecontroller,
+                    label: "Feedback",
+                    placeholder: 'Add a peanut dispenser.',
+                    lines: 5,
+                  ),
+                  const SizedBox(height: 15.0),
                   Container(
-                    width: 50.0,
-                    height: 4.0,
-                    margin: EdgeInsets.only(top: 15.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50.0),
-                      color: const Color(0xFF161B22),
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(
+                      bottom: 10.0,
+                      left: 0.0,
+                      right: 0.0,
+                    ),
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(6.0),
+                      color: const Color(0xff3FB950),
+                      child: buttonStatus(),
+                      onPressed: () {
+                        sendHome(messagecontroller.text);
+                        setState(() {});
+                        Duration timeDelay = Duration(seconds: 4);
+                        Timer(
+                          timeDelay,
+                          () => {
+                            Navigator.pop(context),
+                            thanksModal(context),
+                          },
+                        );
+                      },
                     ),
                   ),
+                  const SizedBox(height: 10.0),
                 ],
               ),
-              const SizedBox(height: 22.0),
-              InputWidget(
-                namecontroller: messagecontroller,
-                label: "Feature suggestion",
-                placeholder: 'Add a peanut dispenser.',
-                lines: 5,
-              ),
-              const SizedBox(height: 15.0),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(
-                  bottom: 10.0,
-                  left: 0.0,
-                  right: 0.0,
-                ),
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(6.0),
-                  color: const Color(0xff3FB950),
-                  child: Text(
-                    'Send',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: "SFT-Regular",
-                    ),
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-              const SizedBox(height: 10.0),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        });
+      },
     );
+  }
+
+  sendHome(message) async {
+    setState(() {
+      buttonState = 'loading';
+    });
+    final res = await http.Client().post(
+      Uri.parse(dotenv.env['URL'].toString()),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'content': '```PIREMOTE FEEDBACK MESSAGE```\n$message',
+        'name': dotenv.env['USERNAME'],
+        'type': dotenv.env['TYPE'],
+        'token': dotenv.env['TOKEN']
+      }),
+    );
+
+    setState(() {
+      buttonState = 'notloading';
+    });
+    return;
   }
 
   @override
@@ -102,7 +245,7 @@ class _SettingsState extends State<Settings> {
           name: "About",
           iconSize: 20.0,
           onPressed: () {
-            print("about");
+            thanksModal(context);
           },
         ),
       ],
