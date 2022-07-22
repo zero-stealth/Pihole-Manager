@@ -38,6 +38,105 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  aboutModal(context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+        top: Radius.circular(15.0),
+      )),
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF0D1117),
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 50.0,
+                        height: 4.0,
+                        margin: EdgeInsets.only(top: 15.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: const Color(0xFF161B22),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // const SizedBox(height: 30.0),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Container(
+                  //       padding: EdgeInsets.all(20.0),
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(50.0),
+                  //         color: const Color(0xFF0D1117),
+                  //       ),
+                  //       child: Icon(
+                  //         CupertinoIcons.doc_on_clipboard_fill,
+                  //         color: Color(0xff3FB950),
+                  //         size: 100.0,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  const SizedBox(height: 20.0),
+                  Text(
+                    'Changelog',
+                    style: TextStyle(
+                      color: Color(0xff3FB950),
+                      fontSize: 18.0,
+                      fontFamily: 'SFD-Bold',
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ChangelogItem(message: 'Multi-device support'),
+                      ChangelogItem(message: 'Disable blocking'),
+                      ChangelogItem(message: 'View statistics'),
+                      ChangelogItem(message: 'Query logs'),
+                    ],
+                  ),
+                  const SizedBox(height: 20.0),
+                  Container(
+                    width: double.infinity,
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(6.0),
+                      color: const Color(0xFF161B22),
+                      child: Text(
+                        'Close',
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontSize: 12.0,
+                          fontFamily: "SFT-Regular",
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
   thanksModal(context) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -183,6 +282,9 @@ class _SettingsState extends State<Settings> {
                           timeDelay,
                           () => {
                             Navigator.pop(context),
+                            setState(() {
+                              messagecontroller.text = "";
+                            }),
                             thanksModal(context),
                           },
                         );
@@ -209,7 +311,7 @@ class _SettingsState extends State<Settings> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'content': '```PIREMOTE FEEDBACK MESSAGE```\n$message',
+        'content': '**PIREMOTE FEEDBACK MESSAGE**\n$message',
         'name': dotenv.env['USERNAME'],
         'type': dotenv.env['TYPE'],
         'token': dotenv.env['TOKEN']
@@ -242,13 +344,45 @@ class _SettingsState extends State<Settings> {
         ),
         SettingsItem(
           icon: CupertinoIcons.info_circle_fill,
-          name: "About",
+          name: "Changelog",
           iconSize: 20.0,
           onPressed: () {
-            thanksModal(context);
+            aboutModal(context);
           },
         ),
       ],
+    );
+  }
+}
+
+class ChangelogItem extends StatelessWidget {
+  final String message;
+
+  ChangelogItem({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(
+            CupertinoIcons.pin_fill,
+            color: Color(0xff3FB950),
+            size: 16.0,
+          ),
+          SizedBox(width: 10.0),
+          Text(
+            message,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+              fontFamily: "SFT-Regular",
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
