@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,6 +20,115 @@ class Logs extends StatefulWidget {
 class _LogsState extends State<Logs> {
   var logs = [];
 
+  calculateStatus(type) {
+    switch (type) {
+      case '1':
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.xmark_shield_fill,
+              color: Colors.redAccent,
+              size: 15.0,
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              'Gravity list',
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 13.0,
+                fontFamily: "SFT-Regular",
+              ),
+            ),
+          ],
+        );
+
+      case '2':
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.checkmark_shield_fill,
+              color: Color(0xff3FB950),
+              size: 15.0,
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              'Upstream server',
+              style: TextStyle(
+                color: Color(0xff3FB950),
+                fontSize: 13.0,
+                fontFamily: "SFT-Regular",
+              ),
+            ),
+          ],
+        );
+
+      case '3':
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.xmark_shield_fill,
+              color: Colors.blueAccent,
+              size: 15.0,
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              'Local cache',
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontSize: 13.0,
+                fontFamily: "SFT-Regular",
+              ),
+            ),
+          ],
+        );
+
+      case '4':
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.xmark_shield_fill,
+              color: Colors.redAccent,
+              size: 15.0,
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              'Wildcard blocking',
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 13.0,
+                fontFamily: "SFT-Regular",
+              ),
+            ),
+          ],
+        );
+
+      default:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.xmark_shield_fill,
+              color: Colors.redAccent,
+              size: 15.0,
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              'Blacklist',
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 12.0,
+                fontFamily: "SFT-Regular",
+              ),
+            ),
+          ],
+        );
+    }
+  }
+
   myLogs() {
     if (logs.length > 0) {
       return MediaQuery.removePadding(
@@ -31,28 +141,50 @@ class _LogsState extends State<Logs> {
             scrollDirection: Axis.vertical,
             itemCount: logs.length,
             itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  Text(
-                    logs[index][0]['timestamp'].toString(),
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13.0,
-                      fontFamily: "SFT-Regular",
-                      fontWeight: FontWeight.w600,
+              return Container(
+                margin: EdgeInsets.only(
+                  bottom: 10.0,
+                ),
+                padding: EdgeInsets.only(
+                  bottom: 5.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 2.0,
+                      color: const Color(0xFF161B22).withOpacity(0.5),
                     ),
                   ),
-                  Text(
-                    logs[index][1]['domain'].toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13.0,
-                      fontFamily: "SFT-Regular",
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    calculateStatus(logs[index][2]['type'].toString()),
+                    SizedBox(height: 5.0),
+                    Text(
+                      '${logs[index][1]['domain'].toString()}',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.0,
+                        fontFamily: "SFT-Regular",
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8.0),
-                ],
+                    SizedBox(height: 5.0),
+                    Text(
+                      '${logs[index][3]['client'].toString()}',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                        fontFamily: "SFT-Regular",
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                  ],
+                ),
               );
             }),
       );
@@ -79,7 +211,7 @@ class _LogsState extends State<Logs> {
 
     for (var i = 0; i < devices.length; i++) {
       final res = await http.Client().get(Uri.parse(
-          'http://${devices[i]['ip']}/admin/api.php?getAllQueries=5&auth=${devices[i]['apitoken']}'));
+          'http://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         // print(DateTime.parse(pars['data'][0][0].toDate().toString()));
@@ -91,27 +223,26 @@ class _LogsState extends State<Logs> {
         // String formattedTime = DateFormat.jm().format(date);
         // print(date);
 
-        print('first: ${pars['data']}');
-
         try {
-          for (var n = 0; n < pars['data'].length; i++) {
+          for (var n = 0; n < pars['data'].length; n++) {
             var data = [
-              {'timestamp': pars['data'][n][0].toString()},
-              {'domain': pars['data'][n][2].toString()},
-              {'type': pars['data'][n][4].toString()},
-              {'client': pars['data'][n][3].toString()},
+              {'timestamp': pars['data'][n][0]},
+              {'domain': pars['data'][n][2]},
+              {'type': pars['data'][n][4]},
+              {'client': pars['data'][n][3]},
             ];
 
             setState(() {
               logs.add(data);
             });
+
+            print(pars['data'][n]);
           }
 
           print('second: $logs');
         } catch (e) {
           print(e);
         }
-
       }
     }
   }
@@ -120,7 +251,7 @@ class _LogsState extends State<Logs> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // fetchLogs();
+    fetchLogs();
   }
 
   @override
@@ -134,17 +265,17 @@ class _LogsState extends State<Logs> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.only(
-            top: 15.0,
-            bottom: 10.0,
-            left: 15.0,
-            right: 15.0,
-          ),
+          // padding: const EdgeInsets.only(
+          //   top: 15.0,
+          //   bottom: 10.0,
+          //   left: 15.0,
+          //   right: 15.0,
+          // ),
           decoration: BoxDecoration(
-            color: const Color(0xFF161B22),
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(6.0),
           ),
-          child: Text("Logs"),
+          child: myLogs(),
         ),
       ],
     );

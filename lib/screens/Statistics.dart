@@ -37,14 +37,18 @@ class _StatisticsState extends State<Statistics> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        clients[index][0]['ip'].toString(),
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                          fontFamily: "SFT-Regular",
-                          fontWeight: FontWeight.w600,
+                      Flexible(
+                        child: Container(
+                          child: Text(
+                            '${clients[index][0]['ip'].toString()}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.0,
+                              fontFamily: "SFT-Regular",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
                       Text(
