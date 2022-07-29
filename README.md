@@ -18,4 +18,8 @@ Pihole Applications for android on google playstore are either disfunctional, po
 | Allowlist and denylist management |  |
 | Homescreen widgets |  |
 
+# Donate
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=VXVZE42TBRQAS)
+
 
