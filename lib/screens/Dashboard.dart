@@ -9,6 +9,7 @@ import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/AddDevices.dart';
+import 'package:piremote/screens/Devices.dart';
 import 'package:piremote/screens/Logs.dart';
 import 'package:piremote/screens/Settings.dart';
 import 'package:piremote/screens/Statistics.dart';
@@ -260,7 +261,7 @@ class _DashboardState extends State<Dashboard> {
   pageHandler() {
     switch (selectedMenuItem) {
       case 'home':
-        return devices_list();
+        return Devices();
 
       case 'stats':
         return Statistics();
@@ -517,12 +518,12 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchQueries();
-    print('INITIATED');
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchQueries();
+  //   print('INITIATED');
+  // }
 
   @override
   Widget build(BuildContext context) {
