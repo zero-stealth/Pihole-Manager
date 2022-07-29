@@ -191,13 +191,14 @@ class _LogsState extends State<Logs> {
     } else {
       return Container(
         width: double.infinity,
+        height: MediaQuery.of(context).size.height,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             LoadingAnimationWidget.staggeredDotsWave(
               color: Color(0xff3FB950),
-              size: 20.0,
+              size: 50.0,
             )
           ],
         ),
@@ -211,7 +212,7 @@ class _LogsState extends State<Logs> {
 
     for (var i = 0; i < devices.length; i++) {
       final res = await http.Client().get(Uri.parse(
-          'http://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
+          'http://${devices[i]['ip']}/admin/api.php?getAllQueries=50&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         // print(DateTime.parse(pars['data'][0][0].toDate().toString()));
