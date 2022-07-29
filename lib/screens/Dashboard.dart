@@ -92,9 +92,9 @@ class _DashboardState extends State<Dashboard> {
           LineSplitter ls = new LineSplitter();
           List<String> lines = ls.convert(temp.text.trim());
 
-          for (var i = 0; i < lines.length; i++) {
-            if (i == 4) {
-              var ext = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
+          for (var n = 0; n < lines.length; n++) {
+            if (n == 4) {
+              var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
               setState(() {
                 var mytemp = double.parse(ext);
                 assert(mytemp is double);
@@ -102,8 +102,8 @@ class _DashboardState extends State<Dashboard> {
               });
             }
 
-            if (i == 3) {
-              var ext2 = lines[i].replaceAll(new RegExp(r'[^\.0-9]'), '');
+            if (n == 3) {
+              var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
               setState(() {
                 memory = '$ext2%';
               });
@@ -364,8 +364,8 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  devices_list() {
-    print(devices_data.length);
+  devices_list(){
+    // print(devices_data.length);
     if (devices_data.length > 0) {
       for (var i = 0; i < devices_data.length; i++) {
         return Column(
@@ -521,6 +521,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     fetchQueries();
+    print('INITIATED');
   }
 
   @override
