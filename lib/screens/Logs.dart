@@ -9,6 +9,7 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
+import 'package:piremote/screens/Query.dart';
 
 class Logs extends StatefulWidget {
   const Logs({Key? key}) : super(key: key);
@@ -141,49 +142,57 @@ class _LogsState extends State<Logs> {
             scrollDirection: Axis.vertical,
             itemCount: logs.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: EdgeInsets.only(
-                  bottom: 10.0,
-                ),
-                padding: EdgeInsets.only(
-                  bottom: 5.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 2.0,
-                      color: const Color(0xFF161B22).withOpacity(0.5),
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Query()),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.only(
+                    bottom: 10.0,
+                  ),
+                  padding: EdgeInsets.only(
+                    bottom: 5.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 2.0,
+                        color: const Color(0xFF161B22).withOpacity(0.5),
+                      ),
                     ),
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    calculateStatus(logs[index][2]['type'].toString()),
-                    SizedBox(height: 5.0),
-                    Text(
-                      '${logs[index][1]['domain'].toString()}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.0,
-                        fontFamily: "SFT-Regular",
-                        fontWeight: FontWeight.w600,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      calculateStatus(logs[index][2]['type'].toString()),
+                      SizedBox(height: 5.0),
+                      Text(
+                        '${logs[index][1]['domain'].toString()}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontFamily: "SFT-Regular",
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      '${logs[index][3]['client'].toString()}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.0,
-                        fontFamily: "SFT-Regular",
+                      SizedBox(height: 5.0),
+                      Text(
+                        '${logs[index][3]['client'].toString()}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.0,
+                          fontFamily: "SFT-Regular",
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8.0),
-                  ],
+                      SizedBox(height: 8.0),
+                    ],
+                  ),
                 ),
               );
             }),
