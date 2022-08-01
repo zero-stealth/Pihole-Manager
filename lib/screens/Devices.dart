@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/models/QueryModel.dart';
+import 'package:piremote/screens/AddDevices.dart';
 import 'package:piremote/widgets/Panels.dart';
 import 'package:piremote/widgets/Stats.dart';
 import 'dart:async';
@@ -19,7 +20,7 @@ class Devices extends StatefulWidget {
 
 class _DevicesState extends State<Devices> {
   var devices_data = [];
-    String memory = "0%";
+  String memory = "0%";
   String temperature = "0°";
 
   String totalQueries = "0";
@@ -150,7 +151,7 @@ class _DevicesState extends State<Devices> {
     );
   }
 
-  deviceSettingsModal(context, name, ip, token) {
+  deviceSettingsModal(context, id, name, ip, token) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -246,7 +247,14 @@ class _DevicesState extends State<Devices> {
                       fontFamily: "SFT-Regular",
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    final dbHelper = DatabaseHelper.instance;
+                    await dbHelper.deleteTable('devices');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddDevices()),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -351,8 +359,12 @@ class _DevicesState extends State<Devices> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(50.0),
                       onTap: () {
-                        deviceSettingsModal(context, devices_data[i]['name'],
-                            devices_data[i]['ip'], devices_data[i]['apitoken']);
+                        deviceSettingsModal(
+                            context,
+                            devices_data[i]['name'],
+                            devices_data[i]['_id'],
+                            devices_data[i]['ip'],
+                            devices_data[i]['apitoken']);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
