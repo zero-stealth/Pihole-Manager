@@ -20,6 +20,7 @@ class Logs extends StatefulWidget {
 
 class _LogsState extends State<Logs> {
   var logs = [];
+  var status = "";
 
   calculateStatus(type) {
     switch (type) {
@@ -146,7 +147,15 @@ class _LogsState extends State<Logs> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Query()),
+                    MaterialPageRoute(
+                      builder: (context) => Query(
+                        domain: "${logs[index][2]['domain'].toString()}",
+                        client: "${logs[index][4]['client'].toString()}",
+                        type: "${logs[index][1]['requestType'].toString()}",
+                        timestamp: "${logs[index][0]['timestamp'].toString()}",
+                        status: "${logs[index][3]['type'].toString()}",
+                      ),
+                    ),
                   );
                 },
                 child: Container(
@@ -168,10 +177,10 @@ class _LogsState extends State<Logs> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      calculateStatus(logs[index][2]['type'].toString()),
+                      calculateStatus(logs[index][3]['type'].toString()),
                       SizedBox(height: 5.0),
                       Text(
-                        '${logs[index][1]['domain'].toString()}',
+                        '${logs[index][2]['domain'].toString()}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
@@ -182,7 +191,7 @@ class _LogsState extends State<Logs> {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        '${logs[index][3]['client'].toString()}',
+                        '${logs[index][4]['client'].toString()}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
@@ -237,6 +246,7 @@ class _LogsState extends State<Logs> {
           for (var n = 0; n < pars['data'].length; n++) {
             var data = [
               {'timestamp': pars['data'][n][0]},
+              {'requestType': pars['data'][n][1]},
               {'domain': pars['data'][n][2]},
               {'type': pars['data'][n][4]},
               {'client': pars['data'][n][3]},

@@ -1,14 +1,271 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/database/database_helper.dart';
 
 class Query extends StatefulWidget {
-  const Query({Key? key}) : super(key: key);
+  final String status;
+  final String domain;
+  final String client;
+  final String type;
+  final String timestamp;
+
+  Query({
+    required this.status,
+    required this.domain,
+    required this.client,
+    required this.type,
+    required this.timestamp,
+  });
 
   @override
   State<Query> createState() => _QueryState();
 }
 
 class _QueryState extends State<Query> {
+  checkStatus(type) {
+    switch (type) {
+      case '1':
+        return QueryItem(
+          title: "Status",
+          domain: "Blocked",
+          icon: CupertinoIcons.xmark_shield_fill,
+          color: Colors.redAccent,
+          textcolor: Colors.redAccent,
+          titlecolor: Colors.redAccent,
+        );
+
+      case '2':
+        return QueryItem(
+          title: "Status",
+          domain: "Allowed",
+          icon: CupertinoIcons.xmark_shield_fill,
+          color: Color(0xff3FB950),
+          textcolor: Color(0xff3FB950),
+          titlecolor: Color(0xff3FB950),
+        );
+
+      case '3':
+        return QueryItem(
+          title: "Status",
+          domain: "Allowed",
+          icon: CupertinoIcons.xmark_shield_fill,
+          color: Color(0xff3FB950),
+          textcolor: Color(0xff3FB950),
+          titlecolor: Color(0xff3FB950),
+        );
+
+      case '4':
+        return QueryItem(
+          title: "Status",
+          domain: "Allowed",
+          icon: CupertinoIcons.xmark_shield_fill,
+          color: Color(0xff3FB950),
+          textcolor: Color(0xff3FB950),
+          titlecolor: Color(0xff3FB950),
+        );
+
+      default:
+        return QueryItem(
+          title: "Status",
+          domain: "Blocked",
+          icon: CupertinoIcons.xmark_shield_fill,
+          color: Colors.redAccent,
+          textcolor: Colors.redAccent,
+          titlecolor: Colors.redAccent,
+        );
+    }
+  }
+
+  var progress = "inactive";
+
+  statusReport() {
+    if (progress == "loading") {
+      return progressBtn();
+    }
+
+    if (progress == "whitelisted") {
+      return CupertinoButton(
+        borderRadius: BorderRadius.circular(6.0),
+        color: const Color(0xFF161B22),
+        child: Text(
+          'Whitelisted',
+          style: TextStyle(
+            color: Color(0xff3FB950),
+            fontSize: 13.0,
+            fontFamily: "SFT-Regular",
+          ),
+        ),
+        onPressed: () {},
+      );
+    }
+
+    if (progress == "blacklisted") {
+      return CupertinoButton(
+        borderRadius: BorderRadius.circular(6.0),
+        color: const Color(0xFF161B22),
+        child: Text(
+          'Blacklisted',
+          style: TextStyle(
+            color: Colors.redAccent,
+            fontSize: 13.0,
+            fontFamily: "SFT-Regular",
+          ),
+        ),
+        onPressed: () {},
+      );
+    }
+  }
+
+  progressBtn() {
+    return CupertinoButton(
+      borderRadius: BorderRadius.circular(6.0),
+      color: Color(0xff3FB950),
+      child: LoadingAnimationWidget.staggeredDotsWave(
+        color: Colors.white,
+        size: 25.0,
+      ),
+      onPressed: () {},
+    );
+  }
+
+  changeBtn(type, domain) {
+    switch (type) {
+      case '1':
+        return CupertinoButton(
+          borderRadius: BorderRadius.circular(6.0),
+          color: Color(0xff3FB950),
+          child: Text(
+            'Add to whitelist',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.0,
+              fontFamily: "SFT-Regular",
+            ),
+          ),
+          onPressed: () {
+            addToWhitelist(domain);
+          },
+        );
+
+      case '2':
+        return CupertinoButton(
+          borderRadius: BorderRadius.circular(6.0),
+          color: Colors.redAccent,
+          child: Text(
+            'Add to blacklist',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.0,
+              fontFamily: "SFT-Regular",
+            ),
+          ),
+          onPressed: () {
+            addToBlacklist(domain);
+          },
+        );
+
+      case '3':
+        return CupertinoButton(
+          borderRadius: BorderRadius.circular(6.0),
+          color: Colors.redAccent,
+          child: Text(
+            'Add to blacklist',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.0,
+              fontFamily: "SFT-Regular",
+            ),
+          ),
+          onPressed: () {
+            addToBlacklist(domain);
+          },
+        );
+
+      case '4':
+        return CupertinoButton(
+          borderRadius: BorderRadius.circular(6.0),
+          color: Color(0xff3FB950),
+          child: Text(
+            'Add to whitelist',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.0,
+              fontFamily: "SFT-Regular",
+            ),
+          ),
+          onPressed: () {
+            addToWhitelist(domain);
+          },
+        );
+
+      default:
+        return CupertinoButton(
+          borderRadius: BorderRadius.circular(6.0),
+          color: Color(0xff3FB950),
+          child: Text(
+            'Add to whitelist',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.0,
+              fontFamily: "SFT-Regular",
+            ),
+          ),
+          onPressed: () {
+            addToWhitelist(domain);
+          },
+        );
+    }
+  }
+
+  addToBlacklist(domain) async {
+    setState(() {
+      progress = 'loading';
+    });
+    final dbHelper = DatabaseHelper.instance;
+    var devices = await dbHelper.queryAllRows('devices');
+    var ip = devices[0]['ip'];
+    var url = 'http://$ip';
+    var token = devices[0]['apitoken'];
+    final response = await http.get(
+        Uri.parse('$url/admin/api.php?list=black&add=$domain&auth=$token'));
+
+    if (response.statusCode == 200) {
+      print('ADDED TO BLACKLIST');
+      setState(() {
+        progress = 'blacklisted';
+      });
+    }
+  }
+
+  addToWhitelist(domain) async {
+    setState(() {
+      progress = 'loading';
+    });
+    final dbHelper = DatabaseHelper.instance;
+    var devices = await dbHelper.queryAllRows('devices');
+    var ip = devices[0]['ip'];
+    var url = 'http://$ip';
+    var token = devices[0]['apitoken'];
+    final response = await http.get(
+        Uri.parse('$url/admin/api.php?list=white&add=$domain&auth=$token'));
+
+    if (response.statusCode == 200) {
+      print('ADDED TO WHITELIST');
+      setState(() {
+        progress = 'whitelisted';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +281,7 @@ class _QueryState extends State<Query> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    InkWell(
-                      radius: 50.0,
+                    GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
                       },
@@ -48,41 +304,6 @@ class _QueryState extends State<Query> {
                 ),
                 SizedBox(height: 25.0),
                 Container(
-                  padding: EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF161B22),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '09:59:00',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.0,
-                              fontFamily: "SFT-Regular",
-                            ),
-                          ),
-                          Text(
-                            '30 July 2022',
-                            style: TextStyle(
-                              color: Colors.grey.withOpacity(0.5),
-                              fontSize: 14.0,
-                              fontFamily: "SFT-Regular",
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
                   width: double.infinity,
                   child: Text(
                     'Request',
@@ -94,7 +315,7 @@ class _QueryState extends State<Query> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 15.0),
                 Container(
                   padding: EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
@@ -103,14 +324,7 @@ class _QueryState extends State<Query> {
                   ),
                   child: Column(
                     children: [
-                      QueryItem(
-                        title: 'Status',
-                        domain: 'blocked',
-                        icon: CupertinoIcons.xmark_shield_fill,
-                        color: Colors.redAccent,
-                        textcolor: Colors.redAccent,
-                        titlecolor: Colors.redAccent,
-                      ),
+                      checkStatus(widget.status),
                       SizedBox(height: 10.0),
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
@@ -119,7 +333,7 @@ class _QueryState extends State<Query> {
                       SizedBox(height: 10.0),
                       QueryItem(
                         title: 'Domain',
-                        domain: 'torn.com',
+                        domain: widget.domain,
                         icon: CupertinoIcons.globe,
                         color: Color(0xff3FB950),
                         textcolor: Colors.white.withOpacity(0.5),
@@ -133,7 +347,7 @@ class _QueryState extends State<Query> {
                       SizedBox(height: 10.0),
                       QueryItem(
                         title: 'Client',
-                        domain: 'Windows Desktop',
+                        domain: widget.client,
                         icon: CupertinoIcons.device_laptop,
                         color: Color(0xff3FB950),
                         textcolor: Colors.white.withOpacity(0.5),
@@ -147,7 +361,7 @@ class _QueryState extends State<Query> {
                       SizedBox(height: 10.0),
                       QueryItem(
                         title: 'Type',
-                        domain: 'A',
+                        domain: widget.type,
                         icon: CupertinoIcons.wifi,
                         color: Color(0xff3FB950),
                         textcolor: Colors.white.withOpacity(0.5),
@@ -166,19 +380,9 @@ class _QueryState extends State<Query> {
                     left: 0.0,
                     right: 0.0,
                   ),
-                  child: CupertinoButton(
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: const Color(0xff3FB950),
-                    child: Text(
-                      'Add to whitelist',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.0,
-                        fontFamily: "SFT-Regular",
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
+                  child: progress == "inactive"
+                      ? changeBtn(widget.status, widget.domain)
+                      : statusReport(),
                 ),
               ],
             ),
