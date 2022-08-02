@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/screens/Blocked.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -334,6 +335,17 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SettingsItem(
+          icon: CupertinoIcons.xmark_shield_fill,
+          name: "Blocked services",
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Blocked()),
+            );
+          },
+        ),
         SettingsItem(
           icon: CupertinoIcons.chat_bubble_fill,
           name: "Feature suggestion",
