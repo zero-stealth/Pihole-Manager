@@ -28,11 +28,13 @@ class _BlockedState extends State<Blocked> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.all(2.0),
+                    onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Icon(
+                    icon: Icon(
                       CupertinoIcons.chevron_back,
                       size: 25.0,
                       color: Colors.white,
@@ -153,17 +155,17 @@ class ServiceItem extends StatelessWidget {
   });
 
   myBorder(s) {
-    if(s == true){
+    if (s == true) {
       return Column(
-      children: [
-        SizedBox(height: 10.0),
-        Divider(
-          color: Colors.grey.withOpacity(0.04),
-          thickness: 2.0,
-        ),
-        SizedBox(height: 10.0),
-      ],
-    );
+        children: [
+          SizedBox(height: 10.0),
+          Divider(
+            color: Colors.grey.withOpacity(0.04),
+            thickness: 2.0,
+          ),
+          SizedBox(height: 10.0),
+        ],
+      );
     } else {
       return Container();
     }

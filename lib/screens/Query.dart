@@ -281,11 +281,13 @@ class _QueryState extends State<Query> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () {
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.all(2.0),
+                      onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      icon: Icon(
                         CupertinoIcons.chevron_back,
                         size: 25.0,
                         color: Colors.white,
@@ -302,20 +304,9 @@ class _QueryState extends State<Query> {
                     ),
                   ],
                 ),
-                SizedBox(height: 25.0),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    'Request',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.grey.withOpacity(0.5),
-                      fontSize: 14.0,
-                      fontFamily: "SFT-Regular",
-                    ),
-                  ),
-                ),
-                SizedBox(height: 15.0),
+                // SizedBox(height: 20.0),
+                
+                SizedBox(height: 20.0),
                 Container(
                   padding: EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
@@ -437,7 +428,7 @@ class QueryItem extends StatelessWidget {
                 ),
                 SizedBox(height: 4.0),
                 SizedBox(
-                  width: 200,
+                  width: 250,
                   child: Text(
                     domain,
                     overflow: TextOverflow.clip,
