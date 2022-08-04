@@ -333,36 +333,53 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SettingsItem(
-          icon: CupertinoIcons.xmark_shield_fill,
-          name: "Blocked services",
-          iconSize: 20.0,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Blocked()),
-            );
-          },
-        ),
-        SettingsItem(
-          icon: CupertinoIcons.chat_bubble_fill,
-          name: "Feature suggestion",
-          iconSize: 18.0,
-          onPressed: () {
-            feedbackModal(context);
-          },
-        ),
-        SettingsItem(
-          icon: CupertinoIcons.info_circle_fill,
-          name: "Changelog",
-          iconSize: 20.0,
-          onPressed: () {
-            aboutModal(context);
-          },
-        ),
-      ],
+    return Container(
+      padding: EdgeInsets.only(
+        top: 16.0,
+        bottom: 16.0,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161B22),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: double.infinity,
+      child: Column(
+        children: [
+          SettingsItem(
+            icon: CupertinoIcons.xmark_shield_fill,
+            name: "Blocked services",
+            subtitle: "Manage popular services",
+            iconSize: 22.0,
+            borderStatus: true,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Blocked()),
+              );
+            },
+          ),
+          SettingsItem(
+            icon: CupertinoIcons.chat_bubble_fill,
+            name: "Feature suggestion",
+            subtitle: "Your feature ideas",
+            iconSize: 20.0,
+            borderStatus: true,
+            onPressed: () {
+              feedbackModal(context);
+            },
+          ),
+          SettingsItem(
+            icon: CupertinoIcons.info_circle_fill,
+            name: "Changelog",
+            subtitle: "Latest changes",
+            borderStatus: false,
+            iconSize: 22.0,
+            onPressed: () {
+              aboutModal(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -403,58 +420,93 @@ class SettingsItem extends StatelessWidget {
   final String name;
   final IconData icon;
   final double iconSize;
+  final bool borderStatus;
   final Function onPressed;
+  final String subtitle;
 
   SettingsItem({
     required this.name,
     required this.icon,
     required this.iconSize,
     required this.onPressed,
+    required this.borderStatus,
+    required this.subtitle,
   });
+
+  myBorder(s) {
+    if (s == true) {
+      return Column(
+        children: [
+          SizedBox(height: 10.0),
+          Divider(
+            color: Colors.grey.withOpacity(0.04),
+            thickness: 2.0,
+          ),
+          SizedBox(height: 10.0),
+        ],
+      );
+    } else {
+      return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15.0),
-      child: InkWell(
-        enableFeedback: true,
-        borderRadius: BorderRadius.circular(6.0),
-        onTap: () {
-          onPressed();
-        },
-        child: Container(
-          padding: const EdgeInsets.only(
-            top: 15.0,
-            bottom: 15.0,
-            left: 15.0,
-            right: 15.0,
-          ),
-          decoration: BoxDecoration(
-            color: const Color(0xFF161B22),
-            borderRadius: BorderRadius.circular(6.0),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: iconSize,
-                color: Colors.white,
-              ),
-              SizedBox(width: 15.0),
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontFamily: "SFT-Regular",
-                  color: Colors.white,
+    return Column(
+      children: [
+        InkWell(
+          enableFeedback: true,
+          borderRadius: BorderRadius.circular(6.0),
+          onTap: () {
+            onPressed();
+          },
+          child: Container(
+            padding: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: iconSize,
+                  color: Color(0xff3FB950),
                 ),
-              ),
-            ],
+                SizedBox(width: 15.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontFamily: "SFT-Regular",
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 12.0,
+                        fontFamily: "SFT-Regular",
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        myBorder(borderStatus),
+      ],
     );
   }
 }

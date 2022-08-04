@@ -363,6 +363,26 @@ class _StatisticsState extends State<Statistics> {
                 ),
                 SizedBox(height: 12.0),
                 myclients(),
+                // manage btn
+                // SizedBox(height: 10.0),
+                // CupertinoButton(
+                //   padding: const EdgeInsets.all(10.0),
+                //   color: const Color(0xFF0D1117),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Text(
+                //         'Manage clients',
+                //         style: TextStyle(
+                //           color: Color(0xff3FB950),
+                //           fontSize: 14.0,
+                //           fontFamily: 'SFT-Regular',
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                //   onPressed: () {},
+                // ),
               ],
             ),
           ),
