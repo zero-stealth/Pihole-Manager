@@ -127,21 +127,14 @@ class _DevicesState extends State<Devices> {
     var url = 'http://$ip';
     final response =
         await http.get(Uri.parse('$url/admin/api.php?enable&auth=$token'));
-
-    if (response.statusCode == 200) {
-      print('ENABLED BLOCKING SUCCESSFULLY');
-      refreshScreen();
-    }
   }
 
   disableBlocking(ip, token, seconds) async {
     var url = 'http://$ip';
     final response = await http
         .get(Uri.parse('$url/admin/api.php?disable=$seconds&auth=$token'));
-
-    if (response.statusCode == 200) {
-      refreshScreen();
-    }
+    Navigator.pop(context);
+    setState(() {});
   }
 
   refreshScreen() {

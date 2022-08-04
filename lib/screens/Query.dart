@@ -436,12 +436,18 @@ class QueryItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.0),
-                Text(
-                  domain,
-                  style: TextStyle(
-                    color: textcolor,
-                    fontSize: 13.0,
-                    fontFamily: "SFT-Regular",
+                SizedBox(
+                  width: 200,
+                  child: Text(
+                    domain,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      color: textcolor,
+                      fontSize: 13.0,
+                      fontFamily: "SFT-Regular",
+                    ),
+                    softWrap: true,
+                    maxLines: 2,
                   ),
                 ),
               ],

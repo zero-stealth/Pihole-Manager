@@ -35,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
 
   var selectedMenuItem = "home";
   var timesPressed = 0;
+  var _parentVariable = false;
 
   final Uri _url = Uri.parse('https://youtube.com/watch?v=xvFZjo5PgG0');
 
@@ -42,6 +43,13 @@ class _DashboardState extends State<Dashboard> {
     if(!await launchUrl(_url)){
       throw 'Could not launch $_url';
     }
+  }
+
+  refreshScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => super.widget),
+    );
   }
 
   pageHandler() {
