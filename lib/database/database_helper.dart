@@ -50,6 +50,15 @@ class DatabaseHelper {
           apitoken TEXT NOT NULL
         )
         ''');
+
+    await db.execute('''
+        CREATE TABLE clients (
+          _id INTEGER PRIMARY KEY,
+          name TEXT NOT NULL,
+          ip TEXT NOT NULL,
+          requests TEXT NOT NULL
+        )
+        ''');
   }
 
   Future<int> insert(Map<String, dynamic> row, mytable) async {
