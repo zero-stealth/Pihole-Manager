@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/screens/Blocked.dart';
+import 'package:piremote/screens/Clients.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -345,6 +346,19 @@ class _SettingsState extends State<Settings> {
       width: double.infinity,
       child: Column(
         children: [
+          SettingsItem(
+            icon: CupertinoIcons.device_laptop,
+            name: "Manage clients",
+            subtitle: "Manage pihole users",
+            iconSize: 22.0,
+            borderStatus: true,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Clients()),
+              );
+            },
+          ),
           SettingsItem(
             icon: CupertinoIcons.xmark_shield_fill,
             name: "Blocked services",

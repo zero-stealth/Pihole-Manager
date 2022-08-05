@@ -36,11 +36,12 @@ class _DashboardState extends State<Dashboard> {
   var selectedMenuItem = "home";
   var timesPressed = 0;
   var _parentVariable = false;
+  var clients = [];
 
   final Uri _url = Uri.parse('https://youtube.com/watch?v=xvFZjo5PgG0');
 
   Future<void> _launchUrl() async {
-    if(!await launchUrl(_url)){
+    if (!await launchUrl(_url)) {
       throw 'Could not launch $_url';
     }
   }
@@ -99,6 +100,71 @@ class _DashboardState extends State<Dashboard> {
   //   fetchQueries();
   //   print('INITIATED');
   // }
+
+  setClients() async {
+    final dbHelper = DatabaseHelper.instance;
+    var devices = await dbHelper.queryAllRows('devices');
+
+    for (var i = 0; i < devices.length; i++) {
+      final res = await http.Client().get(Uri.parse(
+          'http://${devices[i]['ip']}/admin/api.php?topClients&auth=${devices[i]['apitoken']}'));
+      if (res.statusCode == 200) {
+        var pars = jsonDecode(res.body);
+        // print('CLIENTS: $pars');
+        // print(pars['top_sources'].keys.elementAt(2));
+
+        // print(pars['top_sources'].length);
+
+        for (var i = 0; i < pars['top_sources'].length; i++) {
+          var key = pars['top_sources'].keys.elementAt(i);
+          var value = pars['top_sources']['$key'];
+          var data = [
+            {'ip': key},
+            {'requests': value}
+          ];
+
+          await checkClient(key, value);
+        }
+      }
+    }
+  }
+
+  // cheeck of client already exists in the db
+  // if yes do nothing
+  // if not add them
+  checkClient(ip, requests) async {
+    try {
+      final dbHelper = DatabaseHelper.instance;
+      var myclients = await dbHelper.queryAllRows('clients');
+
+      for (var i = 0; i < myclients.length; i++) {
+        if (ip == myclients[i]['ip']) {
+          print("[-] $ip already exists in db");
+          return;
+        }
+      }
+
+      Map<String, dynamic> row = {
+        "name": "none",
+        "ip": ip,
+        "requests": requests
+      };
+
+      await dbHelper.insert(row, "clients");
+      print("[+] Added $ip to clients db");
+      return;
+    } catch (e) {
+      print('ERROR');
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setClients();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +299,7 @@ class _DashboardState extends State<Dashboard> {
                                     timesPressed = timesPressed + 1;
                                   });
 
-                                  if(timesPressed >= 10){
+                                  if (timesPressed >= 10) {
                                     setState(() {
                                       timesPressed = 0;
                                     });
