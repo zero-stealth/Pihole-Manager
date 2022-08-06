@@ -6,6 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:piremote/functions/Functions.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _StatisticsState extends State<Statistics> {
                       Flexible(
                         child: Container(
                           child: Text(
-                            '${clients[index][0]['ip'].toString()}',
+                            clients[index]['name'] != "none" ? '${clients[index]['name'].toString()}' : '${clients[index]['ip'].toString()}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.white,
@@ -52,7 +53,7 @@ class _StatisticsState extends State<Statistics> {
                         ),
                       ),
                       Text(
-                        clients[index][1]['requests'].toString(),
+                        clients[index]['requests'].toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 13.0,
@@ -259,34 +260,11 @@ class _StatisticsState extends State<Statistics> {
 
   fetchTopClients() async {
     final dbHelper = DatabaseHelper.instance;
-    var devices = await dbHelper.queryAllRows('devices');
+    var myclients = await dbHelper.queryAllRows('clients');
 
-    for (var i = 0; i < devices.length; i++) {
-      final res = await http.Client().get(Uri.parse(
-          'http://${devices[i]['ip']}/admin/api.php?topClients&auth=${devices[i]['apitoken']}'));
-      if (res.statusCode == 200) {
-        var pars = jsonDecode(res.body);
-        // print('CLIENTS: $pars');
-        // print(pars['top_sources'].keys.elementAt(2));
-
-        // print(pars['top_sources'].length);
-
-        for (var i = 0; i < pars['top_sources'].length; i++) {
-          var key = pars['top_sources'].keys.elementAt(i);
-          var value = pars['top_sources']['$key'];
-          var data = [
-            {'ip': key},
-            {'requests': value}
-          ];
-
-          setState(() {
-            clients.add(data);
-          });
-        }
-      } else {
-        return;
-      }
-    }
+    setState(() {
+      clients = myclients;
+    });
   }
 
   refresh() {
@@ -299,6 +277,7 @@ class _StatisticsState extends State<Statistics> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setClients();
     fetchTopClients();
     fetchTopQueries();
   }

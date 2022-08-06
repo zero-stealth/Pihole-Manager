@@ -9,6 +9,7 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
+import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Query.dart';
 
 class Logs extends StatefulWidget {
@@ -271,6 +272,7 @@ class _LogsState extends State<Logs> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setClients();
     fetchLogs();
   }
 
