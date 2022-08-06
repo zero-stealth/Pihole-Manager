@@ -277,19 +277,24 @@ class _SettingsState extends State<Settings> {
                       color: const Color(0xff3FB950),
                       child: buttonStatus(),
                       onPressed: () {
-                        sendHome(messagecontroller.text);
-                        setState(() {});
-                        Duration timeDelay = Duration(seconds: 4);
-                        Timer(
-                          timeDelay,
-                          () => {
-                            Navigator.pop(context),
-                            setState(() {
-                              messagecontroller.text = "";
-                            }),
-                            thanksModal(context),
-                          },
-                        );
+                        var mymessage = messagecontroller.text;
+                        if (mymessage.length == 0) {
+                          print("DO NOTHING");
+                        } else {
+                          sendHome(messagecontroller.text);
+                          setState(() {});
+                          Duration timeDelay = Duration(seconds: 4);
+                          Timer(
+                            timeDelay,
+                            () => {
+                              Navigator.pop(context),
+                              setState(() {
+                                messagecontroller.text = "";
+                              }),
+                              thanksModal(context),
+                            },
+                          );
+                        }
                       },
                     ),
                   ),

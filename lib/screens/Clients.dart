@@ -130,27 +130,20 @@ class _ClientsState extends State<Clients> {
                       color: const Color(0xff3FB950),
                       child: buttonStatus(),
                       onPressed: () async {
-                        Map<String, dynamic> row = {
-                          "_id": id,
-                          "name": namecontroller.text
-                        };
-                        await dbHelper.update(row, "clients");
-                        Navigator.pop(context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => super.widget),
-                        // );
-                        setState((){
-                          fetchClients();
-                        });
-
-                        // Duration timeDelay = Duration(seconds: 4);
-                        // Timer(
-                        //   timeDelay,
-                        //   () => {
-                            
-                        //   },
-                        // );
+                        var myname = namecontroller.text;
+                        if (myname.length == 0) {
+                          print("DO NOTHING");
+                        } else {
+                          Map<String, dynamic> row = {
+                            "_id": id,
+                            "name": namecontroller.text
+                          };
+                          await dbHelper.update(row, "clients");
+                          Navigator.pop(context);
+                          setState(() {
+                            fetchClients();
+                          });
+                        }
                       },
                     ),
                   ),
