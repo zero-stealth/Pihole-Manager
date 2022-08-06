@@ -9,7 +9,6 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
-import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Query.dart';
 
 class Logs extends StatefulWidget {
@@ -245,20 +244,22 @@ class _LogsState extends State<Logs> {
 
         try {
           for (var n = 0; n < pars['data'].length; n++) {
-            var clientName = await findClientName(pars['data'][n][3]);
-
             var data = [
               {'timestamp': pars['data'][n][0]},
               {'requestType': pars['data'][n][1]},
               {'domain': pars['data'][n][2]},
               {'type': pars['data'][n][4]},
-              {'client': clientName},
+              {'client': pars['data'][n][3]},
             ];
 
             setState(() {
               logs.add(data);
             });
+
+            print(pars['data'][n]);
           }
+
+          print('second: $logs');
         } catch (e) {
           print(e);
         }
@@ -270,7 +271,6 @@ class _LogsState extends State<Logs> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setClients();
     fetchLogs();
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Blocked.dart';
 import 'package:piremote/screens/Clients.dart';
 import 'package:piremote/widgets/InputWidget.dart';
@@ -335,6 +336,12 @@ class _SettingsState extends State<Settings> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

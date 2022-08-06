@@ -4,6 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:piremote/database/database_helper.dart';
+import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/models/QueryModel.dart';
 import 'package:piremote/screens/AddDevices.dart';
 import 'package:piremote/widgets/Panels.dart';
@@ -470,7 +471,6 @@ class _DevicesState extends State<Devices> {
   void initState() {
     super.initState();
     fetchQueries();
-    print('INITIATED');
   }
 
   @override
