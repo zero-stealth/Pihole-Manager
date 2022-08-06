@@ -245,22 +245,20 @@ class _LogsState extends State<Logs> {
 
         try {
           for (var n = 0; n < pars['data'].length; n++) {
+            var clientName = await findClientName(pars['data'][n][3]);
+
             var data = [
               {'timestamp': pars['data'][n][0]},
               {'requestType': pars['data'][n][1]},
               {'domain': pars['data'][n][2]},
               {'type': pars['data'][n][4]},
-              {'client': pars['data'][n][3]},
+              {'client': clientName},
             ];
 
             setState(() {
               logs.add(data);
             });
-
-            print(pars['data'][n]);
           }
-
-          print('second: $logs');
         } catch (e) {
           print(e);
         }
