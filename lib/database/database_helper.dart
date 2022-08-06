@@ -70,6 +70,22 @@ class DatabaseHelper {
           type TEXT NOT NULL
         )
         ''');
+
+    await db.execute('''
+        CREATE TABLE topQueries (
+          _id INTEGER PRIMARY KEY,
+          url TEXT NOT NULL,
+          requests TEXT NOT NULL
+        )
+        ''');
+
+    await db.execute('''
+        CREATE TABLE topAds (
+          _id INTEGER PRIMARY KEY,
+          url TEXT NOT NULL,
+          requests TEXT NOT NULL
+        )
+        ''');
   }
 
   Future<int> insert(Map<String, dynamic> row, mytable) async {
