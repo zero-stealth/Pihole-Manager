@@ -59,6 +59,17 @@ class DatabaseHelper {
           requests TEXT NOT NULL
         )
         ''');
+
+    await db.execute('''
+        CREATE TABLE logs (
+          _id INTEGER PRIMARY KEY,
+          client TEXT NOT NULL,
+          timestamp TEXT NOT NULL,
+          requestType TEXT NOT NULL,
+          domain TEXT NOT NULL,
+          type TEXT NOT NULL
+        )
+        ''');
   }
 
   Future<int> insert(Map<String, dynamic> row, mytable) async {
