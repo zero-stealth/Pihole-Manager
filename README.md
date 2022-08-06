@@ -16,6 +16,7 @@ Pihole Applications for android on google playstore are either disfunctional, po
 | Query log | :white_check_mark: |
 | Popular services blocking |  |
 | Allowlist and denylist management | :white_check_mark: |
+| Manage clients | :white_check_mark: |
 
 # Donate
 
