@@ -141,6 +141,7 @@ class _ClientsState extends State<Clients> {
                           await dbHelper.update(row, "clients");
                           Navigator.pop(context);
                           setState(() {
+                            namecontroller.text = "";
                             fetchClients();
                           });
                         }
