@@ -8,6 +8,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Blocked.dart';
 import 'package:piremote/screens/Clients.dart';
+import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -22,6 +23,84 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   TextEditingController messagecontroller = TextEditingController();
   String buttonState = 'notloading';
+  var ipStatus = true;
+
+  all() {
+    if (ipStatus == false) {
+      return Disconnected(context: context);
+    }
+
+    return Container(
+      padding: EdgeInsets.only(
+        top: 16.0,
+        bottom: 16.0,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161B22),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: double.infinity,
+      child: Column(
+        children: [
+          SettingsItem(
+            icon: CupertinoIcons.device_laptop,
+            name: "Manage clients",
+            subtitle: "Manage pihole users",
+            iconSize: 22.0,
+            borderStatus: true,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Clients()),
+              );
+            },
+          ),
+          SettingsItem(
+            icon: CupertinoIcons.xmark_shield_fill,
+            name: "Blocked services",
+            subtitle: "Manage popular services",
+            iconSize: 22.0,
+            borderStatus: true,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Blocked()),
+              );
+            },
+          ),
+          SettingsItem(
+            icon: CupertinoIcons.chat_bubble_fill,
+            name: "Feature suggestion",
+            subtitle: "Your feature ideas",
+            iconSize: 20.0,
+            borderStatus: true,
+            onPressed: () {
+              feedbackModal(context);
+            },
+          ),
+          SettingsItem(
+            icon: CupertinoIcons.info_circle_fill,
+            name: "Changelog",
+            subtitle: "Latest changes",
+            borderStatus: false,
+            iconSize: 22.0,
+            onPressed: () {
+              aboutModal(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  check() async {
+    var status = await test_ip();
+    if (status == false) {
+      return setState(() {
+        ipStatus = false;
+      });
+    }
+  }
 
   buttonStatus() {
     switch (buttonState) {
@@ -342,71 +421,12 @@ class _SettingsState extends State<Settings> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    check();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: 16.0,
-        bottom: 16.0,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      width: double.infinity,
-      child: Column(
-        children: [
-          SettingsItem(
-            icon: CupertinoIcons.device_laptop,
-            name: "Manage clients",
-            subtitle: "Manage pihole users",
-            iconSize: 22.0,
-            borderStatus: true,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Clients()),
-              );
-            },
-          ),
-          SettingsItem(
-            icon: CupertinoIcons.xmark_shield_fill,
-            name: "Blocked services",
-            subtitle: "Manage popular services",
-            iconSize: 22.0,
-            borderStatus: true,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Blocked()),
-              );
-            },
-          ),
-          SettingsItem(
-            icon: CupertinoIcons.chat_bubble_fill,
-            name: "Feature suggestion",
-            subtitle: "Your feature ideas",
-            iconSize: 20.0,
-            borderStatus: true,
-            onPressed: () {
-              feedbackModal(context);
-            },
-          ),
-          SettingsItem(
-            icon: CupertinoIcons.info_circle_fill,
-            name: "Changelog",
-            subtitle: "Latest changes",
-            borderStatus: false,
-            iconSize: 22.0,
-            onPressed: () {
-              aboutModal(context);
-            },
-          ),
-        ],
-      ),
-    );
+    return all();
   }
 }
 

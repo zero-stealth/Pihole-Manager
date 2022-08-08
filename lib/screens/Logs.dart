@@ -9,7 +9,9 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
+import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Query.dart';
+import 'package:piremote/widgets/Disconnected.dart';
 
 class Logs extends StatefulWidget {
   const Logs({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _LogsState extends State<Logs> {
   var logs = [];
   var status = "";
   var clients = [];
+  var ipStatus = true;
 
   getDeviceNames() async {
     final dbHelper = DatabaseHelper.instance;
@@ -237,6 +240,10 @@ class _LogsState extends State<Logs> {
   }
 
   myLogs() {
+    if (ipStatus == false) {
+      return Disconnected(context: context);
+    }
+
     if (logs.length > 0) {
       return MediaQuery.removePadding(
         context: context,
@@ -331,6 +338,13 @@ class _LogsState extends State<Logs> {
   }
 
   fetchLogs() async {
+    var status = await test_ip();
+    if (status == false) {
+      return setState(() {
+        ipStatus = false;
+      });
+    }
+
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
 

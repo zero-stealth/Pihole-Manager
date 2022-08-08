@@ -7,6 +7,7 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/models/QueryModel.dart';
 import 'package:piremote/screens/AddDevices.dart';
+import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/Panels.dart';
 import 'package:piremote/widgets/Stats.dart';
 import 'dart:async';
@@ -31,6 +32,7 @@ class _DevicesState extends State<Devices> {
   String status = "";
   String clients_ever_seen = "";
   var myprotocol = "";
+  var ipStatus = true;
 
   deviceStatusIcon(status) {
     switch (status) {
@@ -53,6 +55,14 @@ class _DevicesState extends State<Devices> {
   }
 
   fetchQueries() async {
+    var status = await test_ip();
+
+    if (status == false) {
+      return setState(() {
+        ipStatus = false;
+      });
+    }
+
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
 
@@ -90,6 +100,8 @@ class _DevicesState extends State<Devices> {
         } catch (e) {
           print(e);
         }
+      } else {
+        print("FETCH FAILED.");
       }
 
       var myurl = "$myprotocol://${devices[i]['ip']}";
@@ -123,7 +135,8 @@ class _DevicesState extends State<Devices> {
 
         // timer.cancel();
       } else {
-        throw Exception("Unable to fetch query data");
+        // throw Exception("Unable to fetch query data");
+        print("FETCH FAILED");
       }
     }
   }
@@ -322,6 +335,10 @@ class _DevicesState extends State<Devices> {
 
   devices_list() {
     // print(devices_data.length);
+    if (ipStatus == false) {
+      return Disconnected(context: context);
+    }
+
     if (devices_data.length > 0) {
       for (var i = 0; i < devices_data.length; i++) {
         return Column(
@@ -487,3 +504,5 @@ class _DevicesState extends State<Devices> {
     );
   }
 }
+
+

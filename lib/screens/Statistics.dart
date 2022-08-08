@@ -7,6 +7,7 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:piremote/functions/Functions.dart';
+import 'package:piremote/widgets/Disconnected.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -19,6 +20,182 @@ class _StatisticsState extends State<Statistics> {
   List clients = [];
   List topQueries = [];
   List topAds = [];
+  var ipStatus = true;
+
+  all() {
+    if (ipStatus == false) {
+      return Disconnected(context: context);
+    }
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(
+            top: 15.0,
+            bottom: 10.0,
+            left: 15.0,
+            right: 15.0,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFF161B22),
+            borderRadius: BorderRadius.circular(6.0),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        CupertinoIcons.device_laptop,
+                        color: Color(0xff3FB950),
+                        size: 20.0,
+                      ),
+                      SizedBox(width: 10.0),
+                      Text(
+                        'Top Clients',
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontFamily: "SFD-Bold",
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Icon(
+                  //   CupertinoIcons.chevron_forward,
+                  //   color: Color(0xff3FB950),
+                  // ),
+                ],
+              ),
+              SizedBox(height: 12.0),
+              myclients(),
+              // manage btn
+              // SizedBox(height: 10.0),
+              // CupertinoButton(
+              //   padding: const EdgeInsets.all(10.0),
+              //   color: const Color(0xFF0D1117),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Text(
+              //         'Manage clients',
+              //         style: TextStyle(
+              //           color: Color(0xff3FB950),
+              //           fontSize: 14.0,
+              //           fontFamily: 'SFT-Regular',
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              //   onPressed: () {},
+              // ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20.0),
+        Container(
+          padding: const EdgeInsets.only(
+            top: 15.0,
+            bottom: 10.0,
+            left: 15.0,
+            right: 15.0,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFF161B22),
+            borderRadius: BorderRadius.circular(6.0),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        CupertinoIcons.checkmark_shield_fill,
+                        color: Color(0xff3FB950),
+                        size: 22.0,
+                      ),
+                      SizedBox(width: 10.0),
+                      Text(
+                        'Top Allowed',
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontFamily: "SFD-Bold",
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Icon(
+                  //   CupertinoIcons.chevron_forward,
+                  //   color: Color(0xff3FB950),
+                  // ),
+                ],
+              ),
+              SizedBox(height: 12.0),
+              myqueries(),
+            ],
+          ),
+        ),
+        SizedBox(height: 20.0),
+        Container(
+          padding: const EdgeInsets.only(
+            top: 15.0,
+            bottom: 10.0,
+            left: 15.0,
+            right: 15.0,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFF161B22),
+            borderRadius: BorderRadius.circular(6.0),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        CupertinoIcons.xmark_shield_fill,
+                        color: Colors.redAccent,
+                        size: 22.0,
+                      ),
+                      SizedBox(width: 10.0),
+                      Text(
+                        'Top Blocked',
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontFamily: "SFD-Bold",
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Icon(
+                  //   CupertinoIcons.chevron_forward,
+                  //   color: Colors.redAccent,
+                  // ),
+                ],
+              ),
+              SizedBox(height: 12.0),
+              myads(),
+            ],
+          ),
+        ),
+        SizedBox(height: 100.0)
+      ],
+    );
+  }
 
   myclients() {
     if (clients.length > 0) {
@@ -41,7 +218,9 @@ class _StatisticsState extends State<Statistics> {
                       Flexible(
                         child: Container(
                           child: Text(
-                            clients[index]['name'] != "none" ? '${clients[index]['name'].toString()}' : '${clients[index]['ip'].toString()}',
+                            clients[index]['name'] != "none"
+                                ? '${clients[index]['name'].toString()}'
+                                : '${clients[index]['ip'].toString()}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.white,
@@ -259,6 +438,13 @@ class _StatisticsState extends State<Statistics> {
   }
 
   fetchTopClients() async {
+    var status = await test_ip();
+    if (status == false) {
+      return setState(() {
+        ipStatus = false;
+      });
+    }
+
     final dbHelper = DatabaseHelper.instance;
     var myclients = await dbHelper.queryAllRows('clients');
 
@@ -298,170 +484,7 @@ class _StatisticsState extends State<Statistics> {
       },
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.only(
-              top: 15.0,
-              bottom: 10.0,
-              left: 15.0,
-              right: 15.0,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFF161B22),
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          CupertinoIcons.device_laptop,
-                          color: Color(0xff3FB950),
-                          size: 20.0,
-                        ),
-                        SizedBox(width: 10.0),
-                        Text(
-                          'Top Clients',
-                          style: TextStyle(
-                            color: Color(0xff3FB950),
-                            fontFamily: "SFD-Bold",
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Icon(
-                    //   CupertinoIcons.chevron_forward,
-                    //   color: Color(0xff3FB950),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 12.0),
-                myclients(),
-                // manage btn
-                // SizedBox(height: 10.0),
-                // CupertinoButton(
-                //   padding: const EdgeInsets.all(10.0),
-                //   color: const Color(0xFF0D1117),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Text(
-                //         'Manage clients',
-                //         style: TextStyle(
-                //           color: Color(0xff3FB950),
-                //           fontSize: 14.0,
-                //           fontFamily: 'SFT-Regular',
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                //   onPressed: () {},
-                // ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.0),
-          Container(
-            padding: const EdgeInsets.only(
-              top: 15.0,
-              bottom: 10.0,
-              left: 15.0,
-              right: 15.0,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFF161B22),
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          CupertinoIcons.checkmark_shield_fill,
-                          color: Color(0xff3FB950),
-                          size: 22.0,
-                        ),
-                        SizedBox(width: 10.0),
-                        Text(
-                          'Top Allowed',
-                          style: TextStyle(
-                            color: Color(0xff3FB950),
-                            fontFamily: "SFD-Bold",
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Icon(
-                    //   CupertinoIcons.chevron_forward,
-                    //   color: Color(0xff3FB950),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 12.0),
-                myqueries(),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.0),
-          Container(
-            padding: const EdgeInsets.only(
-              top: 15.0,
-              bottom: 10.0,
-              left: 15.0,
-              right: 15.0,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFF161B22),
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          CupertinoIcons.xmark_shield_fill,
-                          color: Colors.redAccent,
-                          size: 22.0,
-                        ),
-                        SizedBox(width: 10.0),
-                        Text(
-                          'Top Blocked',
-                          style: TextStyle(
-                            color: Colors.redAccent,
-                            fontFamily: "SFD-Bold",
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Icon(
-                    //   CupertinoIcons.chevron_forward,
-                    //   color: Colors.redAccent,
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 12.0),
-                myads(),
-              ],
-            ),
-          ),
-          SizedBox(height: 100.0)
+          all(),
         ],
       ),
     );

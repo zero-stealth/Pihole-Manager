@@ -254,3 +254,22 @@ fetchTopQueries() async {
     }
   }
 }
+
+
+test_ip() async {
+    var devices = await dbHelper.queryAllRows('devices');
+
+    try {
+      // var prot = setprotocol();
+      var url = '${devices[0]['protocol']}://${devices[0]['ip']}';
+      // /admin/api.php?getAllQueries=100&auth=
+      final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
