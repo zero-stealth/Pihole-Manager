@@ -386,13 +386,14 @@ class _DevicesState extends State<Devices> {
                             devices_data[i]['ip'],
                             devices_data[i]['apitoken']);
                       },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Icon(
-                          CupertinoIcons.ellipsis,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Container(),
+                      // Container(
+                      //   padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      //   child: Icon(
+                      //     CupertinoIcons.ellipsis,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
                     ),
                   ),
                 ],

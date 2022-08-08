@@ -8,6 +8,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Blocked.dart';
 import 'package:piremote/screens/Clients.dart';
+import 'package:piremote/screens/EditDevice.dart';
 import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 import 'package:http/http.dart' as http;
@@ -43,7 +44,7 @@ class _SettingsState extends State<Settings> {
       child: Column(
         children: [
           SettingsItem(
-            icon: CupertinoIcons.device_laptop,
+            icon: CupertinoIcons.gear_alt_fill,
             name: "Manage clients",
             subtitle: "Manage pihole users",
             iconSize: 22.0,
@@ -52,6 +53,19 @@ class _SettingsState extends State<Settings> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Clients()),
+              );
+            },
+          ),
+          SettingsItem(
+            icon: CupertinoIcons.wrench_fill,
+            name: "Manage device",
+            subtitle: "Manage pihole instances",
+            iconSize: 22.0,
+            borderStatus: true,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditDevice()),
               );
             },
           ),
