@@ -21,6 +21,32 @@ class Logs extends StatefulWidget {
 class _LogsState extends State<Logs> {
   var logs = [];
   var status = "";
+  var clients = [];
+
+  getDeviceNames() async {
+    final dbHelper = DatabaseHelper.instance;
+    var myclients = await dbHelper.queryAllRows('clients');
+
+    setState(() {
+      clients = myclients;
+    });
+  }
+
+  deviceName(ip) {
+    if (clients.length < 0) {
+      return ip;
+    } else {
+      for (var i = 0; i < clients.length; i++) {
+        if (clients[i]['ip'] == ip) {
+          if (clients[i]['name'] != 'none') {
+            return clients[i]['name'];
+          } else {
+            return ip;
+          }
+        }
+      }
+    }
+  }
 
   calculateStatus(type) {
     switch (type) {
@@ -191,7 +217,7 @@ class _LogsState extends State<Logs> {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        '${logs[index][4]['client'].toString()}',
+                        deviceName(logs[index][4]['client'].toString()),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
@@ -271,6 +297,7 @@ class _LogsState extends State<Logs> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getDeviceNames();
     fetchLogs();
   }
 
