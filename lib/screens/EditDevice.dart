@@ -360,9 +360,9 @@ class _EditDeviceState extends State<EditDevice> {
                       ),
                     },
                     onValueChanged: (value) {
-                      // setState(() {
-                      //   protocol = value as int?;
-                      // });
+                      setState(() {
+                        protocol = value as int?;
+                      });
                     },
                   ),
                 ),
