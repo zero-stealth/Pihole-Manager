@@ -20,6 +20,7 @@ class _AddDevicesState extends State<AddDevices> {
   TextEditingController ipcontroller = TextEditingController();
   TextEditingController tokencontroller = TextEditingController();
   TextEditingController namecontroller = TextEditingController();
+  int? protocol = 0;
 
   String buttonState = "notloading";
 
@@ -52,9 +53,22 @@ class _AddDevicesState extends State<AddDevices> {
     });
   }
 
+  setprotocol(){
+    switch (protocol) {
+      case 0:
+        return "http";
+
+      case 1:
+        return "https";
+      default:
+    }
+  }
+
   test_ip(name, ip, token) async {
+    var prot = setprotocol();
     try {
-      var url = 'http://$ip';
+      // var prot = setprotocol();
+      var url = '$prot://$ip';
       // /admin/api.php?getAllQueries=100&auth=
       final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
       if (response.statusCode == 200) {
@@ -66,7 +80,7 @@ class _AddDevicesState extends State<AddDevices> {
       } else {
         setState(() {
           piholeStatus = false;
-          piholeStatusMessage = "Pihole not found on ip $ip";
+          piholeStatusMessage = "Pihole not found on $prot://$ip";
           buttonState = "notloading";
         });
       }
@@ -74,7 +88,7 @@ class _AddDevicesState extends State<AddDevices> {
       print(e);
       setState(() {
         piholeStatus = false;
-        piholeStatusMessage = "Pihole not found on ip $ip";
+        piholeStatusMessage = "Pihole not found on ip $prot://$ip";
         buttonState = "notloading";
       });
     }
@@ -82,8 +96,8 @@ class _AddDevicesState extends State<AddDevices> {
 
   test_token(name, ip, token) async {
     final dbHelper = DatabaseHelper.instance;
-
-    var url = 'http://$ip';
+    var prot = setprotocol();
+    var url = '$prot://$ip';
     // /admin/api.php?getAllQueries=100&auth=
     final resp = await http
         .get(Uri.parse('$url/admin/api.php?getAllQueries=100&auth=$token'));
@@ -162,141 +176,197 @@ class _AddDevicesState extends State<AddDevices> {
     return Scaffold(
       // const Color(0xFF0D1117)
       backgroundColor: const Color(0xFF0D1117),
-      body: Align(
-        alignment: Alignment.center,
-        child: Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Container(
-              //   width: double.infinity,
-              //   child: Text(
-              //     'Config',
-              //     textAlign: TextAlign.start,
-              //     style: TextStyle(
-              //       fontSize: 16.0,
-              //       color: Color(0xff3FB950),
-              //       fontFamily: "SFD-Bold",
-              //     ),
-              //   ),
-              // ),
-              const SizedBox(height: 15.0),
-              InputWidget(
-                namecontroller: namecontroller,
-                label: "Device Name",
-                placeholder: "Mainframe",
-                lines: 1,
-              ),
-              SizedBox(height: 15.0),
-              InputWidget(
-                namecontroller: ipcontroller,
-                label: "Pihole ip address",
-                placeholder: "192.168.0.1",
-                lines: 1,
-              ),
-              const SizedBox(height: 15.0),
-              InputWidget(
-                namecontroller: tokencontroller,
-                label: "Pihole api token",
-                placeholder: "token",
-                lines: 1,
-              ),
-              SizedBox(height: 25.0),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(
-                  bottom: 10.0,
-                  left: 0.0,
-                  right: 0.0,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 20.0,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Container(
+                //   width: double.infinity,
+                //   child: Text(
+                //     'Config',
+                //     textAlign: TextAlign.start,
+                //     style: TextStyle(
+                //       fontSize: 16.0,
+                //       color: Color(0xff3FB950),
+                //       fontFamily: "SFD-Bold",
+                //     ),
+                //   ),
+                // ),
+                const SizedBox(height: 15.0),
+                InputWidget(
+                  namecontroller: namecontroller,
+                  label: "Device Name",
+                  placeholder: "Mainframe",
+                  lines: 1,
                 ),
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(6.0),
-                  color: const Color(0xff3FB950),
-                  child: buttonStatus(buttonState),
-                  onPressed: () {
-                    print(
-                      'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
-                    );
-
-                    if (ipcontroller.text.isEmpty ||
-                        tokencontroller.text.isEmpty ||
-                        namecontroller.text.isEmpty) {
-                      setState(() {
-                        piholeStatus = false;
-                        piholeStatusMessage = "Fill all fields idiot!";
-                      });
-                    } else {
-                      setState(() {
-                        buttonState = "loading";
-                        piholeStatus = false;
-                        tokenStatus = false;
-                        piholeStatusMessage = "";
-                        tokenStatusMessage = "";
-                      });
-
-                      test_ip(
-                        namecontroller.text,
-                        ipcontroller.text,
-                        tokencontroller.text,
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(height: 0.0),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 0.0,
-                  right: 0.0,
-                ),
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(6.0),
-                  color: const Color.fromARGB(255, 16, 21, 27),
-                  child: const Text(
-                    'Never mind',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Color(0xff3FB950),
-                      fontFamily: "SFD-Bold",
-                    ),
+                SizedBox(height: 15.0),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(
+                    top: 5.0,
+                    bottom: 20.0,
                   ),
-                  onPressed: () async {
-                    final dbHelper = DatabaseHelper.instance;
-                    var d = await dbHelper.queryAllRows('devices');
-
-                    if (d.length > 0) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Dashboard()),
-                      );
-                    } else {
-                      print("[+] No devices in database");
-                    }
-                  },
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF161B22),
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                  child: CupertinoSlidingSegmentedControl(
+                    backgroundColor: Color(0xFF161B22),
+                    thumbColor: Color(0xff3FB950),
+                    groupValue: protocol,
+                    children: {
+                      0: Container(
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6.0)
+                        ),
+                        child: Text(
+                          "http",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            // color: Color(0xff3FB950),
+                            color: Colors.white,
+                            fontFamily: 'SFD-Bold',
+                          ),
+                        ),
+                      ),
+                      1: Container(
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6.0)
+                        ),
+                        child: Text(
+                          "https",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            // color: Color(0xff3FB950),
+                            color: Colors.white,
+                            fontFamily: 'SFD-Bold',
+                          ),
+                        ),
+                      ),
+                    },
+                    onValueChanged: (value) {
+                      setState(() {
+                        protocol = value as int?;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4.0),
-              Notifier(
-                active: piholeStatus,
-                message: piholeStatusMessage,
-              ),
-              Notifier(
-                active: tokenStatus,
-                message: tokenStatusMessage,
-              ),
-            ],
+                InputWidget(
+                  namecontroller: ipcontroller,
+                  label: "Pihole ip address",
+                  placeholder: "192.168.0.1",
+                  lines: 1,
+                ),
+                const SizedBox(height: 15.0),
+                InputWidget(
+                  namecontroller: tokencontroller,
+                  label: "Pihole api token",
+                  placeholder: "token",
+                  lines: 1,
+                ),
+                SizedBox(height: 25.0),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(
+                    bottom: 10.0,
+                    left: 0.0,
+                    right: 0.0,
+                  ),
+                  child: CupertinoButton(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: const Color(0xff3FB950),
+                    child: buttonStatus(buttonState),
+                    onPressed: () {
+                      print(
+                        'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
+                      );
+        
+                      if (ipcontroller.text.isEmpty ||
+                          tokencontroller.text.isEmpty ||
+                          namecontroller.text.isEmpty) {
+                        setState(() {
+                          piholeStatus = false;
+                          piholeStatusMessage = "Fill all fields.";
+                        });
+                      } else {
+                        setState(() {
+                          buttonState = "loading";
+                          piholeStatus = false;
+                          tokenStatus = false;
+                          piholeStatusMessage = "";
+                          tokenStatusMessage = "";
+                        });
+        
+                        test_ip(
+                          namecontroller.text,
+                          ipcontroller.text,
+                          tokencontroller.text,
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(height: 0.0),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(
+                    bottom: 20.0,
+                    left: 0.0,
+                    right: 0.0,
+                  ),
+                  child: CupertinoButton(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: const Color.fromARGB(255, 16, 21, 27),
+                    child: const Text(
+                      'Never mind',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Color(0xff3FB950),
+                        fontFamily: "SFD-Bold",
+                      ),
+                    ),
+                    onPressed: () async {
+                      final dbHelper = DatabaseHelper.instance;
+                      var d = await dbHelper.queryAllRows('devices');
+        
+                      if (d.length > 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Dashboard()),
+                        );
+                      } else {
+                        print("[+] No devices in database");
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                Notifier(
+                  active: piholeStatus,
+                  message: piholeStatusMessage,
+                ),
+                Notifier(
+                  active: tokenStatus,
+                  message: tokenStatusMessage,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
 
 class Notifier extends StatelessWidget {
   final bool active;
@@ -322,12 +392,19 @@ class Notifier extends StatelessWidget {
               size: 20.0,
             ),
             SizedBox(width: 10.0),
-            Text(
-              message,
-              style: TextStyle(
-                color: Color(0xff3FB950),
-                fontFamily: "SFT-Regular",
-                fontSize: 14.0,
+            Flexible(
+              child: Container(
+                child: Text(
+                  message,
+                  overflow: TextOverflow.clip,
+                  maxLines: 5,
+                  softWrap: true,
+                  style: TextStyle(
+                    color: Color(0xff3FB950),
+                    fontFamily: "SFT-Regular",
+                    fontSize: 14.0,
+                  ),
+                ),
               ),
             ),
           ],
@@ -347,12 +424,18 @@ class Notifier extends StatelessWidget {
                 size: 20.0,
               ),
               SizedBox(width: 10.0),
-              Text(
-                message,
-                style: TextStyle(
-                  color: Colors.redAccent,
-                  fontFamily: "SFT-Regular",
-                  fontSize: 14.0,
+              Flexible(
+                child: Container(
+                  child: Text(
+                    message,
+                    softWrap: true,
+                    style: TextStyle(
+                      overflow: TextOverflow.clip,
+                      color: Colors.redAccent,
+                      fontFamily: "SFT-Regular",
+                      fontSize: 14.0,
+                    ),
+                  ),
                 ),
               ),
             ],

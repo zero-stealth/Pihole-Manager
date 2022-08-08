@@ -192,26 +192,26 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),
-                  // SizedBox(width: 20.0),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //     top: 5.0,
-                  //     right: 20.0,
-                  //   ),
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(builder: (context) => AddDevices()),
-                  //       );
-                  //     },
-                  //     child: const Icon(
-                  //       CupertinoIcons.add_circled,
-                  //       color: Colors.white,
-                  //       size: 23.0,
-                  //     ),
-                  //   ),
-                  // ),
+                  SizedBox(width: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                      right: 20.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddDevices()),
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.add_circled,
+                        color: Colors.white,
+                        size: 23.0,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               SliverList(
