@@ -219,7 +219,7 @@ class _StatisticsState extends State<Statistics> {
 
     for (var i = 0; i < devices.length; i++) {
       final res = await http.Client().get(Uri.parse(
-          'http://${devices[i]['ip']}/admin/api.php?topItems&auth=${devices[i]['apitoken']}'));
+          '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?topItems&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         // print('CLIENTS: $pars');

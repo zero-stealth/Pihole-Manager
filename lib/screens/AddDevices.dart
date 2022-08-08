@@ -128,6 +128,7 @@ class _AddDevicesState extends State<AddDevices> {
         Map<String, dynamic> row = {
           "name": name,
           "ip": ip,
+          "protocol": prot,
           "apitoken": token,
         };
 

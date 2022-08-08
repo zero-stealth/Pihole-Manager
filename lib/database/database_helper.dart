@@ -45,6 +45,7 @@ class DatabaseHelper {
     await db.execute('''
         CREATE TABLE devices (
           _id INTEGER PRIMARY KEY,
+          protocol TEXT NOT NULL,
           name TEXT NOT NULL,
           ip TEXT NOT NULL,
           apitoken TEXT NOT NULL

@@ -30,6 +30,7 @@ class _DevicesState extends State<Devices> {
   String blocklist = "0";
   String status = "";
   String clients_ever_seen = "";
+  var myprotocol = "";
 
   deviceStatusIcon(status) {
     switch (status) {
@@ -56,8 +57,11 @@ class _DevicesState extends State<Devices> {
     var devices = await dbHelper.queryAllRows('devices');
 
     for (var i = 0; i < devices.length; i++) {
+      setState(() {
+        myprotocol = devices[i]['protocol'];
+      });
       final resp = await http.Client()
-          .get(Uri.parse('http://${devices[i]['ip']}/admin/'));
+          .get(Uri.parse('$myprotocol://${devices[i]['ip']}/admin/'));
       if (resp.statusCode == 200) {
         var document = parser.parse(resp.body);
         try {
@@ -88,7 +92,7 @@ class _DevicesState extends State<Devices> {
         }
       }
 
-      var myurl = "http://${devices[i]['ip']}";
+      var myurl = "$myprotocol://${devices[i]['ip']}";
       final response =
           await http.get(Uri.parse('$myurl/admin/api.php?summary'));
 
@@ -125,7 +129,7 @@ class _DevicesState extends State<Devices> {
   }
 
   enableBlocking(ip, token) async {
-    var url = 'http://$ip';
+    var url = '$myprotocol://$ip';
     final response =
         await http.get(Uri.parse('$url/admin/api.php?enable&auth=$token'));
     setState(() {
@@ -134,7 +138,7 @@ class _DevicesState extends State<Devices> {
   }
 
   disableBlocking(ip, token, seconds) async {
-    var url = 'http://$ip';
+    var url = '$myprotocol://$ip';
     final response = await http
         .get(Uri.parse('$url/admin/api.php?disable=$seconds&auth=$token'));
     Navigator.pop(context);

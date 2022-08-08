@@ -227,7 +227,7 @@ class _QueryState extends State<Query> {
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
     var ip = devices[0]['ip'];
-    var url = 'http://$ip';
+    var url = '${devices[0]['protocol']}://$ip';
     var token = devices[0]['apitoken'];
     final response = await http.get(
         Uri.parse('$url/admin/api.php?list=black&add=$domain&auth=$token'));
@@ -247,7 +247,7 @@ class _QueryState extends State<Query> {
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
     var ip = devices[0]['ip'];
-    var url = 'http://$ip';
+    var url = '${devices[0]['protocol']}://$ip';
     var token = devices[0]['apitoken'];
     final response = await http.get(
         Uri.parse('$url/admin/api.php?list=white&add=$domain&auth=$token'));
