@@ -48,20 +48,47 @@ class _LogsState extends State<Logs> {
     }
   }
 
-  calculateStatus(type) {
+  calculateTime(timestamp) {
+    try {
+      var date =
+          DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp) * 1000);
+      var formattedDate = DateFormat.yMMMd().format(date);
+      var formattedTime = DateFormat.jm().format(date);
+      print("[TIME] $formattedTime");
+      return formattedTime;
+    } catch (e) {
+      print(e);
+      return timestamp.toString();
+    }
+  }
+
+  calculateStatus(type, timestamp) {
     switch (type) {
       case '1':
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              CupertinoIcons.xmark_shield_fill,
-              color: Colors.redAccent,
-              size: 15.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  CupertinoIcons.xmark_shield_fill,
+                  color: Colors.redAccent,
+                  size: 15.0,
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  'Gravity list',
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 13.0,
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 5.0),
             Text(
-              'Gravity list',
+              '$timestamp',
               style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 13.0,
@@ -73,16 +100,29 @@ class _LogsState extends State<Logs> {
 
       case '2':
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              CupertinoIcons.checkmark_shield_fill,
-              color: Color(0xff3FB950),
-              size: 15.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  CupertinoIcons.checkmark_shield_fill,
+                  color: Color(0xff3FB950),
+                  size: 15.0,
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  'Upstream server',
+                  style: TextStyle(
+                    color: Color(0xff3FB950),
+                    fontSize: 13.0,
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 5.0),
             Text(
-              'Upstream server',
+              '$timestamp',
               style: TextStyle(
                 color: Color(0xff3FB950),
                 fontSize: 13.0,
@@ -94,16 +134,29 @@ class _LogsState extends State<Logs> {
 
       case '3':
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              CupertinoIcons.xmark_shield_fill,
-              color: Colors.blueAccent,
-              size: 15.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  CupertinoIcons.xmark_shield_fill,
+                  color: Colors.blueAccent,
+                  size: 15.0,
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  'Local cache',
+                  style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 13.0,
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 5.0),
             Text(
-              'Local cache',
+              '$timestamp',
               style: TextStyle(
                 color: Colors.blueAccent,
                 fontSize: 13.0,
@@ -115,16 +168,29 @@ class _LogsState extends State<Logs> {
 
       case '4':
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              CupertinoIcons.xmark_shield_fill,
-              color: Colors.redAccent,
-              size: 15.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  CupertinoIcons.xmark_shield_fill,
+                  color: Colors.redAccent,
+                  size: 15.0,
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  'Wildcard blocking',
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 13.0,
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 5.0),
             Text(
-              'Wildcard blocking',
+              '$timestamp',
               style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 13.0,
@@ -136,16 +202,29 @@ class _LogsState extends State<Logs> {
 
       default:
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              CupertinoIcons.xmark_shield_fill,
-              color: Colors.redAccent,
-              size: 15.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  CupertinoIcons.xmark_shield_fill,
+                  color: Colors.redAccent,
+                  size: 15.0,
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  'Blacklist',
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 12.0,
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: 5.0),
             Text(
-              'Blacklist',
+              '$timestamp',
               style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 12.0,
@@ -203,7 +282,8 @@ class _LogsState extends State<Logs> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      calculateStatus(logs[index][3]['type'].toString()),
+                      calculateStatus(logs[index][3]['type'].toString(),
+                          logs[index][0]['timestamp'].toString()),
                       SizedBox(height: 5.0),
                       Text(
                         '${logs[index][2]['domain'].toString()}',
@@ -271,7 +351,7 @@ class _LogsState extends State<Logs> {
         try {
           for (var n = 0; n < pars['data'].length; n++) {
             var data = [
-              {'timestamp': pars['data'][n][0]},
+              {'timestamp': calculateTime(pars['data'][n][0])},
               {'requestType': pars['data'][n][1]},
               {'domain': pars['data'][n][2]},
               {'type': pars['data'][n][4]},
@@ -279,7 +359,7 @@ class _LogsState extends State<Logs> {
             ];
 
             setState(() {
-              logs.add(data);
+              logs.insert(i, data);
             });
 
             print(pars['data'][n]);

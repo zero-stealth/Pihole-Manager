@@ -323,6 +323,20 @@ class _QueryState extends State<Query> {
                       ),
                       SizedBox(height: 10.0),
                       QueryItem(
+                        title: 'Time',
+                        domain: widget.timestamp,
+                        icon: CupertinoIcons.clock,
+                        color: Color(0xff3FB950),
+                        textcolor: Colors.white.withOpacity(0.5),
+                        titlecolor: Colors.white,
+                      ),
+                      SizedBox(height: 10.0),
+                      Divider(
+                        color: Colors.grey.withOpacity(0.04),
+                        thickness: 2.0,
+                      ),
+                      SizedBox(height: 10.0),
+                      QueryItem(
                         title: 'Domain',
                         domain: widget.domain,
                         icon: CupertinoIcons.globe,
