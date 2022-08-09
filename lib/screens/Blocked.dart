@@ -82,7 +82,7 @@ class _BlockedState extends State<Blocked> {
                   ),
                   SizedBox(width: 20.0),
                   Text(
-                    'Blocked Services',
+                    'Block Services',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
