@@ -262,7 +262,7 @@ class _LogsState extends State<Logs> {
                     MaterialPageRoute(
                       builder: (context) => Query(
                         domain: "${logs[index][2]['domain'].toString()}",
-                        client: "${logs[index][4]['client'].toString()}",
+                        client: deviceName(logs[index][4]['client'].toString()),
                         type: "${logs[index][1]['requestType'].toString()}",
                         timestamp: "${logs[index][0]['timestamp'].toString()}",
                         status: "${logs[index][3]['type'].toString()}",
@@ -416,7 +416,12 @@ class _LogsState extends State<Logs> {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(6.0),
           ),
-          child: myLogs(),
+          child: Column(
+            children: [
+              myLogs(),
+              SizedBox(height: 100.0),
+            ],
+          ),
         ),
       ],
     );
