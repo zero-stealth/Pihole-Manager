@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/rendering.dart';
 import 'package:piremote/database/database_helper.dart';
@@ -6,6 +7,131 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 
 final dbHelper = DatabaseHelper.instance;
+
+var myservices = [
+  {
+    "name": "reddit",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(reddit|redd|redditmedia|redditinc|redditstatus|redditstatic|redditblog|redditmail)\%5C.(com|it)\$",
+  },
+  {
+    "name": "instagram",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(cdninstagram|instagram|ig)%5C.(com|me|org|info|cc|tv|net)\$",
+  },
+  {
+    "name": "whatsapp",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(whatsapp|whatsappbrand|whatsapp-plus)%5C.(com|me|org|info|cc|tv|net)\$",
+  },
+  {
+    "name": "discord",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(discord|discordapp|discordstatus)%5C.(com|gg|media|net)\$",
+  },
+  {
+    "name": "facebook",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(facebook|fb|facebook.com|facebookmail|facebook-hardware|facebookenterprise|)%5C.(com|co|org|it|ca|au|ai|net)\$",
+  },
+  {
+    "name": "netflix",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(netflix|netflix.com|netflixstudios|netflixinvestor|netflixtechblog|nflxext|nflximg|nflxso|nflxvideo|nflxvpn)%5C.(com|net|ca|au)\$",
+  },
+];
+
+blockService(name) async {
+  var s = await dbHelper.queryAllRows("services");
+  var d = await dbHelper.queryAllRows("devices");
+
+  for (var i = 0; i < s.length; i++) {
+    Map<String, dynamic> row = {
+        "_id": s[i]["_id"],
+        "name": name,
+        "status": "blocked",
+        "regex": s[i]['regex'],
+    };
+
+    if(s[i]['name'] == name){
+      var regex = Uri.encodeFull(s[i]['regex']); 
+
+      log(regex);
+
+      final res = await http.Client().get(Uri.parse(
+        'http://${d[0]['ip']}/admin/api.php?list=regex_black&add=$regex&auth=${d[0]['apitoken']}'));
+      
+      if (res.statusCode == 200) {
+        var pars = jsonDecode(res.body);
+        log(res.body);
+        await dbHelper.update(row, "services");
+      }
+    }
+  }
+
+  return;
+}
+
+enableService(name) async {
+  var s = await dbHelper.queryAllRows("services");
+  var d = await dbHelper.queryAllRows("devices");
+
+  for (var i = 0; i < s.length; i++) {
+    Map<String, dynamic> row = {
+        "_id": s[i]["_id"],
+        "name": name,
+        "status": "notblocked",
+        "regex": s[i]['regex'],
+    };
+
+    if(s[i]['name'] == name){
+      var regex = Uri.encodeFull(s[i]['regex']); 
+
+      log(regex);
+
+      final res = await http.Client().get(Uri.parse(
+        'http://${d[0]['ip']}/admin/api.php?list=regex_white&add=$regex&auth=${d[0]['apitoken']}'));
+      
+      if (res.statusCode == 200) {
+        var pars = jsonDecode(res.body);
+        //log(pars);
+        await dbHelper.update(row, "services");
+      }
+    }
+  }
+
+  return;
+}
+
+// add services to the database if
+// they do not exist
+addServices() async {
+  var s = await dbHelper.queryAllRows("services");
+
+  if (s.length > 0) {
+    log("SERVICES DB EXISTS");
+    return;
+  } else {
+    for (var i = 0; i < myservices.length; i++) {
+      Map<String, dynamic> row = {
+        "name": myservices[i]['name'],
+        "status": myservices[i]['status'],
+        "regex": myservices[i]['regex'],
+      };
+
+      await dbHelper.insert(row, "services");
+    }
+
+    log("ADDED SUCCESSFULLY");
+    return;
+  }
+}
 
 // checks if the client exists on the database
 // updates requests count if they do
@@ -255,21 +381,20 @@ fetchTopQueries() async {
   }
 }
 
-
 test_ip() async {
-    var devices = await dbHelper.queryAllRows('devices');
+  var devices = await dbHelper.queryAllRows('devices');
 
-    try {
-      // var prot = setprotocol();
-      var url = '${devices[0]['protocol']}://${devices[0]['ip']}';
-      // /admin/api.php?getAllQueries=100&auth=
-      final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
+  try {
+    // var prot = setprotocol();
+    var url = '${devices[0]['protocol']}://${devices[0]['ip']}';
+    // /admin/api.php?getAllQueries=100&auth=
+    final response = await http.get(Uri.parse('$url/admin/api.php?summary'));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
     }
+  } catch (e) {
+    return false;
   }
+}

@@ -87,6 +87,15 @@ class DatabaseHelper {
           requests TEXT NOT NULL
         )
         ''');
+
+    await db.execute('''
+        CREATE TABLE services (
+          _id INTEGER PRIMARY KEY,
+          name TEXT NOT NULL,
+          status TEXT NOT NULL,
+          regex TEXT NOT NULL
+        )
+        ''');
   }
 
   Future<int> insert(Map<String, dynamic> row, mytable) async {

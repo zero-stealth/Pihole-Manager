@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piremote/database/database_helper.dart';
+import 'package:piremote/functions/Functions.dart';
 
 class Blocked extends StatefulWidget {
   const Blocked({Key? key}) : super(key: key);
@@ -10,9 +14,45 @@ class Blocked extends StatefulWidget {
 }
 
 class _BlockedState extends State<Blocked> {
-  // const List<String> _assetNames = <String>[
-  //   'assets/reddit.svg'
-  // ];
+  final dbHelper = DatabaseHelper.instance;
+  var services = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchServices();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  fetchServices() async {
+    var s = await dbHelper.queryAllRows("services");
+
+    setState(() {
+      services = s;
+    });
+  }
+
+  getService(name){
+    for (var i = 0; i < services.length; i++) {
+      if(services[i]['name'] == name){
+        if(services[i]['status'] == "blocked"){
+          log("${services[i]['name']} ${services[i]['status']}");
+          return true;
+        } else {
+          log("${services[i]['name']} ${services[i]['status']}");
+          return false;
+        }
+      }
+    }
+
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,62 +109,62 @@ class _BlockedState extends State<Blocked> {
                     ServiceItem(
                       service: "Reddit",
                       icon: 'assets/reddit.svg',
-                      listsCount: 0,
-                      status: false,
+                      listsCount: 1,
+                      status: getService("reddit"),
                       bottomBorder: true,
                     ),
                     ServiceItem(
                       service: "Discord",
                       icon: 'assets/discord.svg',
-                      listsCount: 0,
-                      status: false,
+                      listsCount: 1,
+                      status: getService("discord"),
                       bottomBorder: true,
                     ),
                     ServiceItem(
                       service: "Whatsapp",
                       icon: 'assets/whatsapp.svg',
-                      listsCount: 0,
-                      status: false,
+                      listsCount: 1,
+                      status: getService("whatsapp"),
                       bottomBorder: true,
                     ),
-                    ServiceItem(
-                      service: "Ebay",
-                      icon: 'assets/ebay.svg',
-                      listsCount: 0,
-                      status: false,
-                      bottomBorder: true,
-                    ),
+                    // ServiceItem(
+                    //   service: "Ebay",
+                    //   icon: 'assets/ebay.svg',
+                    //   listsCount: 1,
+                    //   status: false,
+                    //   bottomBorder: true,
+                    // ),
                     ServiceItem(
                       service: "Instagram",
                       icon: 'assets/instagram.svg',
-                      listsCount: 0,
-                      status: false,
+                      listsCount: 1,
+                      status: getService("instagram"),
                       bottomBorder: true,
                     ),
-                    ServiceItem(
-                      service: "Amazon",
-                      icon: 'assets/amazon.svg',
-                      listsCount: 0,
-                      status: false,
-                      bottomBorder: true,
-                    ),
+                    // ServiceItem(
+                    //   service: "Amazon",
+                    //   icon: 'assets/amazon.svg',
+                    //   listsCount: 1,
+                    //   status: false,
+                    //   bottomBorder: true,
+                    // ),
                     ServiceItem(
                       service: "Netflix",
                       icon: 'assets/netflix.svg',
-                      listsCount: 0,
-                      status: false,
+                      listsCount: 1,
+                      status: getService("netflix"),
                       bottomBorder: true,
                     ),
                     ServiceItem(
                       service: "Facebook",
-                      listsCount: 0,
+                      listsCount: 1,
                       icon: 'assets/facebook.svg',
-                      status: false,
+                      status: getService("facebook"),
                       bottomBorder: false,
                     ),
                     // ServiceItem(
                     //   service: "Facebook",
-                    //   listsCount: 0,
+                    //   listsCount: 1,
                     //   status: false,
                     //   bottomBorder: false,
                     // ),
@@ -139,12 +179,13 @@ class _BlockedState extends State<Blocked> {
   }
 }
 
-class ServiceItem extends StatelessWidget {
+class ServiceItem extends StatefulWidget {
   final String service;
   final int listsCount;
-  final bool status;
+  bool status;
   final bool bottomBorder;
   final String icon;
+  //final Function action;
 
   ServiceItem({
     required this.service,
@@ -152,8 +193,14 @@ class ServiceItem extends StatelessWidget {
     required this.status,
     required this.bottomBorder,
     required this.icon,
+    //required this.action,
   });
 
+  @override
+  State<ServiceItem> createState() => _ServiceItemState();
+}
+
+class _ServiceItemState extends State<ServiceItem> {
   myBorder(s) {
     if (s == true) {
       return Column(
@@ -187,7 +234,7 @@ class ServiceItem extends StatelessWidget {
                 //   color: Colors.white,
                 // ),
                 SvgPicture.asset(
-                  icon,
+                  widget.icon,
                   color: Colors.white,
                   width: 25.0,
                   height: 25.0,
@@ -197,7 +244,7 @@ class ServiceItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      service,
+                      widget.service,
                       style: TextStyle(
                         color: Color(0xff3FB950),
                         fontSize: 14.0,
@@ -207,7 +254,7 @@ class ServiceItem extends StatelessWidget {
                     ),
                     SizedBox(height: 4.0),
                     Text(
-                      '$listsCount regex entries',
+                      '${widget.listsCount} regex entry',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 12.0,
@@ -220,13 +267,62 @@ class ServiceItem extends StatelessWidget {
             ),
             CupertinoSwitch(
               activeColor: Color(0xff3FB950),
-              value: status,
-              onChanged: (value) {},
+              value: widget.status,
+              onChanged: (value)async{
+                if(widget.status == true){
+                  await enableService(widget.service.toLowerCase());
+                } else {
+                  await blockService(widget.service.toLowerCase());
+                }
+
+                setState(() {
+                  widget.status = value;
+                });
+              },
             ),
           ],
         ),
-        myBorder(bottomBorder),
+        myBorder(widget.bottomBorder),
       ],
     );
   }
 }
+
+
+
+// facebook
+// ^(.+\.)??(facebook|fb)\.(com|net|org|me)$ 
+// ^(.+\.)?(facebook|fb(cdn|sbx)?|tfbnw)\.(com|net)$
+// ^(.+\.)??(facebook|(t)?fb(nw)?(cdn|sbx)?)(\.[^\.]+|\.co\.uk)$
+// ^(.+\.)?(facebook|fb(cdn|sbx)?|tfbnw)\..+$
+
+// twitter
+// ^(.+[_.-])?(twitter|twimg|cms-twdigitalassets)\.(co\.)?[^.]+$
+
+// reddit
+// ^(.+\.)??(reddit|redd|redditmedia|redditinc|redditstatus|redditstatic|redditblog|redditmail)\.(com|it)$
+
+// discord
+// ^(.+\.)??(discord|discordapp|discordstatus)\.(com|gg|media|net)\$
+
+// whatsapp
+// (.+\.)??(whatsapp|whatsappbrand|whatsapp-plus)\.(com|me|org|info|cc|tv|net)
+
+// ebay
+// cant do ebay
+
+// instagram
+// (.+\.)??(cdninstagram|instagram|ig)\.(com|me|org|info|cc|tv|net)
+
+// disneyplus
+// (.+\.)??(disneyplus|disneyplus.bn5x.net|disney-portal.my.onetrust|disney-portal)\.(com|net)
+// (.+\.)??(bamgrid|bam.nr-data|cdn.registrydisney.go|cws.conviva|d9.flashtalking)\.(com|net)
+// (.+\.)??(adobedtm|dssott|js-agent.newrelic)\.(com|net)
+
+// netflix
+// (.+\.)??(netflix|netflix.com|netflixdnstest10|netflixdnstest|netflixdnstest1|netflixdnstest2|netflixdnstest3|netflixdnstest4|netflixdnstest5|netflixdnstest6|netflixdnstest7|netflixdnstest8|netflixdnstest9)\.(com|net|au|ca)
+// ^(.+\.)??(netflix|netflix.com|netflixstudios|netflixinvestor|netflixtechblog|nflxext|nflximg|nflxso|nflxvideo|nflxvpn)\.(com|net|ca|au)\$
+// (.+\.)??(nflxext|nflximg|nflxso|nflxvideo|nflxvpn)\.(com|net|ca|au)
+
+
+

@@ -95,15 +95,6 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchQueries();
-  //   print('INITIATED');
-  // }
-
-  
-
   // cheeck of client already exists in the db
   // if yes do nothing
   // if not add them
@@ -139,6 +130,7 @@ class _DashboardState extends State<Dashboard> {
     // TODO: implement initState
     super.initState();
     fixdb();
+    addServices();
     setClients();
   }
 
