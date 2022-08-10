@@ -1,4 +1,4 @@
-package com.example.piremote
+package com.example.piholemanager
 
 import io.flutter.embedding.android.FlutterActivity
 
