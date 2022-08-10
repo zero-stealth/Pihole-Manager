@@ -194,6 +194,16 @@ class _SettingsState extends State<Settings> {
                       fontFamily: 'SFD-Bold',
                     ),
                   ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    'We are working on more features to improve your pihole experience with regular updates.',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12.0,
+                      height: 1.5,
+                      fontFamily: "SFT-Regular",
+                    ),
+                  ),
                   const SizedBox(height: 20.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +212,9 @@ class _SettingsState extends State<Settings> {
                       ChangelogItem(message: 'Enable and disable pihole.'),
                       ChangelogItem(message: 'View pihole statistics.'),
                       ChangelogItem(message: 'View query logs.'),
-                      ChangelogItem(message: 'Blacklist and whitelist domains.'),
+                      ChangelogItem(
+                          message: 'Blacklist and whitelist domains.'),
+                      ChangelogItem(message: 'Manage clients.'),
                     ],
                   ),
                   const SizedBox(height: 20.0),
@@ -463,12 +475,15 @@ class ChangelogItem extends StatelessWidget {
             size: 16.0,
           ),
           SizedBox(width: 10.0),
-          Text(
-            message,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14.0,
-              fontFamily: "SFT-Regular",
+          Flexible(
+            child: Text(
+              message,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0,
+                fontFamily: "SFT-Regular",
+              ),
             ),
           ),
         ],
