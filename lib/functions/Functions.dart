@@ -60,8 +60,8 @@ blockService(name) async {
     };
 
     if(s[i]['name'] == name){
-      var regex = Uri.encodeFull(s[i]['regex']); 
-
+      // var regex = Uri.encodeFull(s[i]['regex']); 
+      var regex = s[i]['regex'];
       log(regex);
 
       final res = await http.Client().get(Uri.parse(
@@ -91,8 +91,8 @@ enableService(name) async {
     };
 
     if(s[i]['name'] == name){
-      var regex = Uri.encodeFull(s[i]['regex']); 
-
+      // var regex = Uri.encodeFull(s[i]['regex']); 
+      var regex = s[i]['regex'];
       log(regex);
 
       final res = await http.Client().get(Uri.parse(
