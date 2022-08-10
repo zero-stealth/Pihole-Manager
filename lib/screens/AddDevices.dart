@@ -288,6 +288,7 @@ class _AddDevicesState extends State<AddDevices> {
                     color: const Color(0xff3FB950),
                     child: buttonStatus(buttonState),
                     onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
                       print(
                         'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
                       );
@@ -313,40 +314,6 @@ class _AddDevicesState extends State<AddDevices> {
                           ipcontroller.text,
                           tokencontroller.text,
                         );
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(height: 0.0),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(
-                    bottom: 20.0,
-                    left: 0.0,
-                    right: 0.0,
-                  ),
-                  child: CupertinoButton(
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: const Color.fromARGB(255, 16, 21, 27),
-                    child: const Text(
-                      'Never mind',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Color(0xff3FB950),
-                        fontFamily: "SFD-Bold",
-                      ),
-                    ),
-                    onPressed: () async {
-                      final dbHelper = DatabaseHelper.instance;
-                      var d = await dbHelper.queryAllRows('devices');
-        
-                      if (d.length > 0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Dashboard()),
-                        );
-                      } else {
-                        print("[+] No devices in database");
                       }
                     },
                   ),

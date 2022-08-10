@@ -198,10 +198,11 @@ class _SettingsState extends State<Settings> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ChangelogItem(message: 'Multi-device support'),
-                      ChangelogItem(message: 'Disable blocking'),
-                      ChangelogItem(message: 'View statistics'),
-                      ChangelogItem(message: 'Query logs'),
+                      ChangelogItem(message: 'Block popular services.'),
+                      ChangelogItem(message: 'Enable and disable pihole.'),
+                      ChangelogItem(message: 'View pihole statistics.'),
+                      ChangelogItem(message: 'View query logs.'),
+                      ChangelogItem(message: 'Blacklist and whitelist domains.'),
                     ],
                   ),
                   const SizedBox(height: 20.0),
