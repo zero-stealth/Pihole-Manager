@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/widgets/Disconnected.dart';
+import 'package:piremote/widgets/NoDevices.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -21,8 +22,13 @@ class _StatisticsState extends State<Statistics> {
   List topQueries = [];
   List topAds = [];
   var ipStatus = true;
+  var deviceStatus = true;
 
   all() {
+    if (deviceStatus == false) {
+      return NoDevices(context: context);
+    }
+
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -42,36 +48,6 @@ class _StatisticsState extends State<Statistics> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        CupertinoIcons.device_laptop,
-                        color: Color(0xff3FB950),
-                        size: 20.0,
-                      ),
-                      SizedBox(width: 10.0),
-                      Text(
-                        'Top Clients',
-                        style: TextStyle(
-                          color: Color(0xff3FB950),
-                          fontFamily: "SFD-Bold",
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon(
-                  //   CupertinoIcons.chevron_forward,
-                  //   color: Color(0xff3FB950),
-                  // ),
-                ],
-              ),
-              SizedBox(height: 12.0),
               myclients(),
               // manage btn
               // SizedBox(height: 10.0),
@@ -110,36 +86,6 @@ class _StatisticsState extends State<Statistics> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        CupertinoIcons.checkmark_shield_fill,
-                        color: Color(0xff3FB950),
-                        size: 22.0,
-                      ),
-                      SizedBox(width: 10.0),
-                      Text(
-                        'Top Allowed',
-                        style: TextStyle(
-                          color: Color(0xff3FB950),
-                          fontFamily: "SFD-Bold",
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon(
-                  //   CupertinoIcons.chevron_forward,
-                  //   color: Color(0xff3FB950),
-                  // ),
-                ],
-              ),
-              SizedBox(height: 12.0),
               myqueries(),
             ],
           ),
@@ -158,36 +104,6 @@ class _StatisticsState extends State<Statistics> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        CupertinoIcons.xmark_shield_fill,
-                        color: Colors.redAccent,
-                        size: 22.0,
-                      ),
-                      SizedBox(width: 10.0),
-                      Text(
-                        'Top Blocked',
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontFamily: "SFD-Bold",
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon(
-                  //   CupertinoIcons.chevron_forward,
-                  //   color: Colors.redAccent,
-                  // ),
-                ],
-              ),
-              SizedBox(height: 12.0),
               myads(),
             ],
           ),
@@ -200,51 +116,85 @@ class _StatisticsState extends State<Statistics> {
   myclients() {
     if (clients.length > 0) {
       print('${clients}');
-      return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            clipBehavior: Clip.none,
-            scrollDirection: Axis.vertical,
-            itemCount: clients.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Icon(
+                    CupertinoIcons.device_laptop,
+                    color: Color(0xff3FB950),
+                    size: 20.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    'Top Clients',
+                    style: TextStyle(
+                      color: Color(0xff3FB950),
+                      fontFamily: "SFD-Bold",
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ],
+              ),
+              // Icon(
+              //   CupertinoIcons.chevron_forward,
+              //   color: Color(0xff3FB950),
+              // ),
+            ],
+          ),
+          SizedBox(height: 12.0),
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                clipBehavior: Clip.none,
+                scrollDirection: Axis.vertical,
+                itemCount: clients.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
                     children: [
-                      Flexible(
-                        child: Container(
-                          child: Text(
-                            clients[index]['name'] != "none"
-                                ? '${clients[index]['name'].toString()}'
-                                : '${clients[index]['ip'].toString()}',
-                            overflow: TextOverflow.ellipsis,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Container(
+                              child: Text(
+                                clients[index]['name'] != "none"
+                                    ? '${clients[index]['name'].toString()}'
+                                    : '${clients[index]['ip'].toString()}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.0,
+                                  fontFamily: "SFT-Regular",
+                                  // fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            clients[index]['requests'].toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 13.0,
                               fontFamily: "SFT-Regular",
-                              // fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                      Text(
-                        clients[index]['requests'].toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                          fontFamily: "SFT-Regular",
-                        ),
-                      ),
+                      SizedBox(height: 8.0),
                     ],
-                  ),
-                  SizedBox(height: 8.0),
-                ],
-              );
-            }),
+                  );
+                }),
+          ),
+        ],
       );
     } else {
       return Container(
@@ -265,51 +215,85 @@ class _StatisticsState extends State<Statistics> {
 
   myqueries() {
     if (topQueries.length > 0) {
-      return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            clipBehavior: Clip.none,
-            scrollDirection: Axis.vertical,
-            itemCount: topQueries.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Container(
-                            child: Text(
-                              topQueries[index][0]['url'].toString(),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: "SFT-Regular",
-                                fontSize: 13.0,
-                                // fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          topQueries[index][1]['requests'].toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.0,
-                            fontFamily: "SFT-Regular",
-                          ),
-                        ),
-                      ],
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Icon(
+                    CupertinoIcons.checkmark_shield_fill,
+                    color: Color(0xff3FB950),
+                    size: 22.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    'Top Allowed',
+                    style: TextStyle(
+                      color: Color(0xff3FB950),
+                      fontFamily: "SFD-Bold",
+                      fontSize: 14.0,
                     ),
                   ),
-                  SizedBox(height: 8.0),
                 ],
-              );
-            }),
+              ),
+              // Icon(
+              //   CupertinoIcons.chevron_forward,
+              //   color: Color(0xff3FB950),
+              // ),
+            ],
+          ),
+          SizedBox(height: 12.0),
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                clipBehavior: Clip.none,
+                scrollDirection: Axis.vertical,
+                itemCount: topQueries.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                child: Text(
+                                  topQueries[index][0]['url'].toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "SFT-Regular",
+                                    fontSize: 13.0,
+                                    // fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              topQueries[index][1]['requests'].toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.0,
+                                fontFamily: "SFT-Regular",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                    ],
+                  );
+                }),
+          ),
+        ],
       );
     } else {
       return Container(
@@ -330,50 +314,84 @@ class _StatisticsState extends State<Statistics> {
 
   myads() {
     if (topAds.length > 0) {
-      return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            clipBehavior: Clip.none,
-            scrollDirection: Axis.vertical,
-            itemCount: topAds.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Icon(
+                    CupertinoIcons.xmark_shield_fill,
+                    color: Colors.redAccent,
+                    size: 22.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    'Top Blocked',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontFamily: "SFD-Bold",
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ],
+              ),
+              // Icon(
+              //   CupertinoIcons.chevron_forward,
+              //   color: Colors.redAccent,
+              // ),
+            ],
+          ),
+          SizedBox(height: 12.0),
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                clipBehavior: Clip.none,
+                scrollDirection: Axis.vertical,
+                itemCount: topAds.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
                     children: [
-                      Flexible(
-                        child: Container(
-                          // padding: EdgeInsets.only(right: 10.0),
-                          child: Text(
-                            topAds[index][0]['url'].toString(),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              color: Colors.white,
-                              fontFamily: "SFT-Regular",
-                              // fontWeight: FontWeight.w600,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Container(
+                              // padding: EdgeInsets.only(right: 10.0),
+                              child: Text(
+                                topAds[index][0]['url'].toString(),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Colors.white,
+                                  fontFamily: "SFT-Regular",
+                                  // fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Text(
+                            topAds[index][1]['requests'].toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.0,
+                              fontFamily: "SFT-Regular",
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        topAds[index][1]['requests'].toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                          fontFamily: "SFT-Regular",
-                        ),
-                      ),
+                      SizedBox(height: 8.0),
                     ],
-                  ),
-                  SizedBox(height: 8.0),
-                ],
-              );
-            }),
+                  );
+                }),
+          ),
+        ],
       );
     } else {
       return Container(
@@ -438,11 +456,19 @@ class _StatisticsState extends State<Statistics> {
   }
 
   fetchTopClients() async {
-    var status = await test_ip();
-    if (status == false) {
+    var mydevices = await checkDevices();
+
+    if (mydevices == false) {
       return setState(() {
-        ipStatus = false;
+        deviceStatus = false;
       });
+    } else {
+      var status = await test_ip();
+      if (status == false) {
+        return setState(() {
+          ipStatus = false;
+        });
+      }
     }
 
     final dbHelper = DatabaseHelper.instance;

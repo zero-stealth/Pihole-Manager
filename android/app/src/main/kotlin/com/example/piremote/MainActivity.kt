@@ -1,4 +1,4 @@
-package com.example.piholemanager
+package com.shwyfft.piholemanager
 
 import io.flutter.embedding.android.FlutterActivity
 

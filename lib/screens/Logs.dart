@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Query.dart';
 import 'package:piremote/widgets/Disconnected.dart';
+import 'package:piremote/widgets/NoDevices.dart';
+import 'package:piremote/widgets/NoLogs.dart';
 
 class Logs extends StatefulWidget {
   const Logs({Key? key}) : super(key: key);
@@ -25,6 +27,8 @@ class _LogsState extends State<Logs> {
   var status = "";
   var clients = [];
   var ipStatus = true;
+  var deviceStatus = true;
+  var nologs = false;
 
   getDeviceNames() async {
     final dbHelper = DatabaseHelper.instance;
@@ -240,6 +244,14 @@ class _LogsState extends State<Logs> {
   }
 
   myLogs() {
+    if (deviceStatus == false) {
+      return NoDevices(context: context);
+    }
+
+    if(nologs == false){
+      return NoLogs(context: context);
+    }
+    
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -338,11 +350,19 @@ class _LogsState extends State<Logs> {
   }
 
   fetchLogs() async {
-    var status = await test_ip();
-    if (status == false) {
+    var mydevices = await checkDevices();
+
+    if (mydevices == false) {
       return setState(() {
-        ipStatus = false;
+        deviceStatus = false;
       });
+    } else {
+      var status = await test_ip();
+      if (status == false) {
+        return setState(() {
+          ipStatus = false;
+        });
+      }
     }
 
     final dbHelper = DatabaseHelper.instance;
@@ -361,6 +381,12 @@ class _LogsState extends State<Logs> {
         // var date = DateTime.fromMicrosecondsSinceEpoch(1658126697 * 1000, isUtc: false);
         // String formattedTime = DateFormat.jm().format(date);
         // print(date);
+
+        if(pars['data'].length <= 0){
+          return setState(() {
+            nologs = true;
+          });
+        }
 
         try {
           for (var n = 0; n < pars['data'].length; n++) {

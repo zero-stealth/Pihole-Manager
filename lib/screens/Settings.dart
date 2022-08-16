@@ -13,6 +13,7 @@ import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:piremote/widgets/NoDevices.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -25,8 +26,13 @@ class _SettingsState extends State<Settings> {
   TextEditingController messagecontroller = TextEditingController();
   String buttonState = 'notloading';
   var ipStatus = true;
+  var deviceStatus = true;
 
   all() {
+    if (deviceStatus == false) {
+      return NoDevices(context: context);
+    }
+    
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -84,8 +90,8 @@ class _SettingsState extends State<Settings> {
           ),
           SettingsItem(
             icon: CupertinoIcons.chat_bubble_fill,
-            name: "Feature suggestion",
-            subtitle: "Your feature ideas",
+            name: "Feeback",
+            subtitle: "Tell us what you think",
             iconSize: 20.0,
             borderStatus: true,
             onPressed: () {
@@ -108,11 +114,19 @@ class _SettingsState extends State<Settings> {
   }
 
   check() async {
-    var status = await test_ip();
-    if (status == false) {
+    var mydevices = await checkDevices();
+
+    if (mydevices == false) {
       return setState(() {
-        ipStatus = false;
+        deviceStatus = false;
       });
+    } else {
+      var status = await test_ip();
+      if (status == false) {
+        return setState(() {
+          ipStatus = false;
+        });
+      }
     }
   }
 
@@ -368,7 +382,7 @@ class _SettingsState extends State<Settings> {
                   InputWidget(
                     namecontroller: messagecontroller,
                     label: "Feedback",
-                    placeholder: 'Add a peanut butter dispenser.',
+                    placeholder: 'I love pineapple pizza.',
                     lines: 5,
                   ),
                   const SizedBox(height: 15.0),

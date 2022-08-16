@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:piremote/screens/Dashboard.dart';
 import 'package:piremote/screens/SplashScreen.dart';
 
 Future main() async {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         ),
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen(),
+      home: const Dashboard(),
     );
   }
 }

@@ -381,6 +381,18 @@ fetchTopQueries() async {
   }
 }
 
+checkDevices() async {
+  var devices = await dbHelper.queryAllRows('devices');
+
+  if(devices.length <= 0){
+    log("No devices");
+    return false;    
+  } else { 
+    log("Devices: ${devices.length}");
+    return true;
+  }
+}
+
 test_ip() async {
   var devices = await dbHelper.queryAllRows('devices');
 

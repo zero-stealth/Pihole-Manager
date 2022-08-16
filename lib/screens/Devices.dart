@@ -8,6 +8,7 @@ import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/models/QueryModel.dart';
 import 'package:piremote/screens/AddDevices.dart';
 import 'package:piremote/widgets/Disconnected.dart';
+import 'package:piremote/widgets/NoDevices.dart';
 import 'package:piremote/widgets/Panels.dart';
 import 'package:piremote/widgets/Stats.dart';
 import 'dart:async';
@@ -33,6 +34,7 @@ class _DevicesState extends State<Devices> {
   String clients_ever_seen = "";
   var myprotocol = "";
   var ipStatus = true;
+  var deviceStatus = true;
 
   deviceStatusIcon(status) {
     switch (status) {
@@ -55,12 +57,19 @@ class _DevicesState extends State<Devices> {
   }
 
   fetchQueries() async {
-    var status = await test_ip();
+    var mydevices = await checkDevices();
 
-    if (status == false) {
+    if (mydevices == false) {
       return setState(() {
-        ipStatus = false;
+        deviceStatus = false;
       });
+    } else {
+      var status = await test_ip();
+      if (status == false) {
+        return setState(() {
+          ipStatus = false;
+        });
+      }
     }
 
     final dbHelper = DatabaseHelper.instance;
@@ -335,6 +344,10 @@ class _DevicesState extends State<Devices> {
 
   devices_list() {
     // print(devices_data.length);
+    if (deviceStatus == false) {
+      return NoDevices(context: context);
+    }
+
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -505,5 +518,3 @@ class _DevicesState extends State<Devices> {
     );
   }
 }
-
-
