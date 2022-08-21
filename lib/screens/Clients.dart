@@ -198,7 +198,7 @@ class _ClientsState extends State<Clients> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${myclients[index]['name']}",
+                      myclients[index]['name'] == "none" ? "unnamed" : "${myclients[index]['name']}",
                       overflow: TextOverflow.clip,
                       style: TextStyle(
                         fontSize: 14.0,
