@@ -91,12 +91,11 @@ enableService(name) async {
     };
 
     if(s[i]['name'] == name){
-      // var regex = Uri.encodeFull(s[i]['regex']); 
       var regex = s[i]['regex'];
       log(regex);
 
       final res = await http.Client().get(Uri.parse(
-        'http://${d[0]['ip']}/admin/api.php?list=regex_white&add=$regex&auth=${d[0]['apitoken']}'));
+        'http://${d[0]['ip']}/admin/api.php?list=regex_black&sub=$regex&auth=${d[0]['apitoken']}'));
       
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
