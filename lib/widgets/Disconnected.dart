@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:piremote/screens/EditDevice.dart';
 
 class Disconnected extends StatelessWidget {
   const Disconnected({
@@ -55,6 +56,25 @@ class Disconnected extends StatelessWidget {
                 fontFamily: "SFT-Regular",
               ),
             ),
+            SizedBox(height: 30.0),
+            CupertinoButton(
+                borderRadius: BorderRadius.circular(6.0),
+                color: Colors.redAccent,
+                child: Text(
+                  "Edit Device",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                    fontFamily: "SFT-Regular",
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditDevice()),
+                  );
+                },
+              ),
           ],
         ),
       ),

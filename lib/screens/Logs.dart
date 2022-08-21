@@ -248,7 +248,7 @@ class _LogsState extends State<Logs> {
       return NoDevices(context: context);
     }
 
-    if(nologs == false){
+    if(nologs == true){
       return NoLogs(context: context);
     }
     
