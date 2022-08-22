@@ -311,8 +311,7 @@ class _LogsState extends State<Logs> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
-                          fontFamily: pRegular,
-                          fontWeight: FontWeight.w600,
+                          fontFamily: pBold,
                         ),
                       ),
                       SizedBox(height: 5.0),
