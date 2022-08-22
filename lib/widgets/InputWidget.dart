@@ -3,19 +3,37 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class InputWidget extends StatelessWidget {
+class InputWidget extends StatefulWidget {
   const InputWidget({
     Key? key,
     required this.namecontroller,
     required this.label,
     required this.placeholder,
     required this.lines,
+    required this.qrcode,
   }) : super(key: key);
 
   final TextEditingController namecontroller;
   final String label;
   final String placeholder;
   final int lines;
+  final bool qrcode;
+
+  @override
+  State<InputWidget> createState() => _InputWidgetState();
+}
+
+class _InputWidgetState extends State<InputWidget> {
+  qr() {
+    return InkWell(
+      onTap: () {},
+      child: Icon(
+        CupertinoIcons.qrcode,
+        color: Color(0xff3FB950),
+        size: 20.0,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +41,20 @@ class InputWidget extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          child: Text(
-            label,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Color(0xff3FB950),
-              fontFamily: "SFT-Regular",
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.label,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Color(0xff3FB950),
+                  fontFamily: "SFT-Regular",
+                ),
+              ),
+              widget.qrcode == true ? qr() : Container(),
+            ],
           ),
         ),
         SizedBox(height: 12.0),
@@ -48,10 +72,10 @@ class InputWidget extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
             ),
-            controller: namecontroller,
+            controller: widget.namecontroller,
             onChanged: (text) {},
-            maxLines: lines,
-            placeholder: placeholder,
+            maxLines: widget.lines,
+            placeholder: widget.placeholder,
             placeholderStyle: TextStyle(
               color: Colors.grey.withOpacity(0.2),
               fontFamily: "SFT-Regular",
