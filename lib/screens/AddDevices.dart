@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/Dashboard.dart';
 import 'package:piremote/widgets/InputWidget.dart';
@@ -236,7 +237,7 @@ class _AddDevicesState extends State<AddDevices> {
                             fontSize: 12.0,
                             // color: Color(0xff3FB950),
                             color: Colors.white,
-                            fontFamily: 'SFD-Bold',
+                            fontFamily: pBold,
                           ),
                         ),
                       ),
@@ -251,7 +252,7 @@ class _AddDevicesState extends State<AddDevices> {
                             fontSize: 12.0,
                             // color: Color(0xff3FB950),
                             color: Colors.white,
-                            fontFamily: 'SFD-Bold',
+                            fontFamily: pBold,
                           ),
                         ),
                       ),
@@ -372,7 +373,7 @@ class Notifier extends StatelessWidget {
                   softWrap: true,
                   style: TextStyle(
                     color: Color(0xff3FB950),
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                     fontSize: 14.0,
                   ),
                 ),
@@ -403,7 +404,7 @@ class Notifier extends StatelessWidget {
                     style: TextStyle(
                       overflow: TextOverflow.clip,
                       color: Colors.redAccent,
-                      fontFamily: "SFT-Regular",
+                      fontFamily: pRegular,
                       fontSize: 14.0,
                     ),
                   ),

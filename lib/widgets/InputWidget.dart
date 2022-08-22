@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:piremote/data/fonts.dart';
 
 class InputWidget extends StatefulWidget {
   const InputWidget({
@@ -50,7 +51,7 @@ class _InputWidgetState extends State<InputWidget> {
                 style: TextStyle(
                   fontSize: 12.0,
                   color: Color(0xff3FB950),
-                  fontFamily: "SFT-Regular",
+                  fontFamily: pRegular,
                 ),
               ),
               widget.qrcode == true ? qr() : Container(),
@@ -78,7 +79,7 @@ class _InputWidgetState extends State<InputWidget> {
             placeholder: widget.placeholder,
             placeholderStyle: TextStyle(
               color: Colors.grey.withOpacity(0.2),
-              fontFamily: "SFT-Regular",
+              fontFamily: pRegular,
               fontSize: 14.0,
             ),
           ),

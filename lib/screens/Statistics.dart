@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -124,7 +125,7 @@ class _StatisticsState extends State<Statistics> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(
                     CupertinoIcons.device_laptop,
                     color: Color(0xff3FB950),
@@ -135,7 +136,7 @@ class _StatisticsState extends State<Statistics> {
                     'Top Clients',
                     style: TextStyle(
                       color: Color(0xff3FB950),
-                      fontFamily: "SFD-Bold",
+                      fontFamily: pBold,
                       fontSize: 14.0,
                     ),
                   ),
@@ -173,7 +174,7 @@ class _StatisticsState extends State<Statistics> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 13.0,
-                                  fontFamily: "SFT-Regular",
+                                  fontFamily: pRegular,
                                   // fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -184,7 +185,7 @@ class _StatisticsState extends State<Statistics> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 13.0,
-                              fontFamily: "SFT-Regular",
+                              fontFamily: pRegular,
                             ),
                           ),
                         ],
@@ -223,7 +224,7 @@ class _StatisticsState extends State<Statistics> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(
                     CupertinoIcons.checkmark_shield_fill,
                     color: Color(0xff3FB950),
@@ -234,7 +235,7 @@ class _StatisticsState extends State<Statistics> {
                     'Top Allowed',
                     style: TextStyle(
                       color: Color(0xff3FB950),
-                      fontFamily: "SFD-Bold",
+                      fontFamily: pBold,
                       fontSize: 14.0,
                     ),
                   ),
@@ -270,7 +271,7 @@ class _StatisticsState extends State<Statistics> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontFamily: "SFT-Regular",
+                                    fontFamily: pRegular,
                                     fontSize: 13.0,
                                     // fontWeight: FontWeight.w600,
                                   ),
@@ -282,7 +283,7 @@ class _StatisticsState extends State<Statistics> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13.0,
-                                fontFamily: "SFT-Regular",
+                                fontFamily: pRegular,
                               ),
                             ),
                           ],
@@ -322,7 +323,7 @@ class _StatisticsState extends State<Statistics> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(
                     CupertinoIcons.xmark_shield_fill,
                     color: Colors.redAccent,
@@ -333,7 +334,7 @@ class _StatisticsState extends State<Statistics> {
                     'Top Blocked',
                     style: TextStyle(
                       color: Colors.redAccent,
-                      fontFamily: "SFD-Bold",
+                      fontFamily: pBold,
                       fontSize: 14.0,
                     ),
                   ),
@@ -370,7 +371,7 @@ class _StatisticsState extends State<Statistics> {
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   color: Colors.white,
-                                  fontFamily: "SFT-Regular",
+                                  fontFamily: pRegular,
                                   // fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -381,7 +382,7 @@ class _StatisticsState extends State<Statistics> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 13.0,
-                              fontFamily: "SFT-Regular",
+                              fontFamily: pRegular,
                             ),
                           ),
                         ],

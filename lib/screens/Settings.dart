@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/Blocked.dart';
 import 'package:piremote/screens/Clients.dart';
@@ -142,7 +143,7 @@ class _SettingsState extends State<Settings> {
           'Send',
           style: TextStyle(
             fontSize: 14.0,
-            fontFamily: "SFT-Regular",
+            fontFamily: pRegular,
           ),
         );
     }
@@ -205,7 +206,7 @@ class _SettingsState extends State<Settings> {
                     style: TextStyle(
                       color: Color(0xff3FB950),
                       fontSize: 18.0,
-                      fontFamily: 'SFD-Bold',
+                      fontFamily: pBold,
                     ),
                   ),
                   const SizedBox(height: 10.0),
@@ -215,7 +216,7 @@ class _SettingsState extends State<Settings> {
                       color: Colors.white.withOpacity(0.5),
                       fontSize: 12.0,
                       height: 1.5,
-                      fontFamily: "SFT-Regular",
+                      fontFamily: pRegular,
                     ),
                   ),
                   const SizedBox(height: 20.0),
@@ -242,7 +243,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 12.0,
-                          fontFamily: "SFT-Regular",
+                          fontFamily: pRegular,
                         ),
                       ),
                       onPressed: () {
@@ -327,7 +328,7 @@ class _SettingsState extends State<Settings> {
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 12.0,
-                          fontFamily: "SFT-Regular",
+                          fontFamily: pRegular,
                         ),
                       ),
                       onPressed: () {
@@ -497,7 +498,7 @@ class ChangelogItem extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14.0,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ),
@@ -577,7 +578,7 @@ class SettingsItem extends StatelessWidget {
                       name,
                       style: TextStyle(
                         fontSize: 14.0,
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                         color: Colors.white,
                       ),
                     ),
@@ -587,7 +588,7 @@ class SettingsItem extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 12.0,
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                       ),
                     ),
                   ],

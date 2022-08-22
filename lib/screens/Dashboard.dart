@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/AddDevices.dart';
@@ -158,7 +159,7 @@ class _DashboardState extends State<Dashboard> {
                   child: Text(
                     appBarName(),
                     style: TextStyle(
-                      fontFamily: 'SFD-Bold',
+                      fontFamily: pBold,
                       color: Colors.white,
                       fontSize: 18.0,
                     ),
@@ -297,6 +298,7 @@ class _DashboardState extends State<Dashboard> {
                                         'Home',
                                         style: TextStyle(
                                           fontSize: 10.0,
+                                          fontFamily: pRegular,
                                           color: selectedMenuItem == "home"
                                               ? Color(0xff3FB950)
                                               : Color.fromARGB(
@@ -342,6 +344,7 @@ class _DashboardState extends State<Dashboard> {
                                         'Stats',
                                         style: TextStyle(
                                           fontSize: 10.0,
+                                          fontFamily: pRegular,
                                           color: selectedMenuItem == "stats"
                                               ? Color(0xff3FB950)
                                               : Color.fromARGB(
@@ -385,6 +388,7 @@ class _DashboardState extends State<Dashboard> {
                                         'Logs',
                                         style: TextStyle(
                                           fontSize: 10.0,
+                                          fontFamily: pRegular,
                                           color: selectedMenuItem == "logs"
                                               ? Color(0xff3FB950)
                                               : Color.fromARGB(
@@ -430,6 +434,7 @@ class _DashboardState extends State<Dashboard> {
                                         'Settings',
                                         style: TextStyle(
                                           fontSize: 10.0,
+                                          fontFamily: pRegular,
                                           color: selectedMenuItem == "settings"
                                               ? Color(0xff3FB950)
                                               : Color.fromARGB(

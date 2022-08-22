@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:piremote/data/fonts.dart';
 
 class NoLogs extends StatelessWidget {
   const NoLogs({
@@ -41,7 +42,7 @@ class NoLogs extends StatelessWidget {
                 fontSize: 18.0,
                 // color: Color(0xff3FB950),
                 color: Colors.white,
-                fontFamily: 'SFD-Bold',
+                fontFamily: pBold,
               ),
             ),
             SizedBox(height: 10.0),
@@ -52,7 +53,7 @@ class NoLogs extends StatelessWidget {
                 fontSize: 16.0,
                 // color: Color(0xff3FB950),
                 color: Color.fromARGB(255, 145, 145, 145),
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ],

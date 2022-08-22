@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:piremote/widgets/InputWidget.dart';
@@ -44,7 +45,7 @@ class _ClientsState extends State<Clients> {
           'Change name',
           style: TextStyle(
             fontSize: 14.0,
-            fontFamily: "SFT-Regular",
+            fontFamily: pRegular,
           ),
         );
     }
@@ -112,7 +113,7 @@ class _ClientsState extends State<Clients> {
                       placeholder: "$name",
                       placeholderStyle: TextStyle(
                         color: Colors.grey.withOpacity(0.2),
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                         fontSize: 14.0,
                       ),
                     ),
@@ -200,9 +201,9 @@ class _ClientsState extends State<Clients> {
                     Text(
                       myclients[index]['name'] == "none" ? "unnamed" : "${myclients[index]['name']}",
                       overflow: TextOverflow.clip,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14.0,
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                         color: Color(0xff3FB950),
                       ),
                     ),
@@ -212,7 +213,7 @@ class _ClientsState extends State<Clients> {
                       overflow: TextOverflow.clip,
                       style: TextStyle(
                         fontSize: 14.0,
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                         // color: Color(0xff3FB950),
                         color: Colors.white,
                       ),
@@ -223,7 +224,7 @@ class _ClientsState extends State<Clients> {
                       overflow: TextOverflow.clip,
                       style: TextStyle(
                         fontSize: 14.0,
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                         color: Colors.white.withOpacity(0.5),
                       ),
                     ),
@@ -238,12 +239,12 @@ class _ClientsState extends State<Clients> {
                       child: CupertinoButton(
                         borderRadius: BorderRadius.circular(6.0),
                         color: const Color.fromARGB(255, 16, 21, 27),
-                        child: const Text(
+                        child: Text(
                           'Manage Device',
                           style: TextStyle(
                             fontSize: 14.0,
                             color: Color(0xff3FB950),
-                            fontFamily: "SFT-Regular",
+                            fontFamily: pRegular,
                           ),
                         ),
                         onPressed: () async {
@@ -297,7 +298,7 @@ class _ClientsState extends State<Clients> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
-                      fontFamily: 'SFD-Bold',
+                      fontFamily: pBold,
                     ),
                   ),
                 ],

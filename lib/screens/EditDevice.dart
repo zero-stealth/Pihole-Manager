@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/screens/AddDevices.dart';
 import 'package:piremote/widgets/InputWidget.dart';
@@ -301,7 +302,7 @@ class _EditDeviceState extends State<EditDevice> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
-                        fontFamily: 'SFD-Bold',
+                        fontFamily: pBold,
                       ),
                     ),
                   ],
@@ -341,7 +342,7 @@ class _EditDeviceState extends State<EditDevice> {
                             fontSize: 12.0,
                             // color: Color(0xff3FB950),
                             color: Colors.white,
-                            fontFamily: 'SFD-Bold',
+                            fontFamily: pBold,
                           ),
                         ),
                       ),
@@ -355,7 +356,7 @@ class _EditDeviceState extends State<EditDevice> {
                             fontSize: 12.0,
                             // color: Color(0xff3FB950),
                             color: Colors.white,
-                            fontFamily: 'SFD-Bold',
+                            fontFamily: pBold,
                           ),
                         ),
                       ),

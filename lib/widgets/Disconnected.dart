@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/screens/EditDevice.dart';
 
 class Disconnected extends StatelessWidget {
@@ -42,7 +43,7 @@ class Disconnected extends StatelessWidget {
                 fontSize: 18.0,
                 // color: Color(0xff3FB950),
                 color: Colors.redAccent,
-                fontFamily: 'SFD-Bold',
+                fontFamily: pBold,
               ),
             ),
             SizedBox(height: 10.0),
@@ -53,7 +54,7 @@ class Disconnected extends StatelessWidget {
                 fontSize: 16.0,
                 // color: Color(0xff3FB950),
                 color: Colors.redAccent,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
             SizedBox(height: 30.0),
@@ -65,7 +66,7 @@ class Disconnected extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14.0,
-                  fontFamily: "SFT-Regular",
+                  fontFamily: pRegular,
                 ),
               ),
               onPressed: () {

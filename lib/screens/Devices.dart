@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/models/QueryModel.dart';
@@ -377,7 +378,7 @@ class _DevicesState extends State<Devices> {
                             devices_data[i]['name'],
                             style: TextStyle(
                               color: Colors.white,
-                              fontFamily: "SFD-Bold",
+                              fontFamily: pBold,
                               fontSize: 18.0,
                             ),
                           ),
@@ -446,20 +447,20 @@ class _DevicesState extends State<Devices> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     devices_data[i]['status'] == 'enabled'
-                        ? const Text(
+                        ? Text(
                             'Disable',
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 14.0,
-                              fontFamily: 'SFT-Regular',
+                              fontFamily: pRegular,
                             ),
                           )
-                        : const Text(
+                        : Text(
                             'Enable',
                             style: TextStyle(
                               color: Color(0xff3FB950),
                               fontSize: 14.0,
-                              fontFamily: 'SFT-Regular',
+                              fontFamily: pRegular,
                             ),
                           ),
                   ],

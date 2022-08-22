@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piremote/data/fonts.dart';
 
 class Panels extends StatelessWidget {
   final String firstLabel;
@@ -34,7 +35,7 @@ class Panels extends StatelessWidget {
                     firstLabel,
                     style: TextStyle(
                       fontSize: 12.0,
-                      fontFamily: "SFD-Bold",
+                      fontFamily: pBold,
                       color: Color(0xff3FB950),
                     ),
                   ),
@@ -43,7 +44,7 @@ class Panels extends StatelessWidget {
                     firstValue,
                     style: TextStyle(
                       fontSize: 14.0,
-                      fontFamily: "SFT-Regular",
+                      fontFamily: pRegular,
                       color: Colors.white,
                     ),
                   ),
@@ -65,7 +66,7 @@ class Panels extends StatelessWidget {
                     secondLabel,
                     style: TextStyle(
                       fontSize: 12.0,
-                      fontFamily: "SFD-Bold",
+                      fontFamily: pBold,
                       color: Color(0xff3FB950),
                     ),
                   ),
@@ -74,7 +75,7 @@ class Panels extends StatelessWidget {
                     secondValue,
                     style: TextStyle(
                       fontSize: 14.0,
-                      fontFamily: "SFT-Regular",
+                      fontFamily: pRegular,
                       color: Colors.white,
                     ),
                   ),

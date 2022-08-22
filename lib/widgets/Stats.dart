@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:piremote/data/fonts.dart';
 
 class Stats extends StatelessWidget {
   final String memoryUsage;
@@ -26,7 +27,7 @@ class Stats extends StatelessWidget {
           '$temperature °C',
           style: TextStyle(
             color: Colors.white,
-            fontFamily: "SFT-Regular",
+            fontFamily: pRegular,
             fontSize: 12.0,
           ),
         ),
@@ -47,7 +48,7 @@ class Stats extends StatelessWidget {
           memoryUsage,
           style: TextStyle(
             color: Colors.white,
-            fontFamily: "SFT-Regular",
+            fontFamily: pRegular,
             fontSize: 12.0,
           ),
         ),

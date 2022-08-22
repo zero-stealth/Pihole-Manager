@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 
 class Query extends StatefulWidget {
@@ -95,7 +96,7 @@ class _QueryState extends State<Query> {
           style: TextStyle(
             color: Color(0xff3FB950),
             fontSize: 13.0,
-            fontFamily: "SFT-Regular",
+            fontFamily: pRegular,
           ),
         ),
         onPressed: () {},
@@ -111,7 +112,7 @@ class _QueryState extends State<Query> {
           style: TextStyle(
             color: Colors.redAccent,
             fontSize: 13.0,
-            fontFamily: "SFT-Regular",
+            fontFamily: pRegular,
           ),
         ),
         onPressed: () {},
@@ -142,7 +143,7 @@ class _QueryState extends State<Query> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 13.0,
-              fontFamily: "SFT-Regular",
+              fontFamily: pRegular,
             ),
           ),
           onPressed: () {
@@ -159,7 +160,7 @@ class _QueryState extends State<Query> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 13.0,
-              fontFamily: "SFT-Regular",
+              fontFamily: pRegular,
             ),
           ),
           onPressed: () {
@@ -176,7 +177,7 @@ class _QueryState extends State<Query> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 13.0,
-              fontFamily: "SFT-Regular",
+              fontFamily: pRegular,
             ),
           ),
           onPressed: () {
@@ -193,7 +194,7 @@ class _QueryState extends State<Query> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 13.0,
-              fontFamily: "SFT-Regular",
+              fontFamily: pRegular,
             ),
           ),
           onPressed: () {
@@ -210,7 +211,7 @@ class _QueryState extends State<Query> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 13.0,
-              fontFamily: "SFT-Regular",
+              fontFamily: pRegular,
             ),
           ),
           onPressed: () {
@@ -299,7 +300,7 @@ class _QueryState extends State<Query> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
-                        fontFamily: 'SFD-Bold',
+                        fontFamily: pBold,
                       ),
                     ),
                   ],
@@ -437,7 +438,7 @@ class QueryItem extends StatelessWidget {
                   style: TextStyle(
                     color: titlecolor,
                     fontSize: 14.0,
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                   ),
                 ),
                 SizedBox(height: 4.0),
@@ -449,7 +450,7 @@ class QueryItem extends StatelessWidget {
                     style: TextStyle(
                       color: textcolor,
                       fontSize: 13.0,
-                      fontFamily: "SFT-Regular",
+                      fontFamily: pRegular,
                     ),
                     softWrap: true,
                     maxLines: 2,

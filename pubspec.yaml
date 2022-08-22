@@ -43,7 +43,6 @@ dependencies:
   flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.5
   flutter_svg: ^1.0.3
-  qr_code_scanner: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +102,14 @@ flutter:
     - family: SFT-Regular
       fonts:
         - asset: assets/SFProText-Regular.ttf
+
+    - family: SFNSR
+      fonts:
+        - asset: assets/SFNSRounded.ttf
+
+    - family: AR
+      fonts:
+        - asset: assets/ArialRounded.ttf
     
     - family: SFCompactRounded
       fonts:

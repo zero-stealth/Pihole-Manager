@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -89,7 +90,7 @@ class _LogsState extends State<Logs> {
                   style: TextStyle(
                     color: Colors.redAccent,
                     fontSize: 13.0,
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                   ),
                 ),
               ],
@@ -99,7 +100,7 @@ class _LogsState extends State<Logs> {
               style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 13.0,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ],
@@ -123,7 +124,7 @@ class _LogsState extends State<Logs> {
                   style: TextStyle(
                     color: Color(0xff3FB950),
                     fontSize: 13.0,
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                   ),
                 ),
               ],
@@ -133,7 +134,7 @@ class _LogsState extends State<Logs> {
               style: TextStyle(
                 color: Color(0xff3FB950),
                 fontSize: 13.0,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ],
@@ -157,7 +158,7 @@ class _LogsState extends State<Logs> {
                   style: TextStyle(
                     color: Colors.blueAccent,
                     fontSize: 13.0,
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                   ),
                 ),
               ],
@@ -167,7 +168,7 @@ class _LogsState extends State<Logs> {
               style: TextStyle(
                 color: Colors.blueAccent,
                 fontSize: 13.0,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ],
@@ -191,7 +192,7 @@ class _LogsState extends State<Logs> {
                   style: TextStyle(
                     color: Colors.redAccent,
                     fontSize: 13.0,
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                   ),
                 ),
               ],
@@ -201,7 +202,7 @@ class _LogsState extends State<Logs> {
               style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 13.0,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ],
@@ -225,7 +226,7 @@ class _LogsState extends State<Logs> {
                   style: TextStyle(
                     color: Colors.redAccent,
                     fontSize: 12.0,
-                    fontFamily: "SFT-Regular",
+                    fontFamily: pRegular,
                   ),
                 ),
               ],
@@ -235,7 +236,7 @@ class _LogsState extends State<Logs> {
               style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 12.0,
-                fontFamily: "SFT-Regular",
+                fontFamily: pRegular,
               ),
             ),
           ],
@@ -310,7 +311,7 @@ class _LogsState extends State<Logs> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
-                          fontFamily: "SFT-Regular",
+                          fontFamily: pRegular,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -321,7 +322,7 @@ class _LogsState extends State<Logs> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 13.0,
-                          fontFamily: "SFT-Regular",
+                          fontFamily: pRegular,
                         ),
                       ),
                       SizedBox(height: 8.0),
