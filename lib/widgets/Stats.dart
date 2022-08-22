@@ -23,12 +23,18 @@ class Stats extends StatelessWidget {
         ),
         SizedBox(width: 5.0),
         Text(
-          '$temperature°',
+          '$temperature °C',
           style: TextStyle(
             color: Colors.white,
             fontFamily: "SFT-Regular",
             fontSize: 12.0,
           ),
+        ),
+        SizedBox(width: 8.0),
+        Container(
+          width: 1.0,
+          height: 15.0,
+          color: Colors.white.withOpacity(0.4),
         ),
         SizedBox(width: 10.0),
         Icon(
