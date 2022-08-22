@@ -90,19 +90,6 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SFD-Bold
-      fonts:
-        - asset: assets/SFProDisplay-Bold.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-    - family: SFD-Regular
-      fonts:
-        - asset: assets/SFProDisplay-Regular.ttf
-
-    - family: SFT-Regular
-      fonts:
-        - asset: assets/SFProText-Regular.ttf
-
     - family: SFNSR
       fonts:
         - asset: assets/SFNSRounded.ttf
@@ -110,14 +97,7 @@ flutter:
     - family: AR
       fonts:
         - asset: assets/ArialRounded.ttf
-    
-    - family: SFCompactRounded
-      fonts:
-        - asset: assets/SFCompactRounded.ttf
-
-    - family: SFT-Bold
-      fonts:
-        - asset: assets/SFProText-Bold.ttf
+  
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
