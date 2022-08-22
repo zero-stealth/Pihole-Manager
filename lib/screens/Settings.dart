@@ -384,6 +384,7 @@ class _SettingsState extends State<Settings> {
                     label: "Feedback",
                     placeholder: 'I love pineapple pizza.',
                     lines: 5,
+                    qrcode: false,
                   ),
                   const SizedBox(height: 15.0),
                   Container(

@@ -105,6 +105,7 @@ class _DevicesState extends State<Devices> {
                 memory = '$ext2%';
               });
             }
+
           }
         } catch (e) {
           print(e);

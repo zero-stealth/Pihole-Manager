@@ -206,6 +206,7 @@ class _AddDevicesState extends State<AddDevices> {
                   label: "Device Name",
                   placeholder: "Mainframe",
                   lines: 1,
+                  qrcode: false,
                 ),
                 SizedBox(height: 15.0),
                 Container(
@@ -267,6 +268,7 @@ class _AddDevicesState extends State<AddDevices> {
                   label: "Pihole ip address",
                   placeholder: "192.168.0.1",
                   lines: 1,
+                  qrcode: false,
                 ),
                 const SizedBox(height: 15.0),
                 InputWidget(
@@ -274,6 +276,7 @@ class _AddDevicesState extends State<AddDevices> {
                   label: "Pihole api token",
                   placeholder: "token",
                   lines: 1,
+                  qrcode: false,
                 ),
                 SizedBox(height: 25.0),
                 Container(

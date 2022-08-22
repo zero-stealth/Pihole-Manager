@@ -58,23 +58,25 @@ class Disconnected extends StatelessWidget {
             ),
             SizedBox(height: 30.0),
             CupertinoButton(
-                borderRadius: BorderRadius.circular(6.0),
-                color: Colors.redAccent,
-                child: Text(
-                  "Edit Device",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.0,
-                    fontFamily: "SFT-Regular",
-                  ),
+              borderRadius: BorderRadius.circular(6.0),
+              color: Colors.redAccent,
+              child: Text(
+                "Edit Device",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                  fontFamily: "SFT-Regular",
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EditDevice()),
-                  );
-                },
               ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditDevice(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

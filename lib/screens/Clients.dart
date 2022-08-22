@@ -200,7 +200,7 @@ class _ClientsState extends State<Clients> {
                     Text(
                       myclients[index]['name'] == "none" ? "unnamed" : "${myclients[index]['name']}",
                       overflow: TextOverflow.clip,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14.0,
                         fontFamily: "SFT-Regular",
                         color: Color(0xff3FB950),
