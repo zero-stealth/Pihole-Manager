@@ -42,7 +42,7 @@ class _LogsHistoryState extends State<LogsHistory> {
       var date = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
       var formattedDate = DateFormat.yMMMd().format(date);
       var formattedTime = DateFormat.jm().format(date);
-      return "Updated on ${formattedDate}, ${formattedTime}";
+      return "Updated ${formattedDate}, ${formattedTime}";
     } catch (e) {
       print(e);
       return timestamp.toString();
