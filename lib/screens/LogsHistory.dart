@@ -76,23 +76,42 @@ class _LogsHistoryState extends State<LogsHistory> {
   statusHandler(status) {
     switch (status) {
       case "blacklisted":
-        return Text(
-          "Blacklisted",
-          style: TextStyle(
-            color: Colors.redAccent,
-            fontFamily: pRegular,
-            fontSize: 12.0,
-          ),
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(CupertinoIcons.xmark_shield_fill,
+                size: 15.0, color: Colors.redAccent),
+            SizedBox(width: 5.0),
+            Text(
+              "Blacklisted",
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontFamily: pRegular,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
         );
 
       case "allowed":
-        return Text(
-          "Allowed",
-          style: TextStyle(
-            color: Color(0xff3FB950),
-            fontFamily: pRegular,
-            fontSize: 12.0,
-          ),
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.xmark_shield_fill,
+              size: 15.0,
+              color: Color(0xff3FB950),
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              "Allowed",
+              style: TextStyle(
+                color: Color(0xff3FB950),
+                fontFamily: pRegular,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
         );
     }
   }
@@ -314,14 +333,6 @@ class _ActionIconState extends State<ActionIcon> {
     };
 
     await dbHelper.update(row, "logsHistory");
-
-    setState(() {
-      if (widget.status == "allowed") {
-        widget.status = "blacklisted";
-      } else {
-        widget.status = "allowed";
-      }
-    });
   }
 
   addToWhitelist(domain, client, id, timestamp) async {
@@ -345,13 +356,29 @@ class _ActionIconState extends State<ActionIcon> {
       onTap: () {
         switch (widget.status) {
           case "allowed":
+            setState(() {
+              widget.status = "blacklisted";
+            });
+
             addToBlacklist(
-                widget.domain, widget.client, widget.id, widget.timestamp);
+              widget.domain,
+              widget.client,
+              widget.id,
+              widget.timestamp,
+            );
             break;
 
           case "blacklisted":
+            setState(() {
+              widget.status = "allowed";
+            });
+
             addToWhitelist(
-                widget.domain, widget.client, widget.id, widget.timestamp);
+              widget.domain,
+              widget.client,
+              widget.id,
+              widget.timestamp,
+            );
             break;
         }
       },
