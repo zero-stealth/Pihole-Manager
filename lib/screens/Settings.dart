@@ -100,8 +100,8 @@ class _SettingsState extends State<Settings> {
             },
           ),
           SettingsItem(
-            icon: CupertinoIcons.info_circle_fill,
-            name: "Changelog",
+            icon: CupertinoIcons.news_solid,
+            name: "What's new",
             subtitle: "Latest changes",
             borderStatus: false,
             iconSize: 22.0,
@@ -200,39 +200,76 @@ class _SettingsState extends State<Settings> {
                   //     ),
                   //   ],
                   // ),
+                  const SizedBox(height: 30.0),
+                  Container(
+                    width: double.infinity,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/appicon.png',
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20.0),
-                  Text(
-                    'Changelog',
-                    style: TextStyle(
-                      color: Color(0xff3FB950),
-                      fontSize: 18.0,
-                      fontFamily: pBold,
+                  Container(
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        'What\'s New',
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontSize: 20.0,
+                          fontFamily: pBold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10.0),
-                  Text(
-                    'We are working on more features to improve your pihole experience with regular updates.',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 12.0,
-                      height: 1.5,
-                      fontFamily: pRegular,
+                  Container(
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        'v1.7',
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontSize: 16.0,
+                          fontFamily: pBold,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 20.0),
+                  //const SizedBox(height: 15.0),
+                  // Container(
+                  //   width: double.infinity,
+                  //   child: Text(
+                  //     'We are working on more features to improve your pihole experience with regular updates.',
+                  //     textAlign: TextAlign.center,
+                  //     style: TextStyle(
+                  //       color: Colors.white.withOpacity(0.5),
+                  //       fontSize: 12.0,
+                  //       height: 1.5,
+                  //       fontFamily: pRegular,
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 25.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ChangelogItem(message: 'Block popular services.'),
-                      ChangelogItem(message: 'Enable and disable pihole.'),
-                      ChangelogItem(message: 'View pihole statistics.'),
-                      ChangelogItem(message: 'View query logs.'),
                       ChangelogItem(
-                          message: 'Blacklist and whitelist domains.'),
-                      ChangelogItem(message: 'Manage clients.'),
+                        title: 'Logs History',
+                        message:
+                            "View your past whitelisting and blacklisting actions and undo them.",
+                      ),
+                      ChangelogItem(
+                        title: 'Improvements',
+                        message:
+                            "Minor UI changes.",
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 20.0),
+                  //const SizedBox(height: 20.0),
                   Container(
                     width: double.infinity,
                     child: CupertinoButton(
@@ -482,33 +519,60 @@ class _SettingsState extends State<Settings> {
 }
 
 class ChangelogItem extends StatelessWidget {
+  final String title;
   final String message;
 
-  ChangelogItem({required this.message});
+  ChangelogItem({
+    required this.message,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10.0),
+      margin: EdgeInsets.only(bottom: 20.0),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(
-            CupertinoIcons.pin_fill,
+            CupertinoIcons.news_solid,
             color: Color(0xff3FB950),
-            size: 16.0,
+            size: 30.0,
           ),
-          SizedBox(width: 10.0),
-          Flexible(
-            child: Text(
-              message,
-              overflow: TextOverflow.clip,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0,
-                fontFamily: pRegular,
+          SizedBox(width: 25.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                    fontFamily: pBold,
+                  ),
+                ),
               ),
-            ),
+              SizedBox(height: 2.0),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
+                child: Text(
+                  message,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 14.0,
+                    height: 1.5,
+                    fontFamily: pRegular,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
