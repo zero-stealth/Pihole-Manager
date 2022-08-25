@@ -37,22 +37,12 @@ class _LogsHistoryState extends State<LogsHistory> {
     fetchHistory();
   }
 
-  calculateTime(timestamp) {
-    try {
-      var date = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
-      var formattedDate = DateFormat.yMMMd().format(date);
-      var formattedTime = DateFormat.jm().format(date);
-      return "Updated ${formattedDate}, ${formattedTime}";
-    } catch (e) {
-      print(e);
-      return timestamp.toString();
-    }
-  }
+  
 
   actionHandler(status, domain, client, index, id, timestamp) {
     switch (status) {
       case "blacklisted":
-        return ActionIcon(
+        return Action(
           status: status,
           domain: domain,
           client: client,
@@ -62,7 +52,7 @@ class _LogsHistoryState extends State<LogsHistory> {
         );
 
       case "allowed":
-        return ActionIcon(
+        return Action(
           status: status,
           domain: domain,
           client: client,
@@ -127,74 +117,13 @@ class _LogsHistoryState extends State<LogsHistory> {
           scrollDirection: Axis.vertical,
           itemCount: history.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              padding: const EdgeInsets.only(
-                bottom: 15.0,
-                left: 20.0,
-                right: 20.0,
-                top: 15.0,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border(
-                  bottom: BorderSide(
-                    width: 2.0,
-                    color: const Color(0xFF161B22).withOpacity(0.5),
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      statusHandler(history[index]['status']),
-                      SizedBox(height: 5.0),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 100,
-                        child: Text(
-                          '${history[index]['domain']}',
-                          overflow: TextOverflow.clip,
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.0,
-                            fontFamily: pBold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        '${history[index]['client']}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                          fontFamily: pRegular,
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Text(
-                        calculateTime(history[index]['timestamp']),
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 12.0,
-                          fontFamily: pRegular,
-                        ),
-                      ),
-                    ],
-                  ),
-                  actionHandler(
-                      history[index]['status'],
-                      history[index]['domain'],
-                      history[index]['client'],
-                      index,
-                      history[index]['_id'],
-                      history[index]['timestamp']),
-                ],
-              ),
+            return actionHandler(
+              history[index]['status'],
+              history[index]['domain'],
+              history[index]['client'],
+              index,
+              history[index]['_id'],
+              history[index]['timestamp'],
             );
           }),
     );
@@ -282,7 +211,7 @@ class _LogsHistoryState extends State<LogsHistory> {
   }
 }
 
-class ActionIcon extends StatefulWidget {
+class Action extends StatefulWidget {
   // status, domain, client, index, id
   String status;
   final String domain;
@@ -291,7 +220,7 @@ class ActionIcon extends StatefulWidget {
   final int id;
   String timestamp;
 
-  ActionIcon({
+  Action({
     required this.status,
     required this.domain,
     required this.client,
@@ -301,10 +230,10 @@ class ActionIcon extends StatefulWidget {
   });
 
   @override
-  State<ActionIcon> createState() => _ActionIconState();
+  State<Action> createState() => _ActionState();
 }
 
-class _ActionIconState extends State<ActionIcon> {
+class _ActionState extends State<Action> {
   addToBlacklist(domain, client, id, timestamp) async {
     final dbHelper = DatabaseHelper.instance;
     var devices = await dbHelper.queryAllRows('devices');
@@ -317,6 +246,61 @@ class _ActionIconState extends State<ActionIcon> {
     if (response.statusCode == 200) {
       print('ADDED TO BLACKLIST');
       await addToHistory(domain, "blacklisted", client, id, timestamp);
+    }
+  }
+
+  calculateTime(timestamp) {
+    try {
+      var date = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
+      var formattedDate = DateFormat.yMMMd().format(date);
+      var formattedTime = DateFormat.jm().format(date);
+      return "Updated ${formattedDate}, ${formattedTime}";
+    } catch (e) {
+      print(e);
+      return timestamp.toString();
+    }
+  }
+
+  statusHandler(status) {
+    switch (status) {
+      case "blacklisted":
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(CupertinoIcons.xmark_shield_fill,
+                size: 15.0, color: Colors.redAccent),
+            SizedBox(width: 5.0),
+            Text(
+              "Blacklisted",
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontFamily: pRegular,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        );
+
+      case "allowed":
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.xmark_shield_fill,
+              size: 15.0,
+              color: Color(0xff3FB950),
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              "Allowed",
+              style: TextStyle(
+                color: Color(0xff3FB950),
+                fontFamily: pRegular,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        );
     }
   }
 
@@ -352,53 +336,115 @@ class _ActionIconState extends State<ActionIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        switch (widget.status) {
-          case "allowed":
-            setState(() {
-              widget.status = "blacklisted";
-            });
-
-            addToBlacklist(
-              widget.domain,
-              widget.client,
-              widget.id,
-              widget.timestamp,
-            );
-            break;
-
-          case "blacklisted":
-            setState(() {
-              widget.status = "allowed";
-            });
-
-            addToWhitelist(
-              widget.domain,
-              widget.client,
-              widget.id,
-              widget.timestamp,
-            );
-            break;
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-            color: widget.status == "allowed"
-                ? Colors.redAccent.withOpacity(0.1)
-                : Color(0xff3FB950).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(50.0)),
-        child: Center(
-          child: Icon(
-            widget.status == "allowed"
-                ? CupertinoIcons.xmark_shield_fill
-                : CupertinoIcons.checkmark_shield_fill,
-            color: widget.status == "allowed"
-                ? Colors.redAccent
-                : Color(0xff3FB950),
+    return Container(
+      padding: const EdgeInsets.only(
+        bottom: 15.0,
+        left: 20.0,
+        right: 20.0,
+        top: 15.0,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border(
+          bottom: BorderSide(
+            width: 2.0,
+            color: const Color(0xFF161B22).withOpacity(0.5),
           ),
         ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              statusHandler(widget.status),
+              SizedBox(height: 5.0),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
+                child: Text(
+                  '${widget.domain}',
+                  overflow: TextOverflow.clip,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                    fontFamily: pBold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                '${widget.client}',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13.0,
+                  fontFamily: pRegular,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Text(
+                calculateTime(widget.timestamp),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.5),
+                  fontSize: 12.0,
+                  fontFamily: pRegular,
+                ),
+              ),
+            ],
+          ),
+          InkWell(
+            onTap: () {
+              switch (widget.status) {
+                case "allowed":
+                  setState(() {
+                    widget.status = "blacklisted";
+                  });
+
+                  addToBlacklist(
+                    widget.domain,
+                    widget.client,
+                    widget.id,
+                    widget.timestamp,
+                  );
+                  break;
+
+                case "blacklisted":
+                  setState(() {
+                    widget.status = "allowed";
+                  });
+
+                  addToWhitelist(
+                    widget.domain,
+                    widget.client,
+                    widget.id,
+                    widget.timestamp,
+                  );
+                  break;
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  color: widget.status == "allowed"
+                      ? Colors.redAccent.withOpacity(0.1)
+                      : Color(0xff3FB950).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(50.0)),
+              child: Center(
+                child: Icon(
+                  widget.status == "allowed"
+                      ? CupertinoIcons.xmark_shield_fill
+                      : CupertinoIcons.checkmark_shield_fill,
+                  color: widget.status == "allowed"
+                      ? Colors.redAccent
+                      : Color(0xff3FB950),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
