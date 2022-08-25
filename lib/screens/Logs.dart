@@ -289,6 +289,8 @@ class _LogsState extends State<Logs> {
                   ),
                   padding: EdgeInsets.only(
                     bottom: 5.0,
+                    left: 20.0,
+                    right: 20.0,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.transparent,

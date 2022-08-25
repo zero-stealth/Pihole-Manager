@@ -511,7 +511,15 @@ class _StatisticsState extends State<Statistics> {
       },
       child: Column(
         children: [
-          all(),
+          Container(
+            padding: EdgeInsets.only(
+              top: 10.0,
+              left: 20.0,
+              right: 20.0,
+              bottom: 20.0,
+            ),
+            child: all(),
+          ),
         ],
       ),
     );
