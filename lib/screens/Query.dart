@@ -309,7 +309,10 @@ class _QueryState extends State<Query> {
                 
                 SizedBox(height: 20.0),
                 Container(
-                  padding: EdgeInsets.all(15.0),
+                  padding: EdgeInsets.only(
+                    top: 5.0,
+                    bottom: 5.0,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF161B22),
                     borderRadius: BorderRadius.circular(10.0),
@@ -317,26 +320,25 @@ class _QueryState extends State<Query> {
                   child: Column(
                     children: [
                       checkStatus(widget.status),
-                      SizedBox(height: 10.0),
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       QueryItem(
                         title: 'Time',
                         domain: widget.timestamp,
-                        icon: CupertinoIcons.clock,
+                        icon: CupertinoIcons.clock_fill,
                         color: Color(0xff3FB950),
                         textcolor: Colors.white.withOpacity(0.5),
                         titlecolor: Colors.white,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       QueryItem(
                         title: 'Domain',
                         domain: widget.domain,
@@ -345,12 +347,12 @@ class _QueryState extends State<Query> {
                         textcolor: Colors.white.withOpacity(0.5),
                         titlecolor: Colors.white,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       QueryItem(
                         title: 'Client',
                         domain: widget.client,
@@ -359,12 +361,12 @@ class _QueryState extends State<Query> {
                         textcolor: Colors.white.withOpacity(0.5),
                         titlecolor: Colors.white,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      SizedBox(height: 10.0),
+                      
                       QueryItem(
                         title: 'Type',
                         domain: widget.type,
@@ -418,49 +420,57 @@ class QueryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              icon,
-              size: 24.0,
-              color: color,
-            ),
-            SizedBox(width: 15.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: titlecolor,
-                    fontSize: 14.0,
-                    fontFamily: pRegular,
-                  ),
-                ),
-                SizedBox(height: 4.0),
-                SizedBox(
-                  width: 250,
-                  child: Text(
-                    domain,
-                    overflow: TextOverflow.clip,
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 10.0,
+        bottom: 10.0,
+        left: 15.0,
+        right: 15.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                icon,
+                size: 24.0,
+                color: color,
+              ),
+              SizedBox(width: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
                     style: TextStyle(
-                      color: textcolor,
-                      fontSize: 13.0,
+                      color: titlecolor,
+                      fontSize: 14.0,
                       fontFamily: pRegular,
                     ),
-                    softWrap: true,
-                    maxLines: 2,
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+                  SizedBox(height: 4.0),
+                  SizedBox(
+                    width: 250,
+                    child: Text(
+                      domain,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        color: textcolor,
+                        fontSize: 13.0,
+                        fontFamily: pRegular,
+                      ),
+                      softWrap: true,
+                      maxLines: 2,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
