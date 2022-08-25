@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -132,7 +134,7 @@ class _QueryState extends State<Query> {
     );
   }
 
-  changeBtn(type, domain) {
+  changeBtn(type, domain, client) {
     switch (type) {
       case '1':
         return CupertinoButton(
@@ -147,7 +149,7 @@ class _QueryState extends State<Query> {
             ),
           ),
           onPressed: () {
-            addToWhitelist(domain);
+            addToWhitelist(domain, client);
           },
         );
 
@@ -164,7 +166,7 @@ class _QueryState extends State<Query> {
             ),
           ),
           onPressed: () {
-            addToBlacklist(domain);
+            addToBlacklist(domain, client);
           },
         );
 
@@ -181,7 +183,7 @@ class _QueryState extends State<Query> {
             ),
           ),
           onPressed: () {
-            addToBlacklist(domain);
+            addToBlacklist(domain, client);
           },
         );
 
@@ -198,7 +200,7 @@ class _QueryState extends State<Query> {
             ),
           ),
           onPressed: () {
-            addToWhitelist(domain);
+            addToWhitelist(domain, client);
           },
         );
 
@@ -215,13 +217,13 @@ class _QueryState extends State<Query> {
             ),
           ),
           onPressed: () {
-            addToWhitelist(domain);
+            addToWhitelist(domain, client);
           },
         );
     }
   }
 
-  addToBlacklist(domain) async {
+  addToBlacklist(domain, client) async {
     setState(() {
       progress = 'loading';
     });
@@ -235,13 +237,36 @@ class _QueryState extends State<Query> {
 
     if (response.statusCode == 200) {
       print('ADDED TO BLACKLIST');
+      await addToHistory(domain, "blacklisted", client);
       setState(() {
         progress = 'blacklisted';
       });
     }
   }
 
-  addToWhitelist(domain) async {
+  addToHistory(domain, status, client) async {
+
+    final dbHelper = DatabaseHelper.instance;
+    var hist = await dbHelper.queryAllRows('logsHistory');
+
+    for (var i = 0; i < hist.length; i++) {
+      if(hist[i]['domain'] == domain){
+        log("[+] Already exists in db");
+        return;
+      }
+    }
+
+    Map<String, dynamic> row = {
+      "domain": domain,
+      "status": status,
+      "client": client,
+      "timestamp": DateTime.now().millisecondsSinceEpoch,
+    };
+
+    await dbHelper.insert(row, "logsHistory");
+  }
+
+  addToWhitelist(domain, client) async {
     setState(() {
       progress = 'loading';
     });
@@ -255,11 +280,13 @@ class _QueryState extends State<Query> {
 
     if (response.statusCode == 200) {
       print('ADDED TO WHITELIST');
+      await addToHistory(domain, "allowed", client);
       setState(() {
         progress = 'whitelisted';
       });
     }
   }
+
 
   @override
   void dispose() {
@@ -389,7 +416,7 @@ class _QueryState extends State<Query> {
                     right: 0.0,
                   ),
                   child: progress == "inactive"
-                      ? changeBtn(widget.status, widget.domain)
+                      ? changeBtn(widget.status, widget.domain, widget.client)
                       : statusReport(),
                 ),
               ],
