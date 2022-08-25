@@ -101,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
               top: 5.0,
               right: 20.0,
             ),
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 Navigator.push(
                   context,
@@ -203,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
                       top: 5.0,
                       right: 20.0,
                     ),
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
