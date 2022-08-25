@@ -289,6 +289,8 @@ class _LogsState extends State<Logs> {
                   ),
                   padding: EdgeInsets.only(
                     bottom: 5.0,
+                    left: 20.0,
+                    right: 20.0,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.transparent,
@@ -370,7 +372,7 @@ class _LogsState extends State<Logs> {
 
     for (var i = 0; i < devices.length; i++) {
       final res = await http.Client().get(Uri.parse(
-          '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=50&auth=${devices[i]['apitoken']}'));
+          '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         // print(DateTime.parse(pars['data'][0][0].toDate().toString()));

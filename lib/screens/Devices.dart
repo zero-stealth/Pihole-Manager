@@ -515,7 +515,15 @@ class _DevicesState extends State<Devices> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        devices_list(),
+        Container(
+          padding: EdgeInsets.only(
+            top: 10.0,
+            left: 20.0,
+            right: 20.0,
+            bottom: 20.0,
+          ),
+          child: devices_list(),
+        ),
       ],
     );
   }

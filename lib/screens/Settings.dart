@@ -33,7 +33,7 @@ class _SettingsState extends State<Settings> {
     if (deviceStatus == false) {
       return NoDevices(context: context);
     }
-    
+
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -469,7 +469,15 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return all();
+    return Container(
+      padding: EdgeInsets.only(
+        top: 10.0,
+        left: 20.0,
+        right: 20.0,
+        bottom: 20.0,
+      ),
+      child: all(),
+    );
   }
 }
 
