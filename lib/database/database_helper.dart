@@ -96,6 +96,16 @@ class DatabaseHelper {
           regex TEXT NOT NULL
         )
         ''');
+
+    await db.execute('''
+        CREATE TABLE logsHistory (
+          _id INTEGER PRIMARY KEY,
+          domain TEXT NOT NULL,
+          status TEXT NOT NULL,
+          client TEXT NOT NULL,
+          timestamp TEXT NOT NULL
+        )
+        ''');
   }
 
   Future<int> insert(Map<String, dynamic> row, mytable) async {
@@ -105,7 +115,7 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> queryAllRows(mytable) async {
     Database? db = await instance.database;
-    return await db!.query(mytable);
+    return await db!.query(mytable, orderBy: "_id DESC");
   }
 
   Future<int?> queryRowCount(mytable) async {
