@@ -13,6 +13,7 @@ import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/screens/AddDevices.dart';
 import 'package:piremote/screens/Devices.dart';
 import 'package:piremote/screens/Logs.dart';
+import 'package:piremote/screens/LogsHistory.dart';
 import 'package:piremote/screens/Settings.dart';
 import 'package:piremote/screens/Statistics.dart';
 import 'package:piremote/widgets/InputWidget.dart';
@@ -87,6 +88,37 @@ class _DashboardState extends State<Dashboard> {
       case "settings":
         return "Settings";
       default:
+    }
+  }
+
+  logsHistory() {
+    if (selectedMenuItem == "logs") {
+      return Row(
+        children: [
+          SizedBox(width: 10.0),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 5.0,
+              right: 20.0,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LogsHistory()),
+                );
+              },
+              child: const Icon(
+                CupertinoIcons.list_bullet,
+                color: Colors.white,
+                size: 23.0,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
     }
   }
 
@@ -185,26 +217,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),
-                  // SizedBox(width: 20.0),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //     top: 5.0,
-                  //     right: 20.0,
-                  //   ),
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(builder: (context) => AddDevices()),
-                  //       );
-                  //     },
-                  //     child: const Icon(
-                  //       CupertinoIcons.add_circled,
-                  //       color: Colors.white,
-                  //       size: 23.0,
-                  //     ),
-                  //   ),
-                  // ),
+                  logsHistory(),
                 ],
               ),
               SliverList(
