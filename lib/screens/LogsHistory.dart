@@ -313,7 +313,7 @@ class _ActionState extends State<Action> {
       "domain": domain,
       "status": status,
       "client": client,
-      "timestamp": timestamp,
+      "timestamp": DateTime.now().millisecondsSinceEpoch,
     };
 
     await dbHelper.update(row, "logsHistory");
@@ -401,6 +401,7 @@ class _ActionState extends State<Action> {
                 case "allowed":
                   setState(() {
                     widget.status = "blacklisted";
+                    widget.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
                   });
 
                   addToBlacklist(
@@ -414,6 +415,7 @@ class _ActionState extends State<Action> {
                 case "blacklisted":
                   setState(() {
                     widget.status = "allowed";
+                    widget.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
                   });
 
                   addToWhitelist(
