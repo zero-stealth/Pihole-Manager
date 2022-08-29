@@ -473,7 +473,7 @@ class _StatisticsState extends State<Statistics> {
     }
 
     final dbHelper = DatabaseHelper.instance;
-    var myclients = await dbHelper.queryAllRows('clients');
+    var myclients = await dbHelper.queryAllRowsNormal('clients');
 
     setState(() {
       clients = myclients;
