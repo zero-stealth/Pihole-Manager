@@ -30,7 +30,7 @@ class NoHistory extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100.0)),
               child: Center(
                 child: Icon(
-                  CupertinoIcons.search,
+                  CupertinoIcons.clock,
                   color: Color(0xff3FB950),
                   size: 70.0,
                 ),
