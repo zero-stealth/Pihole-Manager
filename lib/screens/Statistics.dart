@@ -433,6 +433,10 @@ class _StatisticsState extends State<Statistics> {
             {'requests': value}
           ];
 
+          // setState(() {
+          //   topQueries = [];
+          // });
+
           setState(() {
             topQueries.add(data);
           });
@@ -445,6 +449,10 @@ class _StatisticsState extends State<Statistics> {
             {'url': key},
             {'requests': value}
           ];
+
+          // setState(() {
+          //   topAds = [];
+          // });
 
           setState(() {
             topAds.add(data);
@@ -474,6 +482,10 @@ class _StatisticsState extends State<Statistics> {
 
     final dbHelper = DatabaseHelper.instance;
     var myclients = await dbHelper.queryAllRowsNormal('clients');
+
+    // setState(() {
+    //   clients = [];
+    // });
 
     setState(() {
       clients = myclients;
@@ -539,11 +551,15 @@ class _StatisticsState extends State<Statistics> {
                   right: 20.0,
                 ),
                 child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => super.widget),
-                    );
+                  onTap: () async {
+                    setState(() {
+                      topAds = [];
+                      topQueries = [];
+                      clients = [];
+                    });
+                    await setClients();
+                    await fetchTopClients();
+                    await fetchTopQueries();
                   },
                   child: const Icon(
                     CupertinoIcons.arrow_counterclockwise,

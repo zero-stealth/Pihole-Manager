@@ -136,6 +136,10 @@ class _DevicesState extends State<Devices> {
           "apitoken": devices[i]['apitoken'],
         };
 
+        setState(() {
+          devices_data = [];
+        });
+
         var timer = Timer(
           Duration(seconds: 1),
           () => setState(() {
@@ -547,10 +551,7 @@ class _DevicesState extends State<Devices> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => super.widget),
-                    );
+                    fetchQueries();
                   },
                   child: const Icon(
                     CupertinoIcons.arrow_counterclockwise,
