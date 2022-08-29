@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
 import 'package:piremote/functions/Functions.dart';
+import 'package:piremote/screens/LogsHistory.dart';
 import 'package:piremote/screens/Query.dart';
 import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/NoDevices.dart';
@@ -249,10 +250,10 @@ class _LogsState extends State<Logs> {
       return NoDevices(context: context);
     }
 
-    if(nologs == true){
+    if (nologs == true) {
       return NoLogs(context: context);
     }
-    
+
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -384,7 +385,7 @@ class _LogsState extends State<Logs> {
         // String formattedTime = DateFormat.jm().format(date);
         // print(date);
 
-        if(pars['data'].length <= 0){
+        if (pars['data'].length <= 0) {
           return setState(() {
             nologs = true;
           });
@@ -431,27 +432,109 @@ class _LogsState extends State<Logs> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          // padding: const EdgeInsets.only(
-          //   top: 15.0,
-          //   bottom: 10.0,
-          //   left: 15.0,
-          //   right: 15.0,
-          // ),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(6.0),
-          ),
-          child: Column(
-            children: [
-              myLogs(),
-              SizedBox(height: 100.0),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      color: const Color(0xFF0D1117),
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            // pinned: true,
+            backgroundColor: const Color(0xFF161B22),
+            elevation: 1.0,
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: EdgeInsets.only(
+                top: 5.0,
+                left: 5.0,
+              ),
+              child: Text(
+                "Logs",
+                style: TextStyle(
+                  fontFamily: pBold,
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            actions: [
+              // Padding(
+              //   padding: const EdgeInsets.only(
+              //     top: 5.0,
+              //     right: 20.0,
+              //   ),
+              //   child: InkWell(
+              //     onTap: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(builder: (context) => super.widget),
+              //       );
+              //     },
+              //     child: const Icon(
+              //       CupertinoIcons.arrow_counterclockwise,
+              //       color: Colors.white,
+              //       size: 23.0,
+              //     ),
+              //   ),
+              // ),
+              Row(
+                children: [
+                  SizedBox(width: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                      right: 20.0,
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LogsHistory(),
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.clock,
+                        color: Colors.white,
+                        size: 23.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 20.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child: Column(
+                        children: [
+                          myLogs(),
+                          SizedBox(height: 100.0),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
