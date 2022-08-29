@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piremote/data/fonts.dart';
 import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/functions/Functions.dart';
 
@@ -86,7 +87,7 @@ class _BlockedState extends State<Blocked> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
-                      fontFamily: 'SFD-Bold',
+                      fontFamily: pBold,
                     ),
                   ),
                 ],
@@ -248,8 +249,7 @@ class _ServiceItemState extends State<ServiceItem> {
                       style: TextStyle(
                         color: Color(0xff3FB950),
                         fontSize: 14.0,
-                        fontFamily: "SFT-Regular",
-                        fontWeight: FontWeight.w600,
+                        fontFamily: pBold,
                       ),
                     ),
                     SizedBox(height: 4.0),
@@ -258,7 +258,7 @@ class _ServiceItemState extends State<ServiceItem> {
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 12.0,
-                        fontFamily: "SFT-Regular",
+                        fontFamily: pRegular,
                       ),
                     ),
                   ],
