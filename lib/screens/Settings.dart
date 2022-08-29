@@ -230,7 +230,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v1.7',
+                        'v1.8',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -258,13 +258,17 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'Logs History',
+                        title: 'Bug Fixes',
                         message:
-                            "View your past whitelisting and blacklisting actions and undo them.",
+                            "The refresh button does not take you back to the homescreen anymore.",
                       ),
                       ChangelogItem(
-                        title: 'Improvements',
-                        message: "Minor UI changes.",
+                        title: 'Filter logs',
+                        message: "Sort query logs by client.",
+                      ),
+                      ChangelogItem(
+                        title: 'Performance',
+                        message: "Minor performance improvements.",
                       ),
                     ],
                   ),
@@ -419,7 +423,7 @@ class _SettingsState extends State<Settings> {
                   InputWidget(
                     namecontroller: messagecontroller,
                     label: "Feedback",
-                    placeholder: 'I love pineapple pizza.',
+                    placeholder: 'Talk to us...',
                     lines: 5,
                     qrcode: false,
                   ),
