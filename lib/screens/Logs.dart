@@ -461,25 +461,43 @@ class _LogsState extends State<Logs> {
               ),
             ),
             actions: [
-              // Padding(
-              //   padding: const EdgeInsets.only(
-              //     top: 5.0,
-              //     right: 20.0,
-              //   ),
-              //   child: InkWell(
-              //     onTap: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(builder: (context) => super.widget),
-              //       );
-              //     },
-              //     child: const Icon(
-              //       CupertinoIcons.arrow_counterclockwise,
-              //       color: Colors.white,
-              //       size: 23.0,
-              //     ),
-              //   ),
-              // ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  right: 30.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      logs = [];
+                    });
+                    fetchLogs();
+                  },
+                  child: const Icon(
+                    CupertinoIcons.arrow_counterclockwise,
+                    color: Colors.white,
+                    size: 21.0,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  right: 20.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      logs = [];
+                    });
+                  },
+                  child: const Icon(
+                    CupertinoIcons.doc_text_search,
+                    color: Colors.white,
+                    size: 21.0,
+                  ),
+                ),
+              ),
               Row(
                 children: [
                   SizedBox(width: 10.0),
