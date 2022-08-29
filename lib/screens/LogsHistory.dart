@@ -178,7 +178,7 @@ class _LogsHistoryState extends State<LogsHistory> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Logs history',
+                          'Activity history',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,

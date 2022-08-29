@@ -74,54 +74,6 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  appBarName() {
-    switch (selectedMenuItem) {
-      case "home":
-        return "Home";
-
-      case "stats":
-        return "Statistics";
-
-      case "logs":
-        return "Logs";
-
-      case "settings":
-        return "Settings";
-      default:
-    }
-  }
-
-  logsHistory() {
-    if (selectedMenuItem == "logs") {
-      return Row(
-        children: [
-          SizedBox(width: 10.0),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 5.0,
-              right: 20.0,
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LogsHistory()),
-                );
-              },
-              child: const Icon(
-                CupertinoIcons.clock,
-                color: Colors.white,
-                size: 23.0,
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Container();
-    }
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
