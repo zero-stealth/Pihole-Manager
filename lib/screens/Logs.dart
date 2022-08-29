@@ -404,14 +404,14 @@ class _LogsState extends State<Logs> {
 
           if (selectedClient == "none") {
             setState(() {
-              logs.add(data);
+              logs.insert(n,data);
             });
           }
 
           if (selectedClient != "none") {
             if (pars['data'][n][3] == selectedClient) {
               setState(() {
-                logs.add(data);
+                logs.insert(n,data);
               });
             }
           }
@@ -419,6 +419,12 @@ class _LogsState extends State<Logs> {
         }
       }
     }
+
+    Iterable inReverse = logs.reversed;
+
+    setState(() {
+      logs = inReverse.toList();
+    });
 
     if (logs.length <= 0) {
       setState(() {
