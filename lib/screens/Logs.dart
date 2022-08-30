@@ -404,14 +404,14 @@ class _LogsState extends State<Logs> {
 
           if (selectedClient == "none") {
             setState(() {
-              logs.insert(n,data);
+              logs.add(data);
             });
           }
 
           if (selectedClient != "none") {
             if (pars['data'][n][3] == selectedClient) {
               setState(() {
-                logs.insert(n,data);
+                logs.add(data);
               });
             }
           }
@@ -503,12 +503,13 @@ class _LogsState extends State<Logs> {
                         children: [
                           SizedBox(height: 15.0),
                           InkWell(
-                            onTap: () {
+                            onTap: (){
                               if (selectedClient == clients[i]['ip']) {
+                                Navigator.pop(context);
                                 setState(() {
                                   selectedClient = "none";
+                                  noRequest = false;
                                 });
-                                Navigator.pop(context);
                                 setState(() {
                                   logs = [];
                                 });
@@ -516,6 +517,7 @@ class _LogsState extends State<Logs> {
                               } else {
                                 setState(() {
                                   selectedClient = clients[i]['ip'];
+                                  noRequest = false;
                                 });
                                 Navigator.pop(context);
                                 setState(() {
