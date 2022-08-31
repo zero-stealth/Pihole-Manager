@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:piremote/data/fonts.dart';
-import 'package:piremote/screens/EditDevice.dart';
 
-class NoHistory extends StatelessWidget {
-  const NoHistory({
+class NoRequests extends StatelessWidget {
+  const NoRequests({
     Key? key,
     required this.context,
   }) : super(key: key);
@@ -26,34 +25,34 @@ class NoHistory extends StatelessWidget {
               height: 150.0,
               //padding: EdgeInsets.all(30.0),
               decoration: BoxDecoration(
-                  color: Color(0xff3FB950).withOpacity(0.2),
+                  color: Color.fromARGB(255, 32, 38, 46).withOpacity(0.2),
                   borderRadius: BorderRadius.circular(100.0)),
               child: Center(
                 child: Icon(
-                  CupertinoIcons.clock,
-                  color: Color(0xff3FB950),
+                  CupertinoIcons.search,
+                  color: Colors.white,
                   size: 70.0,
                 ),
               ),
             ),
             SizedBox(height: 20.0),
             Text(
-              "Hmmmm!",
+              "No requests.",
               style: TextStyle(
                 fontSize: 18.0,
                 // color: Color(0xff3FB950),
-                color: Color(0xff3FB950),
+                color: Colors.white,
                 fontFamily: pBold,
               ),
             ),
             SizedBox(height: 10.0),
             Text(
-              "It appears you have not whitelisted or blacklisted anything.",
+              "The client you selected has not sent any requests recently.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
                 // color: Color(0xff3FB950),
-                color: Color(0xff3FB950),
+                color: Color.fromARGB(255, 145, 145, 145),
                 fontFamily: pRegular,
               ),
             ),

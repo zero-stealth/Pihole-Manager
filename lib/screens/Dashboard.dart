@@ -74,54 +74,6 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  appBarName() {
-    switch (selectedMenuItem) {
-      case "home":
-        return "Home";
-
-      case "stats":
-        return "Statistics";
-
-      case "logs":
-        return "Logs";
-
-      case "settings":
-        return "Settings";
-      default:
-    }
-  }
-
-  logsHistory() {
-    if (selectedMenuItem == "logs") {
-      return Row(
-        children: [
-          SizedBox(width: 10.0),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 5.0,
-              right: 20.0,
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LogsHistory()),
-                );
-              },
-              child: const Icon(
-                CupertinoIcons.list_bullet,
-                color: Colors.white,
-                size: 23.0,
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Container();
-    }
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -173,69 +125,16 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: const Color(0xFF0D1117),
       body: Stack(
         children: [
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverAppBar(
-                floating: true,
-                // pinned: true,
-                backgroundColor: const Color(0xFF161B22),
-                elevation: 1.0,
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-                title: Padding(
-                  padding: EdgeInsets.only(
-                    top: 5.0,
-                    left: 5.0,
-                  ),
-                  child: Text(
-                    appBarName(),
-                    style: TextStyle(
-                      fontFamily: pBold,
-                      color: Colors.white,
-                      fontSize: 18.0,
-                    ),
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
                 ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 5.0,
-                      right: 20.0,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => super.widget),
-                        );
-                      },
-                      child: const Icon(
-                        CupertinoIcons.arrow_counterclockwise,
-                        color: Colors.white,
-                        size: 23.0,
-                      ),
-                    ),
-                  ),
-                  logsHistory(),
-                ],
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 15.0,
-                          left: 0.0,
-                          right: 0.0,
-                        ),
-                        child: pageHandler(),
-                      ),
-                    ],
-                  ),
-                ]),
+                child: pageHandler(),
               ),
             ],
           ),

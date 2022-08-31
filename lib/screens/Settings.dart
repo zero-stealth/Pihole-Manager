@@ -39,15 +39,15 @@ class _SettingsState extends State<Settings> {
     }
 
     return Container(
+      margin: EdgeInsets.all(20.0),
       padding: EdgeInsets.only(
-        top: 16.0,
-        bottom: 16.0,
+        top: 20.0,
+        bottom: 20.0,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
         borderRadius: BorderRadius.circular(10.0),
+        color: const Color(0xFF161B22),
       ),
-      width: double.infinity,
       child: Column(
         children: [
           SettingsItem(
@@ -230,7 +230,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v1.7',
+                        'v1.8',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -258,14 +258,17 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'Logs History',
+                        title: 'Bug Fixes',
                         message:
-                            "View your past whitelisting and blacklisting actions and undo them.",
+                            "The refresh button does not take you back to the homescreen anymore.",
                       ),
                       ChangelogItem(
-                        title: 'Improvements',
-                        message:
-                            "Minor UI changes.",
+                        title: 'Filter logs',
+                        message: "Sort query logs by client.",
+                      ),
+                      ChangelogItem(
+                        title: 'Performance',
+                        message: "Minor performance improvements.",
                       ),
                     ],
                   ),
@@ -420,7 +423,7 @@ class _SettingsState extends State<Settings> {
                   InputWidget(
                     namecontroller: messagecontroller,
                     label: "Feedback",
-                    placeholder: 'I love pineapple pizza.',
+                    placeholder: 'Talk to us...',
                     lines: 5,
                     qrcode: false,
                   ),
@@ -507,13 +510,63 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-        top: 10.0,
-        left: 20.0,
-        right: 20.0,
-        bottom: 20.0,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      color: const Color(0xFF0D1117),
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            // pinned: true,
+            backgroundColor: const Color(0xFF161B22),
+            elevation: 1.0,
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: EdgeInsets.only(
+                top: 5.0,
+                left: 5.0,
+              ),
+              child: Text(
+                "Settings",
+                style: TextStyle(
+                  fontFamily: pBold,
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  right: 20.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => super.widget),
+                    );
+                  },
+                  child: const Icon(
+                    CupertinoIcons.arrow_counterclockwise,
+                    color: Colors.white,
+                    size: 23.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                all(),
+              ],
+            ),
+          ),
+        ],
       ),
-      child: all(),
     );
   }
 }

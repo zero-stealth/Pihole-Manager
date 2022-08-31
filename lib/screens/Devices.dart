@@ -106,7 +106,6 @@ class _DevicesState extends State<Devices> {
                 memory = '$ext2%';
               });
             }
-
           }
         } catch (e) {
           print(e);
@@ -136,6 +135,10 @@ class _DevicesState extends State<Devices> {
           "allClients": queryModel.clients_ever_seen,
           "apitoken": devices[i]['apitoken'],
         };
+
+        setState(() {
+          devices_data = [];
+        });
 
         var timer = Timer(
           Duration(seconds: 1),
@@ -512,19 +515,75 @@ class _DevicesState extends State<Devices> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          padding: EdgeInsets.only(
-            top: 10.0,
-            left: 20.0,
-            right: 20.0,
-            bottom: 20.0,
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      color: const Color(0xFF0D1117),
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            // pinned: true,
+            backgroundColor: const Color(0xFF161B22),
+            elevation: 1.0,
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: EdgeInsets.only(
+                top: 5.0,
+                left: 5.0,
+              ),
+              child: Text(
+                "Home",
+                style: TextStyle(
+                  fontFamily: pBold,
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  right: 20.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    fetchQueries();
+                  },
+                  child: const Icon(
+                    CupertinoIcons.arrow_counterclockwise,
+                    color: Colors.white,
+                    size: 23.0,
+                  ),
+                ),
+              ),
+            ],
           ),
-          child: devices_list(),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 20.0,
+                        left: 20.0,
+                        right: 20.0,
+                        bottom: 20.0,
+                      ),
+                      child: devices_list(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,12 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
 import 'package:piremote/functions/Functions.dart';
+import 'package:piremote/screens/LogsHistory.dart';
 import 'package:piremote/screens/Query.dart';
 import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/NoDevices.dart';
 import 'package:piremote/widgets/NoLogs.dart';
+import 'package:piremote/widgets/NoRequests.dart';
 
 class Logs extends StatefulWidget {
   const Logs({Key? key}) : super(key: key);
@@ -30,6 +33,8 @@ class _LogsState extends State<Logs> {
   var ipStatus = true;
   var deviceStatus = true;
   var nologs = false;
+  var selectedClient = "none";
+  var noRequest = false;
 
   getDeviceNames() async {
     final dbHelper = DatabaseHelper.instance;
@@ -249,10 +254,14 @@ class _LogsState extends State<Logs> {
       return NoDevices(context: context);
     }
 
-    if(nologs == true){
+    if (nologs == true) {
       return NoLogs(context: context);
     }
-    
+
+    if (logs.length <= 0 && noRequest == true) {
+      return NoRequests(context: context);
+    }
+
     if (ipStatus == false) {
       return Disconnected(context: context);
     }
@@ -333,7 +342,9 @@ class _LogsState extends State<Logs> {
               );
             }),
       );
-    } else {
+    } 
+
+    if(logs.length <= 0 && noRequest == false){
       return Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
@@ -344,7 +355,7 @@ class _LogsState extends State<Logs> {
             LoadingAnimationWidget.staggeredDotsWave(
               color: Color(0xff3FB950),
               size: 50.0,
-            )
+            ),
           ],
         ),
       );
@@ -375,50 +386,189 @@ class _LogsState extends State<Logs> {
           '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
-        // print(DateTime.parse(pars['data'][0][0].toDate().toString()));
 
-        // var timestamp = DateTime.parse('1658126697');
-
-        // // print(d);
-        // var date = DateTime.fromMicrosecondsSinceEpoch(1658126697 * 1000, isUtc: false);
-        // String formattedTime = DateFormat.jm().format(date);
-        // print(date);
-
-        if(pars['data'].length <= 0){
+        if (pars['data'].length <= 0) {
           return setState(() {
             nologs = true;
           });
         }
 
-        try {
-          for (var n = 0; n < pars['data'].length; n++) {
-            var data = [
-              {'timestamp': calculateTime(pars['data'][n][0])},
-              {'requestType': pars['data'][n][1]},
-              {'domain': pars['data'][n][2]},
-              {'type': pars['data'][n][4]},
-              {'client': pars['data'][n][3]},
-            ];
+        for (var n = 0; n < pars['data'].length; n++) {
+          var data = [
+            {'timestamp': calculateTime(pars['data'][n][0])},
+            {'requestType': pars['data'][n][1]},
+            {'domain': pars['data'][n][2]},
+            {'type': pars['data'][n][4]},
+            {'client': pars['data'][n][3]},
+          ];
 
+          if (selectedClient == "none") {
             setState(() {
-              logs.insert(i, data);
+              logs.add(data);
             });
-
-            print(pars['data'][n]);
           }
 
-          print('second: $logs');
-        } catch (e) {
-          print(e);
+          if (selectedClient != "none") {
+            if (pars['data'][n][3] == selectedClient) {
+              setState(() {
+                logs.add(data);
+              });
+            }
+          }
+
         }
       }
     }
+
+    Iterable inReverse = logs.reversed;
+
+    setState(() {
+      logs = inReverse.toList();
+    });
+
+    if (logs.length <= 0) {
+      setState(() {
+        noRequest = true;
+      });
+    }
+  }
+
+  fetchClients() async {
+    final dbHelper = DatabaseHelper.instance;
+    var myclients = await dbHelper.queryAllRows('clients');
+
+    setState(() {
+      clients = myclients;
+    });
+  }
+
+  filterByClient() {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+        top: Radius.circular(15.0),
+      )),
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF0D1117),
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 50.0,
+                          height: 4.0,
+                          margin: EdgeInsets.only(top: 15.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50.0),
+                            color: const Color(0xFF161B22),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10.0),
+                    Text(
+                      'Filter log',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontFamily: pBold,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    Text(
+                      'Sort your query logs by a client.',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 12.0,
+                        fontFamily: pRegular,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    for (var i = 0; i < clients.length; i++)
+                      Column(
+                        children: [
+                          SizedBox(height: 15.0),
+                          InkWell(
+                            onTap: (){
+                              if (selectedClient == clients[i]['ip']) {
+                                Navigator.pop(context);
+                                setState(() {
+                                  selectedClient = "none";
+                                  noRequest = false;
+                                });
+                                setState(() {
+                                  logs = [];
+                                });
+                                fetchLogs();
+                              } else {
+                                setState(() {
+                                  selectedClient = clients[i]['ip'];
+                                  noRequest = false;
+                                });
+                                Navigator.pop(context);
+                                setState(() {
+                                  logs = [];
+                                });
+                                fetchLogs();
+                              }
+                            },
+                            child: Container(
+                              //margin: EdgeInsets.only(top: 15.0),
+                              width: double.infinity,
+                              padding: EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: selectedClient == clients[i]['ip']
+                                    ? Color(0xff3FB950)
+                                    : Color(0xFF161B22),
+                              ),
+                              child: Text(
+                                clients[i]['name'] == "none"
+                                    ? clients[i]['ip']
+                                    : clients[i]['name'],
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: selectedClient == clients[i]['ip']
+                                      ? Colors.white
+                                      : Colors.white.withOpacity(0.5),
+                                  fontSize: 14.0,
+                                  fontFamily: pRegular,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 20.0),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+      },
+    );
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    fetchClients();
     getDeviceNames();
     fetchLogs();
   }
@@ -431,27 +581,125 @@ class _LogsState extends State<Logs> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          // padding: const EdgeInsets.only(
-          //   top: 15.0,
-          //   bottom: 10.0,
-          //   left: 15.0,
-          //   right: 15.0,
-          // ),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(6.0),
-          ),
-          child: Column(
-            children: [
-              myLogs(),
-              SizedBox(height: 100.0),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      color: const Color(0xFF0D1117),
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            // pinned: true,
+            backgroundColor: const Color(0xFF161B22),
+            elevation: 1.0,
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: EdgeInsets.only(
+                top: 5.0,
+                left: 5.0,
+              ),
+              child: Text(
+                "Logs",
+                style: TextStyle(
+                  fontFamily: pBold,
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  right: 30.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      logs = [];
+                    });
+                    fetchLogs();
+                  },
+                  child: const Icon(
+                    CupertinoIcons.arrow_counterclockwise,
+                    color: Colors.white,
+                    size: 21.0,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  right: 20.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    filterByClient();
+                  },
+                  child: const Icon(
+                    CupertinoIcons.doc_text_search,
+                    color: Colors.white,
+                    size: 21.0,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  SizedBox(width: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                      right: 20.0,
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LogsHistory(),
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.clock,
+                        color: Colors.white,
+                        size: 23.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 20.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child: Column(
+                        children: [
+                          myLogs(),
+                          SizedBox(height: 100.0),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
