@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -83,6 +85,7 @@ class _QueryState extends State<Query> {
   }
 
   var progress = "inactive";
+  var domainStatus = "Copy domain";
 
   statusReport() {
     if (progress == "loading") {
@@ -144,7 +147,7 @@ class _QueryState extends State<Query> {
             'Add to whitelist',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 13.0,
+              fontSize: 14.0,
               fontFamily: pRegular,
             ),
           ),
@@ -161,7 +164,7 @@ class _QueryState extends State<Query> {
             'Add to blacklist',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 13.0,
+              fontSize: 14.0,
               fontFamily: pRegular,
             ),
           ),
@@ -178,7 +181,7 @@ class _QueryState extends State<Query> {
             'Add to blacklist',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 13.0,
+              fontSize: 14.0,
               fontFamily: pRegular,
             ),
           ),
@@ -195,7 +198,7 @@ class _QueryState extends State<Query> {
             'Add to whitelist',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 13.0,
+              fontSize: 14.0,
               fontFamily: pRegular,
             ),
           ),
@@ -212,7 +215,7 @@ class _QueryState extends State<Query> {
             'Add to whitelist',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 13.0,
+              fontSize: 14.0,
               fontFamily: pRegular,
             ),
           ),
@@ -245,12 +248,11 @@ class _QueryState extends State<Query> {
   }
 
   addToHistory(domain, status, client) async {
-
     final dbHelper = DatabaseHelper.instance;
     var hist = await dbHelper.queryAllRows('logsHistory');
 
     for (var i = 0; i < hist.length; i++) {
-      if(hist[i]['domain'] == domain){
+      if (hist[i]['domain'] == domain) {
         log("[+] Already exists in db");
         return;
       }
@@ -286,7 +288,6 @@ class _QueryState extends State<Query> {
       });
     }
   }
-
 
   @override
   void dispose() {
@@ -333,7 +334,7 @@ class _QueryState extends State<Query> {
                   ],
                 ),
                 // SizedBox(height: 20.0),
-                
+
                 SizedBox(height: 20.0),
                 Container(
                   padding: EdgeInsets.only(
@@ -351,7 +352,6 @@ class _QueryState extends State<Query> {
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      
                       QueryItem(
                         title: 'Time',
                         domain: widget.timestamp,
@@ -360,12 +360,10 @@ class _QueryState extends State<Query> {
                         textcolor: Colors.white.withOpacity(0.5),
                         titlecolor: Colors.white,
                       ),
-                      
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      
                       QueryItem(
                         title: 'Domain',
                         domain: widget.domain,
@@ -374,12 +372,10 @@ class _QueryState extends State<Query> {
                         textcolor: Colors.white.withOpacity(0.5),
                         titlecolor: Colors.white,
                       ),
-                      
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      
                       QueryItem(
                         title: 'Client',
                         domain: widget.client,
@@ -388,12 +384,10 @@ class _QueryState extends State<Query> {
                         textcolor: Colors.white.withOpacity(0.5),
                         titlecolor: Colors.white,
                       ),
-                      
                       Divider(
                         color: Colors.grey.withOpacity(0.04),
                         thickness: 2.0,
                       ),
-                      
                       QueryItem(
                         title: 'Type',
                         domain: widget.type,
@@ -411,13 +405,52 @@ class _QueryState extends State<Query> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(
-                    bottom: 10.0,
+                    bottom: 15.0,
                     left: 0.0,
                     right: 0.0,
                   ),
                   child: progress == "inactive"
                       ? changeBtn(widget.status, widget.domain, widget.client)
                       : statusReport(),
+                ),
+                InkWell(
+                  onTap: () {
+                    Clipboard.setData(
+                      ClipboardData(text: widget.domain),
+                    );
+
+                    setState(() {
+                      domainStatus = "Copied to clipboard";
+                    });
+
+                    var timer = Timer(
+                        Duration(seconds: 5),
+                        () => {
+                              setState(() {
+                                domainStatus = "Copy domain";
+                              })
+                            });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(
+                      15.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.02),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        domainStatus,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: pRegular,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -451,8 +484,8 @@ class QueryItem extends StatelessWidget {
       padding: const EdgeInsets.only(
         top: 10.0,
         bottom: 10.0,
-        left: 15.0,
-        right: 15.0,
+        left: 20.0,
+        right: 10.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
