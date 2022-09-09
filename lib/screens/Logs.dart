@@ -386,6 +386,7 @@ class _LogsState extends State<Logs> {
           '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
+        print(pars);
 
         if (pars['data'].length <= 0) {
           return setState(() {

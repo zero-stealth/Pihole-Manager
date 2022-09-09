@@ -43,6 +43,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.5
   flutter_svg: ^1.0.3
+  rive: ^0.9.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,9 @@ flutter:
     - assets/amazon.svg
     - assets/appicon.png
     - assets/netflix.svg
+    - assets/ip.riv
+    - assets/new_file.riv
+    - assets/appico.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

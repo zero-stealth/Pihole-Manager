@@ -536,27 +536,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
             ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 5.0,
-                  right: 20.0,
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => super.widget),
-                    );
-                  },
-                  child: const Icon(
-                    CupertinoIcons.arrow_counterclockwise,
-                    color: Colors.white,
-                    size: 23.0,
-                  ),
-                ),
-              ),
-            ],
+            actions: [],
           ),
           SliverList(
             delegate: SliverChildListDelegate(

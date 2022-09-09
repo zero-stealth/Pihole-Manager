@@ -84,32 +84,32 @@ class _DevicesState extends State<Devices> {
           .get(Uri.parse('$myprotocol://${devices[i]['ip']}/admin/'));
       if (resp.statusCode == 200) {
         var document = parser.parse(resp.body);
-        try {
-          var temp = document.getElementsByClassName('pull-left info')[0];
+        // try {
+        //   var temp = document.getElementsByClassName('pull-left info')[0];
 
-          LineSplitter ls = new LineSplitter();
-          List<String> lines = ls.convert(temp.text.trim());
+        //   LineSplitter ls = new LineSplitter();
+        //   List<String> lines = ls.convert(temp.text.trim());
 
-          for (var n = 0; n < lines.length; n++) {
-            if (n == 4) {
-              var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
-              setState(() {
-                var mytemp = double.parse(ext);
-                assert(mytemp is double);
-                temperature = mytemp.toStringAsFixed(1);
-              });
-            }
+        //   for (var n = 0; n < lines.length; n++) {
+        //     if (n == 4) {
+        //       var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
+        //       setState(() {
+        //         var mytemp = double.parse(ext);
+        //         assert(mytemp is double);
+        //         temperature = mytemp.toStringAsFixed(1);
+        //       });
+        //     }
 
-            if (n == 3) {
-              var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
-              setState(() {
-                memory = '$ext2%';
-              });
-            }
-          }
-        } catch (e) {
-          print(e);
-        }
+        //     if (n == 3) {
+        //       var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
+        //       setState(() {
+        //         memory = '$ext2%';
+        //       });
+        //     }
+        //   }
+        // } catch (e) {
+        //   print(e);
+        // }
       } else {
         print("FETCH FAILED.");
       }
@@ -143,7 +143,7 @@ class _DevicesState extends State<Devices> {
         var timer = Timer(
           Duration(seconds: 1),
           () => setState(() {
-            devices_data.add(data);
+          devices_data.add(data);
           }),
         );
 
@@ -417,12 +417,12 @@ class _DevicesState extends State<Devices> {
                 ],
               ),
             ),
-            const SizedBox(height: 10.0),
-            Stats(
-              temperature: devices_data[i]['temperature'],
-              memoryUsage: devices_data[i]['memory'],
-            ),
-            const SizedBox(height: 18.0),
+            const SizedBox(height: 0.0),
+            // Stats(
+            //   temperature: devices_data[i]['temperature'],
+            //   memoryUsage: devices_data[i]['memory'],
+            // ),
+            const SizedBox(height: 20.0),
             Panels(
               firstLabel: "Total queries",
               firstValue: devices_data[i]['totalQueries'],

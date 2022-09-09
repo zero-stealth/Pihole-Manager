@@ -47,7 +47,7 @@ class NoLogs extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Text(
-              "Logs will appear here when pihole blocks or allows requests.",
+              "Logs will appear here when \npihole blocks or allows \nrequests.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
