@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -143,7 +146,7 @@ class _DevicesState extends State<Devices> {
         var timer = Timer(
           Duration(seconds: 1),
           () => setState(() {
-          devices_data.add(data);
+            devices_data.add(data);
           }),
         );
 
@@ -162,16 +165,37 @@ class _DevicesState extends State<Devices> {
     setState(() {
       devices_data[0]['status'] = "enabled";
     });
+
+    // await AwesomeNotifications().cancelAllSchedules();
   }
 
   disableBlocking(ip, token, seconds) async {
     var url = '$myprotocol://$ip';
     final response = await http
         .get(Uri.parse('$url/admin/api.php?disable=$seconds&auth=$token'));
+    // await AwesomeNotifications().createNotification(
+    //   content: NotificationContent(
+    //     id: 0,
+    //     channelKey: 'blocking_channel',
+    //     title: 'Pihole Enabled',
+    //     body: 'Pihole blocking is now enabled',
+    //     notificationLayout: NotificationLayout.BigText,
+    //   ),
+    //   schedule: NotificationCalendar(
+    //     minute: Duration(seconds: seconds).inMinutes,
+    //     repeats: false,
+    //   ),
+    // );
+
     Navigator.pop(context);
     setState(() {
       devices_data[0]['status'] = "disabled";
     });
+  }
+
+  setNotifyTime(){
+    log('${DateTime.now().day}');
+    log('${DateTime.now().hour}');
   }
 
   refreshScreen() {
@@ -510,6 +534,15 @@ class _DevicesState extends State<Devices> {
   @override
   void initState() {
     super.initState();
+
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        log("[+] Notification not allowed.");
+      } else {
+        log("[+] Notification is allowed.");
+      }
+    });
+
     fetchQueries();
   }
 

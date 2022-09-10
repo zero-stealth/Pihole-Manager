@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -296,6 +297,12 @@ class _QueryState extends State<Query> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1117),
@@ -414,7 +421,7 @@ class _QueryState extends State<Query> {
                       : statusReport(),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     Clipboard.setData(
                       ClipboardData(text: widget.domain),
                     );
@@ -430,6 +437,9 @@ class _QueryState extends State<Query> {
                                 domainStatus = "Copy domain";
                               })
                             });
+
+                    
+
                   },
                   child: Container(
                     padding: EdgeInsets.all(

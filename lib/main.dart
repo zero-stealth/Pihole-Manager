@@ -1,3 +1,4 @@
+//import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -6,6 +7,19 @@ import 'package:piremote/screens/SplashScreen.dart';
 
 Future main() async {
   await dotenv.load(fileName: '.env');
+  // AwesomeNotifications().initialize(
+  //   'resource://drawable/appico',
+  //   [
+  //     NotificationChannel(
+  //       channelKey: 'blocking_channel',
+  //       channelName: 'Blocking Enabled',
+  //       defaultColor: Color(0xff3FB950),
+  //       channelShowBadge: true,
+  //       importance: NotificationImportance.Default,
+  //       channelDescription: "Blocking has been enabled"
+  //     ),
+  //   ],
+  // );
   runApp(const MyApp());
 }
 
