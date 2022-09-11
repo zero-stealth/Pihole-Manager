@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -12,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
 import 'package:piremote/functions/Functions.dart';
+import 'package:piremote/screens/LiveLog.dart';
 import 'package:piremote/screens/LogsHistory.dart';
 import 'package:piremote/screens/Query.dart';
 import 'package:piremote/widgets/Disconnected.dart';
@@ -27,6 +29,7 @@ class Logs extends StatefulWidget {
 }
 
 class _LogsState extends State<Logs> {
+  TextEditingController searchcontroller = TextEditingController();
   var logs = [];
   var status = "";
   var clients = [];
@@ -35,6 +38,8 @@ class _LogsState extends State<Logs> {
   var nologs = false;
   var selectedClient = "none";
   var noRequest = false;
+
+  var livelogStatus = false;
 
   getDeviceNames() async {
     final dbHelper = DatabaseHelper.instance;
@@ -342,9 +347,9 @@ class _LogsState extends State<Logs> {
               );
             }),
       );
-    } 
+    }
 
-    if(logs.length <= 0 && noRequest == false){
+    if (logs.length <= 0 && noRequest == false) {
       return Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
@@ -416,7 +421,6 @@ class _LogsState extends State<Logs> {
               });
             }
           }
-
         }
       }
     }
@@ -504,7 +508,7 @@ class _LogsState extends State<Logs> {
                         children: [
                           SizedBox(height: 15.0),
                           InkWell(
-                            onTap: (){
+                            onTap: () {
                               if (selectedClient == clients[i]['ip']) {
                                 Navigator.pop(context);
                                 setState(() {
@@ -563,6 +567,21 @@ class _LogsState extends State<Logs> {
         });
       },
     );
+  }
+
+  liveLog() async {
+    if (logs.length > 200) {
+      logs.removeRange(199, logs.length);
+    }
+
+    while (livelogStatus == true) {
+      var timer = Timer(
+        Duration(seconds: 2),
+        () => setState(() async {
+          await fetchLogs();
+        }),
+      );
+    }
   }
 
   @override
@@ -689,6 +708,109 @@ class _LogsState extends State<Logs> {
                       ),
                       child: Column(
                         children: [
+                          // InkWell(
+                          //   onTap: () async {
+                          //     // setState(() {
+                          //     //   livelogStatus = !livelogStatus;
+                          //     // });
+
+                          //     // await liveLog();
+                          //     // fetchLogs();
+
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => LiveLog(),
+                          //       ),
+                          //     );
+                          //   },
+                          //   child: Container(
+                          //     width: double.infinity,
+                          //     padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Row(
+                          //           mainAxisAlignment: MainAxisAlignment.start,
+                          //           children: [
+                          //             Icon(
+                          //               CupertinoIcons.waveform_circle,
+                          //               color: livelogStatus == true
+                          //                   ? Color(0xff3FB950)
+                          //                   : Colors.redAccent,
+                          //               size: 22.0,
+                          //             ),
+                          //             SizedBox(width: 15.0),
+                          //             Text(
+                          //               "Live log",
+                          //               style: TextStyle(
+                          //                 fontFamily: pBold,
+                          //                 fontSize: 15.0,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //         Container(
+                          //           padding: EdgeInsets.only(
+                          //             top: 4.0,
+                          //             bottom: 4.0,
+                          //             left: 10.0,
+                          //             right: 10.0,
+                          //           ),
+                          //           decoration: BoxDecoration(
+                          //             color: livelogStatus == true
+                          //                 ? Color(0xff3FB950).withOpacity(0.2)
+                          //                 : Colors.redAccent.withOpacity(0.2),
+                          //             borderRadius: BorderRadius.circular(50.0),
+                          //           ),
+                          //           child: Center(
+                          //             child: Text(
+                          //               livelogStatus == true ? "ON" : "OFF",
+                          //               style: TextStyle(
+                          //                 color: livelogStatus == true
+                          //                     ? Color(0xff3FB950)
+                          //                     : Colors.redAccent,
+                          //                 fontSize: 12.0,
+                          //                 fontFamily: pBold,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          Container(
+                            padding: const EdgeInsets.only(
+                              left: 15.0,
+                              right: 15.0,
+                              bottom: 10.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0D1117),
+                              borderRadius: BorderRadius.circular(6.0),
+                            ),
+                            child: CupertinoTextField(
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF0D1117),
+                              ),
+                              scrollPhysics: const BouncingScrollPhysics(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              controller: searchcontroller,
+                              onChanged: (text) {},
+                              maxLines: 1,
+                              placeholder: "Search domain",
+                              placeholderStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.2),
+                                fontFamily: pRegular,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5.0),
                           myLogs(),
                           SizedBox(height: 100.0),
                         ],
