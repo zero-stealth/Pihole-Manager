@@ -506,7 +506,7 @@ class _LogsState extends State<Logs> {
 
     for (var i = 0; i < devices.length; i++) {
       final res = await http.Client().get(Uri.parse(
-          '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=200&auth=${devices[i]['apitoken']}'));
+          '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         print(pars);
