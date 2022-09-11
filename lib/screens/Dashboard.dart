@@ -125,18 +125,20 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: const Color(0xFF0D1117),
       body: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 0.0,
-                  left: 0.0,
-                  right: 0.0,
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 0.0,
+                    left: 0.0,
+                    right: 0.0,
+                  ),
+                  child: pageHandler(),
                 ),
-                child: pageHandler(),
-              ),
-            ],
+              ],
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,

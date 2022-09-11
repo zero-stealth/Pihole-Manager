@@ -38,8 +38,16 @@ class _LogsState extends State<Logs> {
   var nologs = false;
   var selectedClient = "none";
   var noRequest = false;
+  var searchresult = [];
+  var _isSearching = false;
 
   var livelogStatus = false;
+
+  _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
 
   getDeviceNames() async {
     final dbHelper = DatabaseHelper.instance;
@@ -272,81 +280,186 @@ class _LogsState extends State<Logs> {
     }
 
     if (logs.length > 0) {
-      return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            clipBehavior: Clip.none,
-            scrollDirection: Axis.vertical,
-            itemCount: logs.length,
-            itemBuilder: (BuildContext context, int index) {
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Query(
-                        domain: "${logs[index][2]['domain'].toString()}",
-                        client: deviceName(logs[index][4]['client'].toString()),
-                        type: "${logs[index][1]['requestType'].toString()}",
-                        timestamp: "${logs[index][0]['timestamp'].toString()}",
-                        status: "${logs[index][3]['type'].toString()}",
+      switch (searchcontroller.text.isNotEmpty) {
+        case false:
+          return MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                clipBehavior: Clip.none,
+                scrollDirection: Axis.vertical,
+                itemCount: logs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Query(
+                            domain: "${logs[index][2]['domain'].toString()}",
+                            client:
+                                deviceName(logs[index][4]['client'].toString()),
+                            type: "${logs[index][1]['requestType'].toString()}",
+                            timestamp:
+                                "${logs[index][0]['timestamp'].toString()}",
+                            status: "${logs[index][3]['type'].toString()}",
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        bottom: 10.0,
+                      ),
+                      padding: EdgeInsets.only(
+                        bottom: 5.0,
+                        left: 20.0,
+                        right: 20.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                          bottom: BorderSide(
+                            width: 2.0,
+                            color: const Color(0xFF161B22).withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          calculateStatus(logs[index][3]['type'].toString(),
+                              logs[index][0]['timestamp'].toString()),
+                          SizedBox(height: 5.0),
+                          Text(
+                            '${logs[index][2]['domain'].toString()}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                              fontFamily: pBold,
+                            ),
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            deviceName(logs[index][4]['client'].toString()),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.0,
+                              fontFamily: pRegular,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                        ],
                       ),
                     ),
                   );
-                },
-                child: Container(
-                  margin: EdgeInsets.only(
-                    bottom: 10.0,
-                  ),
-                  padding: EdgeInsets.only(
-                    bottom: 5.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 2.0,
-                        color: const Color(0xFF161B22).withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      calculateStatus(logs[index][3]['type'].toString(),
-                          logs[index][0]['timestamp'].toString()),
-                      SizedBox(height: 5.0),
-                      Text(
-                        '${logs[index][2]['domain'].toString()}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
-                          fontFamily: pBold,
+                }),
+          );
+
+        case true:
+          if (searchresult.isEmpty) {
+            return Container(
+              margin: EdgeInsets.only(top: 150.0),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("No result found"),
+                ],
+              ),
+            );
+          } else {
+            return MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  clipBehavior: Clip.none,
+                  scrollDirection: Axis.vertical,
+                  itemCount: searchresult.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Query(
+                              domain:
+                                  "${searchresult[index][2]['domain'].toString()}",
+                              client: deviceName(
+                                  searchresult[index][4]['client'].toString()),
+                              type:
+                                  "${searchresult[index][1]['requestType'].toString()}",
+                              timestamp:
+                                  "${searchresult[index][0]['timestamp'].toString()}",
+                              status:
+                                  "${searchresult[index][3]['type'].toString()}",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          bottom: 10.0,
+                        ),
+                        padding: EdgeInsets.only(
+                          bottom: 5.0,
+                          left: 20.0,
+                          right: 20.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 2.0,
+                              color: const Color(0xFF161B22).withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            calculateStatus(
+                                searchresult[index][3]['type'].toString(),
+                                searchresult[index][0]['timestamp'].toString()),
+                            SizedBox(height: 5.0),
+                            Text(
+                              '${searchresult[index][2]['domain'].toString()}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.0,
+                                fontFamily: pBold,
+                              ),
+                            ),
+                            SizedBox(height: 5.0),
+                            Text(
+                              deviceName(
+                                  searchresult[index][4]['client'].toString()),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.0,
+                                fontFamily: pRegular,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        deviceName(logs[index][4]['client'].toString()),
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                          fontFamily: pRegular,
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                    ],
-                  ),
-                ),
-              );
-            }),
-      );
+                    );
+                  }),
+            );
+          }
+        default:
+      }
     }
 
     if (logs.length <= 0 && noRequest == false) {
@@ -584,6 +697,20 @@ class _LogsState extends State<Logs> {
     }
   }
 
+  searchOperation(String searchText) {
+    setState(() {
+      searchresult.clear();
+      for (int i = 0; i < logs.length; i++) {
+        if (logs[i][2]['domain']
+            .toString()
+            .toLowerCase()
+            .contains(searchText.toLowerCase())) {
+          searchresult.add(logs[i]);
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -800,7 +927,9 @@ class _LogsState extends State<Logs> {
                                 color: Colors.white,
                               ),
                               controller: searchcontroller,
-                              onChanged: (text) {},
+                              onChanged: (text) {
+                                searchOperation(text);
+                              },
                               maxLines: 1,
                               placeholder: "Search domain",
                               placeholderStyle: TextStyle(
