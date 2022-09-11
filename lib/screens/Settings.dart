@@ -233,7 +233,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v1.8',
+                        'v1.9',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -261,17 +261,17 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'Bug Fixes',
+                        title: 'Easter egg',
                         message:
-                            "The refresh button does not take you back to the homescreen anymore.",
+                            "Added a secret gimmick.",
                       ),
                       ChangelogItem(
-                        title: 'Filter logs',
-                        message: "Sort query logs by client.",
+                        title: 'Search logs',
+                        message: "Search through recent logs by domain name.",
                       ),
                       ChangelogItem(
-                        title: 'Performance',
-                        message: "Minor performance improvements.",
+                        title: 'Bug Fixes',
+                        message: "Fixed bugs that came from the recent pihole update.",
                       ),
                     ],
                   ),
