@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -437,9 +436,6 @@ class _QueryState extends State<Query> {
                                 domainStatus = "Copy domain";
                               })
                             });
-
-                    
-
                   },
                   child: Container(
                     padding: EdgeInsets.all(

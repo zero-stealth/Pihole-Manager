@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -535,13 +534,13 @@ class _DevicesState extends State<Devices> {
   void initState() {
     super.initState();
 
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        log("[+] Notification not allowed.");
-      } else {
-        log("[+] Notification is allowed.");
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   if (!isAllowed) {
+    //     log("[+] Notification not allowed.");
+    //   } else {
+    //     log("[+] Notification is allowed.");
+    //   }
+    // });
 
     fetchQueries();
   }
