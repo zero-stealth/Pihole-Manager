@@ -266,7 +266,10 @@ class _LogsState extends State<Logs> {
 
   myLogs() {
     if (deviceStatus == false) {
-      return NoDevices(context: context);
+      return Container(
+        margin: EdgeInsets.all(20.0),
+        child: NoDevices(context: context),
+      );
     }
 
     if (nologs == true) {
@@ -731,7 +734,7 @@ class _LogsState extends State<Logs> {
           }
         });
       });
-    
+
     super.initState();
     fetchClients();
     getDeviceNames();
@@ -786,6 +789,10 @@ class _LogsState extends State<Logs> {
                       right: 30.0,
                     ),
                     child: InkWell(
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onTap: () {
                         setState(() {
                           logs = [];
@@ -805,6 +812,10 @@ class _LogsState extends State<Logs> {
                       right: 20.0,
                     ),
                     child: InkWell(
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onTap: () {
                         filterByClient();
                       },
@@ -824,6 +835,10 @@ class _LogsState extends State<Logs> {
                           right: 20.0,
                         ),
                         child: InkWell(
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -941,25 +956,52 @@ class _LogsState extends State<Logs> {
                                   color: const Color(0xFF0D1117),
                                   borderRadius: BorderRadius.circular(6.0),
                                 ),
-                                child: CupertinoTextField(
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF0D1117),
-                                  ),
-                                  scrollPhysics: const BouncingScrollPhysics(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  controller: searchcontroller,
-                                  onChanged: (text) {
-                                    searchOperation(text);
-                                  },
-                                  maxLines: 1,
-                                  placeholder: "Search domain",
-                                  placeholderStyle: TextStyle(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    fontFamily: pRegular,
-                                    fontSize: 14.0,
-                                  ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
+                                      child: CupertinoTextField(
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF0D1117),
+                                        ),
+                                        scrollPhysics:
+                                            const BouncingScrollPhysics(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                        controller: searchcontroller,
+                                        onChanged: (text) {
+                                          searchOperation(text);
+                                        },
+                                        maxLines: 1,
+                                        placeholder: "Search domain",
+                                        placeholderStyle: TextStyle(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          fontFamily: pRegular,
+                                          fontSize: 14.0,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          searchcontroller.clear();
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                        });
+                                      },
+                                      child: Icon(
+                                        CupertinoIcons.clear_circled,
+                                        color: searchcontroller.text.isEmpty
+                                            ? Colors.grey.withOpacity(0.2)
+                                            : Color(0xff3FB950),
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(height: 5.0),

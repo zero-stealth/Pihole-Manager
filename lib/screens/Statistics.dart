@@ -551,6 +551,10 @@ class _StatisticsState extends State<Statistics> {
                   right: 20.0,
                 ),
                 child: InkWell(
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
                   onTap: () async {
                     setState(() {
                       topAds = [];

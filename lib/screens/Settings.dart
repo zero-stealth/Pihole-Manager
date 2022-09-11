@@ -31,7 +31,10 @@ class _SettingsState extends State<Settings> {
 
   all() {
     if (deviceStatus == false) {
-      return NoDevices(context: context);
+      return Container(
+        margin: EdgeInsets.all(20.0),
+        child: NoDevices(context: context),
+      );
     }
 
     if (ipStatus == false) {

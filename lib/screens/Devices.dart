@@ -582,6 +582,10 @@ class _DevicesState extends State<Devices> {
                   right: 20.0,
                 ),
                 child: InkWell(
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
                   onTap: () {
                     fetchQueries();
                   },

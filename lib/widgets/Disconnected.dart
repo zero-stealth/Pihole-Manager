@@ -48,7 +48,7 @@ class Disconnected extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Text(
-              "Could not connect to your pihole instance.",
+              "Could not connect to \nyour pihole instance.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,

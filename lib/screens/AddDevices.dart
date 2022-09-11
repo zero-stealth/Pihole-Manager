@@ -54,7 +54,7 @@ class _AddDevicesState extends State<AddDevices> {
     });
   }
 
-  setprotocol(){
+  setprotocol() {
     switch (protocol) {
       case 0:
         return "http";
@@ -201,11 +201,17 @@ class _AddDevicesState extends State<AddDevices> {
                 //     ),
                 //   ),
                 // ),
-                const SizedBox(height: 15.0),
+                const SizedBox(height: 20.0),
+                Image.asset(
+                  'assets/appico.png',
+                  width: 100.0,
+                  height: 100.0,
+                ),
+                const SizedBox(height: 30.0),
                 InputWidget(
                   namecontroller: namecontroller,
                   label: "Device Name",
-                  placeholder: "Mainframe",
+                  placeholder: "Raspberry pi",
                   lines: 1,
                   qrcode: false,
                 ),
@@ -229,8 +235,7 @@ class _AddDevicesState extends State<AddDevices> {
                       0: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6.0)
-                        ),
+                            borderRadius: BorderRadius.circular(6.0)),
                         child: Text(
                           "http",
                           style: TextStyle(
@@ -244,8 +249,7 @@ class _AddDevicesState extends State<AddDevices> {
                       1: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6.0)
-                        ),
+                            borderRadius: BorderRadius.circular(6.0)),
                         child: Text(
                           "https",
                           style: TextStyle(
@@ -296,7 +300,7 @@ class _AddDevicesState extends State<AddDevices> {
                       print(
                         'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
                       );
-        
+
                       if (ipcontroller.text.isEmpty ||
                           tokencontroller.text.isEmpty ||
                           namecontroller.text.isEmpty) {
@@ -312,7 +316,7 @@ class _AddDevicesState extends State<AddDevices> {
                           piholeStatusMessage = "";
                           tokenStatusMessage = "";
                         });
-        
+
                         test_ip(
                           namecontroller.text,
                           ipcontroller.text,
