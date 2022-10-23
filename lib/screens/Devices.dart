@@ -10,6 +10,7 @@ import 'package:piremote/database/database_helper.dart';
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/models/QueryModel.dart';
 import 'package:piremote/screens/AddDevices.dart';
+import 'package:piremote/screens/Blocked.dart';
 import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/InvalidToken.dart';
 import 'package:piremote/widgets/NoDevices.dart';
@@ -80,7 +81,7 @@ class _DevicesState extends State<Devices> {
     await testToken();
     var devices = await getDevices();
 
-    if(devices[0]['validtoken'] == 0){
+    if (devices[0]['validtoken'] == 0) {
       setState(() {
         tokenStatus = false;
       });
@@ -385,7 +386,7 @@ class _DevicesState extends State<Devices> {
       return Disconnected(context: context);
     }
 
-    if(tokenStatus == false) {
+    if (tokenStatus == false) {
       return InvalidToken(context: context);
     }
 
@@ -473,6 +474,34 @@ class _DevicesState extends State<Devices> {
               secondLabel: "All Clients",
               secondValue: devices_data[i]['allClients'],
             ),
+            SizedBox(height: 5.0),
+            Container(
+              width: MediaQuery.of(context).size.width - 40,
+              child: CupertinoButton(
+                padding: const EdgeInsets.all(10.0),
+                color: const Color(0xff3FB950),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Block services',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.0,
+                        fontFamily: pRegular,
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Blocked()),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 10.0),
             Container(
               width: MediaQuery.of(context).size.width - 40,
               child: CupertinoButton(
