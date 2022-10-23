@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:piremote/data/fonts.dart';
@@ -137,7 +138,7 @@ class _SettingsState extends State<Settings> {
     await testToken();
     var devices = await getDevices();
 
-    if(devices[0]['validtoken'] == 0){
+    if (devices[0]['validtoken'] == 0) {
       setState(() {
         _tokenstatus = false;
       });
@@ -258,7 +259,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v1.9',
+                        'v2.0',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -286,17 +287,12 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'Easter egg',
-                        message: "Added a secret gimmick.",
+                        title: 'Minor ui improvements',
+                        message: "Its not much but its honest work.",
                       ),
                       ChangelogItem(
-                        title: 'Search logs',
-                        message: "Search through recent logs by domain name.",
-                      ),
-                      ChangelogItem(
-                        title: 'Bug Fixes',
-                        message:
-                            "Fixed bugs that came from the recent pihole update.",
+                        title: 'Donations',
+                        message: "You can now donate to us in monero.",
                       ),
                     ],
                   ),
@@ -553,50 +549,10 @@ class _SettingsState extends State<Settings> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Container(
-                    padding: EdgeInsets.all(15.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Color(0xFF161B22),
-                    ),
-                    margin: const EdgeInsets.only(
-                      bottom: 20.0,
-                      left: 0.0,
-                      right: 0.0,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(CupertinoIcons.money_dollar),
-                        SizedBox(width: 10.0),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Monero wallet",
-                                style: TextStyle(
-                                  fontFamily: "AR",
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                "83K6DPomcJ8UhCyvp7LfxbVvY2niiatEn4JPd4i2YXgfFqL7VfpVpqv3otV1b5Y5Rv3x5K6jpGA6Yfobk1g5fk5gP8UCMpn",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: "SFNSR",
-                                  color: Colors.white.withOpacity(0.5),
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  DonateBox(
+                      title: "Monero wallet",
+                      value:
+                          "83K6DPomcJ8UhCyvp7LfxbVvY2niiatEn4JPd4i2YXgfFqL7VfpVpqv3otV1b5Y5Rv3x5K6jpGA6Yfobk1g5fk5gP8UCMpn"),
                 ],
               ),
             ),
@@ -681,6 +637,99 @@ class _SettingsState extends State<Settings> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DonateBox extends StatefulWidget {
+  final String title;
+  final String value;
+
+  DonateBox({
+    required this.title,
+    required this.value,
+  });
+
+  @override
+  State<DonateBox> createState() => _DonateBoxState();
+}
+
+class _DonateBoxState extends State<DonateBox> {
+  bool copied = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        await Clipboard.setData(ClipboardData(text: widget.value));
+        setState(() {
+          copied = true;
+        });
+
+        var timer = Timer(
+            Duration(seconds: 2),
+            () => {
+                  setState(() {
+                    copied = false;
+                  }),
+                });
+      },
+      child: Container(
+        padding: EdgeInsets.all(15.0),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Color(0xFF161B22),
+        ),
+        margin: const EdgeInsets.only(
+          bottom: 20.0,
+          left: 0.0,
+          right: 0.0,
+        ),
+        child: Row(
+          children: [
+            Icon(CupertinoIcons.money_dollar),
+            SizedBox(width: 10.0),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontFamily: "AR",
+                      color: Colors.white,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    widget.value,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: "SFNSR",
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  copied == true
+                      ? Text(
+                          "Copied wallet address to clipboard",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: "SFNSR",
+                            color: Color(0xff3FB950),
+                            fontSize: 12.0,
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

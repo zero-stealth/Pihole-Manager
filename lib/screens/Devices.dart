@@ -41,7 +41,26 @@ class _DevicesState extends State<Devices> {
   var ipStatus = true;
   var deviceStatus = true;
 
+  var _myservices = [];
+  var _blockedServices = [];
+
   bool tokenStatus = true;
+
+  _getMyServices() async {
+    var s = await dbHelper.queryAllRows("services");
+
+    for (var i = 0; i < s.length; i++) {
+      if (s[i]["status"] == "blocked") {
+        setState(() {
+          _blockedServices.add(s[i]);
+        });
+      }
+    }
+
+    setState(() {
+      _myservices = s;
+    });
+  }
 
   deviceStatusIcon(status) {
     switch (status) {
@@ -477,6 +496,102 @@ class _DevicesState extends State<Devices> {
             SizedBox(height: 5.0),
             Container(
               width: MediaQuery.of(context).size.width - 40,
+              padding: const EdgeInsets.only(
+                top: 15.0,
+                bottom: 15.0,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6.0),
+                color: const Color(0xFF161B22),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 15.0,
+                      right: 15.0,
+                    ),
+                    child: Text(
+                      "Blocked services",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontFamily: pBold,
+                        color: Color(0xff3FB950),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  for (var i = 0; i < _blockedServices.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10.0,
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 15.0,
+                              right: 15.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.xmark_shield_fill,
+                                  color: Colors.redAccent,
+                                  size: 20.0,
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  "${_blockedServices[i]['name']}",
+                                  style: TextStyle(
+                                    fontFamily: "SFNSR",
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          i == _blockedServices.length - 1
+                              ? SizedBox(height: 5.0)
+                              : Column(
+                                  children: [
+                                    SizedBox(height: 10.0),
+                                    Divider(
+                                      color: Colors.grey.withOpacity(0.04),
+                                      thickness: 2.0,
+                                    ),
+                                  ],
+                                ),
+                        ],
+                      ),
+                    ),
+                  _blockedServices.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            left: 15.0,
+                            right: 15.0,
+                          ),
+                          child: Text(
+                            "No blocked services",
+                            style: TextStyle(
+                              fontFamily: "SFNSR",
+                              color: Colors.white.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+            SizedBox(height: 15.0),
+            Container(
+              width: MediaQuery.of(context).size.width - 40,
               child: CupertinoButton(
                 padding: const EdgeInsets.all(10.0),
                 color: const Color(0xff3FB950),
@@ -580,6 +695,7 @@ class _DevicesState extends State<Devices> {
     //   }
     // });
     // checkToken();
+    _getMyServices();
     fetchQueries();
   }
 
