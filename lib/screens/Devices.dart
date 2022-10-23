@@ -11,6 +11,7 @@ import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/models/QueryModel.dart';
 import 'package:piremote/screens/AddDevices.dart';
 import 'package:piremote/widgets/Disconnected.dart';
+import 'package:piremote/widgets/InvalidToken.dart';
 import 'package:piremote/widgets/NoDevices.dart';
 import 'package:piremote/widgets/Panels.dart';
 import 'package:piremote/widgets/Stats.dart';
@@ -38,6 +39,8 @@ class _DevicesState extends State<Devices> {
   var myprotocol = "";
   var ipStatus = true;
   var deviceStatus = true;
+
+  bool tokenStatus = true;
 
   deviceStatusIcon(status) {
     switch (status) {
@@ -74,86 +77,88 @@ class _DevicesState extends State<Devices> {
         });
       }
     }
+    await testToken();
+    var devices = await getDevices();
 
-    final dbHelper = DatabaseHelper.instance;
-    var devices = await dbHelper.queryAllRows('devices');
-
-    for (var i = 0; i < devices.length; i++) {
+    if(devices[0]['validtoken'] == 0){
       setState(() {
-        myprotocol = devices[i]['protocol'];
+        tokenStatus = false;
       });
-      final resp = await http.Client()
-          .get(Uri.parse('$myprotocol://${devices[i]['ip']}/admin/'));
-      if (resp.statusCode == 200) {
-        var document = parser.parse(resp.body);
-        // try {
-        //   var temp = document.getElementsByClassName('pull-left info')[0];
+    }
 
-        //   LineSplitter ls = new LineSplitter();
-        //   List<String> lines = ls.convert(temp.text.trim());
+    setState(() {
+      myprotocol = devices[0]['protocol'];
+    });
+    final resp = await http.Client()
+        .get(Uri.parse('$myprotocol://${devices[0]['ip']}/admin/'));
+    if (resp.statusCode == 200) {
+      var document = parser.parse(resp.body);
+      // try {
+      //   var temp = document.getElementsByClassName('pull-left info')[0];
 
-        //   for (var n = 0; n < lines.length; n++) {
-        //     if (n == 4) {
-        //       var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
-        //       setState(() {
-        //         var mytemp = double.parse(ext);
-        //         assert(mytemp is double);
-        //         temperature = mytemp.toStringAsFixed(1);
-        //       });
-        //     }
+      //   LineSplitter ls = new LineSplitter();
+      //   List<String> lines = ls.convert(temp.text.trim());
 
-        //     if (n == 3) {
-        //       var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
-        //       setState(() {
-        //         memory = '$ext2%';
-        //       });
-        //     }
-        //   }
-        // } catch (e) {
-        //   print(e);
-        // }
-      } else {
-        print("FETCH FAILED.");
-      }
+      //   for (var n = 0; n < lines.length; n++) {
+      //     if (n == 4) {
+      //       var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
+      //       setState(() {
+      //         var mytemp = double.parse(ext);
+      //         assert(mytemp is double);
+      //         temperature = mytemp.toStringAsFixed(1);
+      //       });
+      //     }
 
-      var myurl = "$myprotocol://${devices[i]['ip']}";
-      final response =
-          await http.get(Uri.parse('$myurl/admin/api.php?summary'));
+      //     if (n == 3) {
+      //       var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
+      //       setState(() {
+      //         memory = '$ext2%';
+      //       });
+      //     }
+      //   }
+      // } catch (e) {
+      //   print(e);
+      // }
+    } else {
+      print("FETCH FAILED.");
+    }
 
-      if (response.statusCode == 200) {
-        final parsed = json.decode(response.body);
-        QueryModel queryModel = QueryModel.fromMap(parsed);
+    var myurl = "$myprotocol://${devices[0]['ip']}";
+    final response = await http.get(Uri.parse('$myurl/admin/api.php?summary'));
 
-        var data = {
-          "name": devices[i]['name'],
-          "ip": devices[i]['ip'],
-          "temperature": temperature,
-          "memory": memory,
-          "totalQueries": queryModel.dns_queries_today,
-          "queriesBlocked": queryModel.ads_blocked_today,
-          "percentBlocked": queryModel.ads_percentage_today,
-          "blocklist": queryModel.domains_being_blocked,
-          "status": queryModel.status,
-          "allClients": queryModel.clients_ever_seen,
-          "apitoken": devices[i]['apitoken'],
-        };
+    if (response.statusCode == 200) {
+      final parsed = json.decode(response.body);
+      QueryModel queryModel = QueryModel.fromMap(parsed);
 
-        setState(() {
-          devices_data = [];
-        });
+      var data = {
+        "name": devices[0]['name'],
+        "ip": devices[0]['ip'],
+        "temperature": temperature,
+        "memory": memory,
+        "totalQueries": queryModel.dns_queries_today,
+        "queriesBlocked": queryModel.ads_blocked_today,
+        "percentBlocked": queryModel.ads_percentage_today,
+        "blocklist": queryModel.domains_being_blocked,
+        "status": queryModel.status,
+        "allClients": queryModel.clients_ever_seen,
+        "apitoken": devices[0]['apitoken'],
+      };
 
-        var timer = Timer(
-          Duration(seconds: 1),
-          () => setState(() {
-            devices_data.add(data);
-          }),
-        );
+      setState(() {
+        devices_data = [];
+      });
 
-        // timer.cancel();
-      } else {
-        // throw Exception("Unable to fetch query data");
-        print("FETCH FAILED");
-      }
+      var timer = Timer(
+        Duration(seconds: 1),
+        () => setState(() {
+          devices_data.add(data);
+        }),
+      );
+
+      // timer.cancel();
+    } else {
+      // throw Exception("Unable to fetch query data");
+      print("FETCH FAILED");
     }
   }
 
@@ -192,7 +197,7 @@ class _DevicesState extends State<Devices> {
     });
   }
 
-  setNotifyTime(){
+  setNotifyTime() {
     log('${DateTime.now().day}');
     log('${DateTime.now().hour}');
   }
@@ -380,6 +385,10 @@ class _DevicesState extends State<Devices> {
       return Disconnected(context: context);
     }
 
+    if(tokenStatus == false) {
+      return InvalidToken(context: context);
+    }
+
     if (devices_data.length > 0) {
       for (var i = 0; i < devices_data.length; i++) {
         return Column(
@@ -474,7 +483,7 @@ class _DevicesState extends State<Devices> {
                   children: [
                     devices_data[i]['status'] == 'enabled'
                         ? Text(
-                            'Disable',
+                            'Disable blocking',
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 14.0,
@@ -482,7 +491,7 @@ class _DevicesState extends State<Devices> {
                             ),
                           )
                         : Text(
-                            'Enable',
+                            'Enable blocking',
                             style: TextStyle(
                               color: Color(0xff3FB950),
                               fontSize: 14.0,
@@ -541,7 +550,7 @@ class _DevicesState extends State<Devices> {
     //     log("[+] Notification is allowed.");
     //   }
     // });
-
+    // checkToken();
     fetchQueries();
   }
 
