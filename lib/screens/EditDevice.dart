@@ -97,6 +97,7 @@ class _EditDeviceState extends State<EditDevice> {
       "ip": ipcontroller.text,
       "name": namecontroller.text,
       "protocol": await setProtocol(),
+      "validtoken": true,
       "apitoken": tokencontroller.text,
     };
 

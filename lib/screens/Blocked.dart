@@ -98,8 +98,8 @@ class _BlockedState extends State<Blocked> {
                 padding: EdgeInsets.only(
                   top: 15.0,
                   bottom: 15.0,
-                  left: 20.0,
-                  right: 20.0,
+                  left: 0.0,
+                  right: 0.0,
                 ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF161B22),
@@ -223,64 +223,70 @@ class _ServiceItemState extends State<ServiceItem> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // Icon(
-                //   CupertinoIcons.device_desktop,
-                //   size: 20.0,
-                //   color: Colors.white,
-                // ),
-                SvgPicture.asset(
-                  widget.icon,
-                  color: Colors.white,
-                  width: 25.0,
-                  height: 25.0,
-                ),
-                SizedBox(width: 15.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.service,
-                      style: TextStyle(
-                        color: Color(0xff3FB950),
-                        fontSize: 14.0,
-                        fontFamily: pBold,
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 15.0,
+            right: 15.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Icon(
+                  //   CupertinoIcons.device_desktop,
+                  //   size: 20.0,
+                  //   color: Colors.white,
+                  // ),
+                  SvgPicture.asset(
+                    widget.icon,
+                    color: Colors.white,
+                    width: 25.0,
+                    height: 25.0,
+                  ),
+                  SizedBox(width: 15.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.service,
+                        style: TextStyle(
+                          color: Color(0xff3FB950),
+                          fontSize: 14.0,
+                          fontFamily: pBold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      '${widget.listsCount} regex entry',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                        fontSize: 12.0,
-                        fontFamily: pRegular,
+                      SizedBox(height: 4.0),
+                      Text(
+                        '${widget.listsCount} regex entry',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 12.0,
+                          fontFamily: pRegular,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            CupertinoSwitch(
-              activeColor: Color(0xff3FB950),
-              value: widget.status,
-              onChanged: (value)async{
-                if(widget.status == true){
-                  await enableService(widget.service.toLowerCase());
-                } else {
-                  await blockService(widget.service.toLowerCase());
-                }
+                    ],
+                  ),
+                ],
+              ),
+              CupertinoSwitch(
+                activeColor: Color(0xff3FB950),
+                value: widget.status,
+                onChanged: (value)async{
+                  if(widget.status == true){
+                    await enableService(widget.service.toLowerCase());
+                  } else {
+                    await blockService(widget.service.toLowerCase());
+                  }
 
-                setState(() {
-                  widget.status = value;
-                });
-              },
-            ),
-          ],
+                  setState(() {
+                    widget.status = value;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
         myBorder(widget.bottomBorder),
       ],

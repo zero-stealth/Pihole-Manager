@@ -48,6 +48,7 @@ class DatabaseHelper {
           protocol TEXT NOT NULL,
           name TEXT NOT NULL,
           ip TEXT NOT NULL,
+          validtoken BOOLEAN NOT NULL,
           apitoken TEXT NOT NULL
         )
         ''');

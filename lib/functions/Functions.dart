@@ -53,20 +53,20 @@ blockService(name) async {
 
   for (var i = 0; i < s.length; i++) {
     Map<String, dynamic> row = {
-        "_id": s[i]["_id"],
-        "name": name,
-        "status": "blocked",
-        "regex": s[i]['regex'],
+      "_id": s[i]["_id"],
+      "name": name,
+      "status": "blocked",
+      "regex": s[i]['regex'],
     };
 
-    if(s[i]['name'] == name){
-      // var regex = Uri.encodeFull(s[i]['regex']); 
+    if (s[i]['name'] == name) {
+      // var regex = Uri.encodeFull(s[i]['regex']);
       var regex = s[i]['regex'];
       log(regex);
 
       final res = await http.Client().get(Uri.parse(
-        'http://${d[0]['ip']}/admin/api.php?list=regex_black&add=$regex&auth=${d[0]['apitoken']}'));
-      
+          'http://${d[0]['ip']}/admin/api.php?list=regex_black&add=$regex&auth=${d[0]['apitoken']}'));
+
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         log(res.body);
@@ -84,19 +84,19 @@ enableService(name) async {
 
   for (var i = 0; i < s.length; i++) {
     Map<String, dynamic> row = {
-        "_id": s[i]["_id"],
-        "name": name,
-        "status": "notblocked",
-        "regex": s[i]['regex'],
+      "_id": s[i]["_id"],
+      "name": name,
+      "status": "notblocked",
+      "regex": s[i]['regex'],
     };
 
-    if(s[i]['name'] == name){
+    if (s[i]['name'] == name) {
       var regex = s[i]['regex'];
       log(regex);
 
       final res = await http.Client().get(Uri.parse(
-        'http://${d[0]['ip']}/admin/api.php?list=regex_black&sub=$regex&auth=${d[0]['apitoken']}'));
-      
+          'http://${d[0]['ip']}/admin/api.php?list=regex_black&sub=$regex&auth=${d[0]['apitoken']}'));
+
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
         //log(pars);
@@ -230,7 +230,7 @@ setClients() async {
   var devices = await dbHelper.queryAllRows('devices');
 
   for (var i = 0; i < devices.length; i++) {
-    final res = await http.Client().get(Uri.parse(
+    final res = await http.Client().post(Uri.parse(
         'http://${devices[i]['ip']}/admin/api.php?topClients&auth=${devices[i]['apitoken']}'));
     if (res.statusCode == 200) {
       var pars = jsonDecode(res.body);
@@ -295,7 +295,7 @@ fetchLogs() async {
   var devices = await dbHelper.queryAllRows('devices');
 
   for (var i = 0; i < devices.length; i++) {
-    final res = await http.Client().get(Uri.parse(
+    final res = await http.Client().post(Uri.parse(
         'http://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
     if (res.statusCode == 200) {
       await deleteAllLogs();
@@ -381,12 +381,12 @@ fetchTopQueries() async {
 }
 
 checkDevices() async {
-  var devices = await dbHelper.queryAllRows('devices');
+  var devices = await getDevices();
 
-  if(devices.length <= 0){
+  if (devices.length <= 0) {
     log("No devices");
-    return false;    
-  } else { 
+    return false;
+  } else {
     log("Devices: ${devices.length}");
     return true;
   }
@@ -408,4 +408,44 @@ test_ip() async {
   } catch (e) {
     return false;
   }
+}
+
+testToken() async {
+  final dbHelper = DatabaseHelper.instance;
+  var devices = await dbHelper.queryAllRows('devices');
+  if(devices.length == 0){
+    return;
+  }
+
+  var ip = devices[0]['ip'];
+  var prot = devices[0]['protocol'];
+  var token = devices[0]['token'];
+  var url = '$prot://$ip';
+
+  final resp = await http
+      .get(Uri.parse('$url/admin/api.php?getAllQueries=100&auth=$token'));
+
+  if (resp.statusCode == 200) {
+    Map<String, dynamic> row = {
+      "_id": devices[0]['_id'],
+      "validtoken": true,
+    };
+
+    await dbHelper.update(row, "devices");
+    return;
+  } else {
+    Map<String, dynamic> row = {
+      "_id": devices[0]['_id'],
+      "validtoken": false,
+    };
+
+    await dbHelper.update(row, "devices");
+    return;
+  }
+}
+
+getDevices() async {
+  final dbHelper = DatabaseHelper.instance;
+  var devices = await dbHelper.queryAllRows('devices');
+  return devices;
 }

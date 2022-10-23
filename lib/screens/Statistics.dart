@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:piremote/functions/Functions.dart';
 import 'package:piremote/widgets/Disconnected.dart';
+import 'package:piremote/widgets/InvalidToken.dart';
 import 'package:piremote/widgets/NoDevices.dart';
 
 class Statistics extends StatefulWidget {
@@ -24,6 +25,7 @@ class _StatisticsState extends State<Statistics> {
   List topAds = [];
   var ipStatus = true;
   var deviceStatus = true;
+  bool _tokenstatus = true;
 
   all() {
     if (deviceStatus == false) {
@@ -32,6 +34,10 @@ class _StatisticsState extends State<Statistics> {
 
     if (ipStatus == false) {
       return Disconnected(context: context);
+    }
+
+    if (_tokenstatus == false) {
+      return InvalidToken(context: context);
     }
 
     return Column(
@@ -479,13 +485,17 @@ class _StatisticsState extends State<Statistics> {
         });
       }
     }
+    await testToken();
+    var devices = await getDevices();
+
+    if(devices[0]['validtoken'] == 0){
+      setState(() {
+        _tokenstatus = false;
+      });
+    }
 
     final dbHelper = DatabaseHelper.instance;
     var myclients = await dbHelper.queryAllRowsNormal('clients');
-
-    // setState(() {
-    //   clients = [];
-    // });
 
     setState(() {
       clients = myclients;

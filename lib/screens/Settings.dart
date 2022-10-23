@@ -14,6 +14,7 @@ import 'package:piremote/widgets/Disconnected.dart';
 import 'package:piremote/widgets/InputWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:piremote/widgets/InvalidToken.dart';
 import 'package:piremote/widgets/NoDevices.dart';
 
 class Settings extends StatefulWidget {
@@ -28,6 +29,7 @@ class _SettingsState extends State<Settings> {
   String buttonState = 'notloading';
   var ipStatus = true;
   var deviceStatus = true;
+  bool _tokenstatus = true;
 
   all() {
     if (deviceStatus == false) {
@@ -39,6 +41,10 @@ class _SettingsState extends State<Settings> {
 
     if (ipStatus == false) {
       return Disconnected(context: context);
+    }
+
+    if (_tokenstatus == false) {
+      return InvalidToken(context: context);
     }
 
     return Container(
@@ -103,6 +109,16 @@ class _SettingsState extends State<Settings> {
             },
           ),
           SettingsItem(
+            icon: CupertinoIcons.money_dollar_circle_fill,
+            name: "Support",
+            subtitle: "Donate to support our work",
+            iconSize: 22.0,
+            borderStatus: true,
+            onPressed: () {
+              supportModal(context);
+            },
+          ),
+          SettingsItem(
             icon: CupertinoIcons.news_solid,
             name: "What's new",
             subtitle: "Latest changes",
@@ -118,6 +134,15 @@ class _SettingsState extends State<Settings> {
   }
 
   check() async {
+    await testToken();
+    var devices = await getDevices();
+
+    if(devices[0]['validtoken'] == 0){
+      setState(() {
+        _tokenstatus = false;
+      });
+    }
+
     var mydevices = await checkDevices();
 
     if (mydevices == false) {
@@ -262,8 +287,7 @@ class _SettingsState extends State<Settings> {
                     children: [
                       ChangelogItem(
                         title: 'Easter egg',
-                        message:
-                            "Added a secret gimmick.",
+                        message: "Added a secret gimmick.",
                       ),
                       ChangelogItem(
                         title: 'Search logs',
@@ -271,7 +295,8 @@ class _SettingsState extends State<Settings> {
                       ),
                       ChangelogItem(
                         title: 'Bug Fixes',
-                        message: "Fixed bugs that came from the recent pihole update.",
+                        message:
+                            "Fixed bugs that came from the recent pihole update.",
                       ),
                     ],
                   ),
@@ -465,6 +490,113 @@ class _SettingsState extends State<Settings> {
                     ),
                   ),
                   const SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  supportModal(context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+        top: Radius.circular(15.0),
+      )),
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF0D1117),
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 50.0,
+                        height: 4.0,
+                        margin: EdgeInsets.only(top: 15.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: const Color(0xFF161B22),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    'Donate',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontFamily: pBold,
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    'Support our work.',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12.0,
+                      fontFamily: pRegular,
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Container(
+                    padding: EdgeInsets.all(15.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Color(0xFF161B22),
+                    ),
+                    margin: const EdgeInsets.only(
+                      bottom: 20.0,
+                      left: 0.0,
+                      right: 0.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(CupertinoIcons.money_dollar),
+                        SizedBox(width: 10.0),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Monero wallet",
+                                style: TextStyle(
+                                  fontFamily: "AR",
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              SizedBox(height: 5.0),
+                              Text(
+                                "83K6DPomcJ8UhCyvp7LfxbVvY2niiatEn4JPd4i2YXgfFqL7VfpVpqv3otV1b5Y5Rv3x5K6jpGA6Yfobk1g5fk5gP8UCMpn",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: "SFNSR",
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

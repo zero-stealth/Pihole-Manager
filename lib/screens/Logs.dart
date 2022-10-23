@@ -17,6 +17,7 @@ import 'package:piremote/screens/LiveLog.dart';
 import 'package:piremote/screens/LogsHistory.dart';
 import 'package:piremote/screens/Query.dart';
 import 'package:piremote/widgets/Disconnected.dart';
+import 'package:piremote/widgets/InvalidToken.dart';
 import 'package:piremote/widgets/NoDevices.dart';
 import 'package:piremote/widgets/NoLogs.dart';
 import 'package:piremote/widgets/NoRequests.dart';
@@ -44,6 +45,7 @@ class _LogsState extends State<Logs> {
   var _showBackToTopButton = false;
 
   var livelogStatus = false;
+  bool _tokenstatus = true;
 
   _handleSearchStart() {
     setState(() {
@@ -284,6 +286,10 @@ class _LogsState extends State<Logs> {
       return Disconnected(context: context);
     }
 
+    if (_tokenstatus == false) {
+      return InvalidToken(context: context);
+    }
+
     if (logs.length > 0) {
       switch (searchcontroller.text.isNotEmpty) {
         case false:
@@ -485,7 +491,7 @@ class _LogsState extends State<Logs> {
     }
   }
 
-  fetchLogs() async {
+  _fetchLogs() async {
     var mydevices = await checkDevices();
 
     if (mydevices == false) {
@@ -505,7 +511,7 @@ class _LogsState extends State<Logs> {
     var devices = await dbHelper.queryAllRows('devices');
 
     for (var i = 0; i < devices.length; i++) {
-      final res = await http.Client().get(Uri.parse(
+      final res = await http.Client().post(Uri.parse(
           '${devices[i]['protocol']}://${devices[i]['ip']}/admin/api.php?getAllQueries=100&auth=${devices[i]['apitoken']}'));
       if (res.statusCode == 200) {
         var pars = jsonDecode(res.body);
@@ -556,7 +562,16 @@ class _LogsState extends State<Logs> {
     }
   }
 
-  fetchClients() async {
+  _fetchClients() async {
+    await testToken();
+    var devices = await getDevices();
+
+    if(devices[0]['validtoken'] == 0){
+      setState(() {
+        _tokenstatus = false;
+      });
+    }
+
     final dbHelper = DatabaseHelper.instance;
     var myclients = await dbHelper.queryAllRows('clients');
 
@@ -721,6 +736,8 @@ class _LogsState extends State<Logs> {
         duration: Duration(seconds: 2), curve: Curves.easeIn);
   }
 
+  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -736,9 +753,9 @@ class _LogsState extends State<Logs> {
       });
 
     super.initState();
-    fetchClients();
+    _fetchClients();
     getDeviceNames();
-    fetchLogs();
+    _fetchLogs();
   }
 
   @override

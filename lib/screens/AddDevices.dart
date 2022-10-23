@@ -130,6 +130,7 @@ class _AddDevicesState extends State<AddDevices> {
           "name": name,
           "ip": ip,
           "protocol": prot,
+          "validtoken": true,
           "apitoken": token,
         };
 
