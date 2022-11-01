@@ -526,84 +526,87 @@ class _StatisticsState extends State<Statistics> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: const Color(0xFF0D1117),
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            // pinned: true,
-            backgroundColor: const Color(0xFF161B22),
-            elevation: 1.0,
-            centerTitle: false,
-            automaticallyImplyLeading: false,
-            title: Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                left: 5.0,
-              ),
-              child: Text(
-                "Statistics",
-                style: TextStyle(
-                  fontFamily: pBold,
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: const Color(0xFF0D1117),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              // pinned: true,
+              backgroundColor: const Color(0xFF161B22),
+              elevation: 1.0,
+              centerTitle: false,
+              automaticallyImplyLeading: false,
+              title: Padding(
+                padding: EdgeInsets.only(
                   top: 5.0,
-                  right: 20.0,
+                  left: 5.0,
                 ),
-                child: InkWell(
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: () async {
-                    setState(() {
-                      topAds = [];
-                      topQueries = [];
-                      clients = [];
-                    });
-                    await setClients();
-                    await fetchTopClients();
-                    await fetchTopQueries();
-                  },
-                  child: const Icon(
-                    CupertinoIcons.arrow_counterclockwise,
+                child: Text(
+                  "Statistics",
+                  style: TextStyle(
+                    fontFamily: pBold,
                     color: Colors.white,
-                    size: 23.0,
+                    fontSize: 18.0,
                   ),
                 ),
               ),
-            ],
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                        top: 20.0,
-                        left: 20.0,
-                        right: 20.0,
-                        bottom: 20.0,
-                      ),
-                      child: all(),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5.0,
+                    right: 20.0,
+                  ),
+                  child: InkWell(
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: () async {
+                      setState(() {
+                        topAds = [];
+                        topQueries = [];
+                        clients = [];
+                      });
+                      await setClients();
+                      await fetchTopClients();
+                      await fetchTopQueries();
+                    },
+                    child: const Icon(
+                      CupertinoIcons.arrow_counterclockwise,
+                      color: Colors.white,
+                      size: 23.0,
                     ),
-                  ],
-                )
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                          top: 20.0,
+                          left: 20.0,
+                          right: 20.0,
+                          bottom: 20.0,
+                        ),
+                        child: all(),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

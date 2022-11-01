@@ -600,43 +600,46 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: const Color(0xFF0D1117),
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            // pinned: true,
-            backgroundColor: const Color(0xFF161B22),
-            elevation: 1.0,
-            centerTitle: false,
-            automaticallyImplyLeading: false,
-            title: Padding(
-              padding: EdgeInsets.only(
-                top: 5.0,
-                left: 5.0,
-              ),
-              child: Text(
-                "Settings",
-                style: TextStyle(
-                  fontFamily: pBold,
-                  color: Colors.white,
-                  fontSize: 18.0,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: const Color(0xFF0D1117),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              // pinned: true,
+              backgroundColor: const Color(0xFF161B22),
+              elevation: 1.0,
+              centerTitle: false,
+              automaticallyImplyLeading: false,
+              title: Padding(
+                padding: EdgeInsets.only(
+                  top: 5.0,
+                  left: 5.0,
+                ),
+                child: Text(
+                  "Settings",
+                  style: TextStyle(
+                    fontFamily: pBold,
+                    color: Colors.white,
+                    fontSize: 18.0,
+                  ),
                 ),
               ),
+              actions: [],
             ),
-            actions: [],
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                all(),
-              ],
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  all(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -768,309 +768,312 @@ class _LogsState extends State<Logs> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: const Color(0xFF0D1117),
-          child: CustomScrollView(
-            controller: _scrollController,
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverAppBar(
-                floating: true,
-                // pinned: true,
-                backgroundColor: const Color(0xFF161B22),
-                elevation: 1.0,
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-                title: Padding(
-                  padding: EdgeInsets.only(
-                    top: 5.0,
-                    left: 5.0,
-                  ),
-                  child: Text(
-                    "Logs",
-                    style: TextStyle(
-                      fontFamily: pBold,
-                      color: Colors.white,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: const Color(0xFF0D1117),
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  // pinned: true,
+                  backgroundColor: const Color(0xFF161B22),
+                  elevation: 1.0,
+                  centerTitle: false,
+                  automaticallyImplyLeading: false,
+                  title: Padding(
+                    padding: EdgeInsets.only(
                       top: 5.0,
-                      right: 30.0,
+                      left: 5.0,
                     ),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        setState(() {
-                          logs = [];
-                        });
-                        fetchLogs();
-                      },
-                      child: const Icon(
-                        CupertinoIcons.arrow_counterclockwise,
+                    child: Text(
+                      "Logs",
+                      style: TextStyle(
+                        fontFamily: pBold,
                         color: Colors.white,
-                        size: 21.0,
+                        fontSize: 18.0,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 5.0,
-                      right: 20.0,
-                    ),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        filterByClient();
-                      },
-                      child: const Icon(
-                        CupertinoIcons.doc_text_search,
-                        color: Colors.white,
-                        size: 21.0,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 5.0,
+                        right: 30.0,
                       ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(width: 10.0),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 5.0,
-                          right: 20.0,
-                        ),
-                        child: InkWell(
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LogsHistory(),
-                              ),
-                            );
-                          },
-                          child: const Icon(
-                            CupertinoIcons.clock,
-                            color: Colors.white,
-                            size: 23.0,
-                          ),
+                      child: InkWell(
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          setState(() {
+                            logs = [];
+                          });
+                          fetchLogs();
+                        },
+                        child: const Icon(
+                          CupertinoIcons.arrow_counterclockwise,
+                          color: Colors.white,
+                          size: 21.0,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Column(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 5.0,
+                        right: 20.0,
+                      ),
+                      child: InkWell(
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          filterByClient();
+                        },
+                        child: const Icon(
+                          CupertinoIcons.doc_text_search,
+                          color: Colors.white,
+                          size: 21.0,
+                        ),
+                      ),
+                    ),
+                    Row(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: 20.0,
+                        SizedBox(width: 10.0),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 5.0,
+                            right: 20.0,
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Column(
-                            children: [
-                              // InkWell(
-                              //   onTap: () async {
-                              //     // setState(() {
-                              //     //   livelogStatus = !livelogStatus;
-                              //     // });
-
-                              //     // await liveLog();
-                              //     // fetchLogs();
-
-                              //     Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //         builder: (context) => LiveLog(),
-                              //       ),
-                              //     );
-                              //   },
-                              //   child: Container(
-                              //     width: double.infinity,
-                              //     padding: EdgeInsets.symmetric(horizontal: 20.0),
-                              //     child: Row(
-                              //       mainAxisAlignment:
-                              //           MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         Row(
-                              //           mainAxisAlignment: MainAxisAlignment.start,
-                              //           children: [
-                              //             Icon(
-                              //               CupertinoIcons.waveform_circle,
-                              //               color: livelogStatus == true
-                              //                   ? Color(0xff3FB950)
-                              //                   : Colors.redAccent,
-                              //               size: 22.0,
-                              //             ),
-                              //             SizedBox(width: 15.0),
-                              //             Text(
-                              //               "Live log",
-                              //               style: TextStyle(
-                              //                 fontFamily: pBold,
-                              //                 fontSize: 15.0,
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //         Container(
-                              //           padding: EdgeInsets.only(
-                              //             top: 4.0,
-                              //             bottom: 4.0,
-                              //             left: 10.0,
-                              //             right: 10.0,
-                              //           ),
-                              //           decoration: BoxDecoration(
-                              //             color: livelogStatus == true
-                              //                 ? Color(0xff3FB950).withOpacity(0.2)
-                              //                 : Colors.redAccent.withOpacity(0.2),
-                              //             borderRadius: BorderRadius.circular(50.0),
-                              //           ),
-                              //           child: Center(
-                              //             child: Text(
-                              //               livelogStatus == true ? "ON" : "OFF",
-                              //               style: TextStyle(
-                              //                 color: livelogStatus == true
-                              //                     ? Color(0xff3FB950)
-                              //                     : Colors.redAccent,
-                              //                 fontSize: 12.0,
-                              //                 fontFamily: pBold,
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  left: 15.0,
-                                  right: 15.0,
-                                  bottom: 10.0,
+                          child: InkWell(
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LogsHistory(),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF0D1117),
-                                  borderRadius: BorderRadius.circular(6.0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
-                                      child: CupertinoTextField(
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFF0D1117),
-                                        ),
-                                        scrollPhysics:
-                                            const BouncingScrollPhysics(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                        controller: searchcontroller,
-                                        onChanged: (text) {
-                                          searchOperation(text);
-                                        },
-                                        maxLines: 1,
-                                        placeholder: "Search domain",
-                                        placeholderStyle: TextStyle(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          fontFamily: pRegular,
-                                          fontSize: 14.0,
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          searchcontroller.clear();
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        });
-                                      },
-                                      child: Icon(
-                                        CupertinoIcons.clear_circled,
-                                        color: searchcontroller.text.isEmpty
-                                            ? Colors.grey.withOpacity(0.2)
-                                            : Color(0xff3FB950),
-                                        size: 20.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 5.0),
-                              myLogs(),
-                              SizedBox(height: 100.0),
-                            ],
+                              );
+                            },
+                            child: const Icon(
+                              CupertinoIcons.clock,
+                              color: Colors.white,
+                              size: 23.0,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 20.0,
-              bottom: 100.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _showBackToTopButton == true
-                    ? InkWell(
-                        onTap: () {
-                          scrollToTop();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(18.0),
-                          decoration: BoxDecoration(
-                            color: Color(0xff3FB950),
-                            borderRadius: BorderRadius.circular(50.0),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: 20.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6.0),
+                            ),
+                            child: Column(
+                              children: [
+                                // InkWell(
+                                //   onTap: () async {
+                                //     // setState(() {
+                                //     //   livelogStatus = !livelogStatus;
+                                //     // });
+    
+                                //     // await liveLog();
+                                //     // fetchLogs();
+    
+                                //     Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(
+                                //         builder: (context) => LiveLog(),
+                                //       ),
+                                //     );
+                                //   },
+                                //   child: Container(
+                                //     width: double.infinity,
+                                //     padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                //     child: Row(
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.spaceBetween,
+                                //       children: [
+                                //         Row(
+                                //           mainAxisAlignment: MainAxisAlignment.start,
+                                //           children: [
+                                //             Icon(
+                                //               CupertinoIcons.waveform_circle,
+                                //               color: livelogStatus == true
+                                //                   ? Color(0xff3FB950)
+                                //                   : Colors.redAccent,
+                                //               size: 22.0,
+                                //             ),
+                                //             SizedBox(width: 15.0),
+                                //             Text(
+                                //               "Live log",
+                                //               style: TextStyle(
+                                //                 fontFamily: pBold,
+                                //                 fontSize: 15.0,
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //         Container(
+                                //           padding: EdgeInsets.only(
+                                //             top: 4.0,
+                                //             bottom: 4.0,
+                                //             left: 10.0,
+                                //             right: 10.0,
+                                //           ),
+                                //           decoration: BoxDecoration(
+                                //             color: livelogStatus == true
+                                //                 ? Color(0xff3FB950).withOpacity(0.2)
+                                //                 : Colors.redAccent.withOpacity(0.2),
+                                //             borderRadius: BorderRadius.circular(50.0),
+                                //           ),
+                                //           child: Center(
+                                //             child: Text(
+                                //               livelogStatus == true ? "ON" : "OFF",
+                                //               style: TextStyle(
+                                //                 color: livelogStatus == true
+                                //                     ? Color(0xff3FB950)
+                                //                     : Colors.redAccent,
+                                //                 fontSize: 12.0,
+                                //                 fontFamily: pBold,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 15.0,
+                                    right: 15.0,
+                                    bottom: 10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF0D1117),
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: MediaQuery.of(context).size.width -
+                                            75,
+                                        child: CupertinoTextField(
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFF0D1117),
+                                          ),
+                                          scrollPhysics:
+                                              const BouncingScrollPhysics(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          controller: searchcontroller,
+                                          onChanged: (text) {
+                                            searchOperation(text);
+                                          },
+                                          maxLines: 1,
+                                          placeholder: "Search domain",
+                                          placeholderStyle: TextStyle(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            fontFamily: pRegular,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            searchcontroller.clear();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          });
+                                        },
+                                        child: Icon(
+                                          CupertinoIcons.clear_circled,
+                                          color: searchcontroller.text.isEmpty
+                                              ? Colors.grey.withOpacity(0.2)
+                                              : Color(0xff3FB950),
+                                          size: 20.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 5.0),
+                                myLogs(),
+                                SizedBox(height: 100.0),
+                              ],
+                            ),
                           ),
-                          child: Icon(
-                            CupertinoIcons.chevron_up,
-                            size: 22.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    : Container(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-        ),
-      ],
+          Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                right: 20.0,
+                bottom: 100.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _showBackToTopButton == true
+                      ? InkWell(
+                          onTap: () {
+                            scrollToTop();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(18.0),
+                            decoration: BoxDecoration(
+                              color: Color(0xff3FB950),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            child: Icon(
+                              CupertinoIcons.chevron_up,
+                              size: 22.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
