@@ -259,7 +259,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v2.0',
+                        'v2.1',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -293,6 +293,10 @@ class _SettingsState extends State<Settings> {
                       ChangelogItem(
                         title: 'Donations',
                         message: "You can now donate to us in monero.",
+                      ),
+                      ChangelogItem(
+                        title: 'Bug fix',
+                        message: "The back button will not take you back to the splash screen anymore.",
                       ),
                     ],
                   ),
