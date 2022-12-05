@@ -355,7 +355,8 @@ class _LogsState extends State<Logs> {
                           ),
                           SizedBox(height: 5.0),
                           Text(
-                            deviceName(logs[index][4]['client'].toString()),
+                            deviceName(logs[index][4]['client'].toString()) ??
+                                " ",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.white,
@@ -566,7 +567,7 @@ class _LogsState extends State<Logs> {
     await testToken();
     var devices = await getDevices();
 
-    if(devices[0]['validtoken'] == 0){
+    if (devices[0]['validtoken'] == 0) {
       setState(() {
         _tokenstatus = false;
       });
@@ -736,8 +737,6 @@ class _LogsState extends State<Logs> {
         duration: Duration(seconds: 2), curve: Curves.easeIn);
   }
 
-  
-
   @override
   void initState() {
     // TODO: implement initState
@@ -897,10 +896,10 @@ class _LogsState extends State<Logs> {
                                 //     // setState(() {
                                 //     //   livelogStatus = !livelogStatus;
                                 //     // });
-    
+
                                 //     // await liveLog();
                                 //     // fetchLogs();
-    
+
                                 //     Navigator.push(
                                 //       context,
                                 //       MaterialPageRoute(
@@ -980,8 +979,9 @@ class _LogsState extends State<Logs> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        width: MediaQuery.of(context).size.width -
-                                            75,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
                                         child: CupertinoTextField(
                                           decoration: const BoxDecoration(
                                             color: Color(0xFF0D1117),
