@@ -43,6 +43,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.5
   flutter_svg: ^1.0.3
+  get: ^4.6.5
   # awesome_notifications: ^0.6.21
 
 dev_dependencies:
