@@ -144,7 +144,8 @@ class _DevicesState extends State<Devices> {
     }
 
     var myurl = "$myprotocol://${devices[0]['ip']}";
-    final response = await http.get(Uri.parse('$myurl/admin/api.php?summary'));
+    final response = await http.get(Uri.parse(
+        '$myurl/admin/api.php?summary&auth=${devices[0]['apitoken']}'));
 
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
