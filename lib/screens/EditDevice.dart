@@ -314,6 +314,7 @@ class _EditDeviceState extends State<EditDevice> {
                   label: "Device Name",
                   placeholder: namecontroller.text,
                   lines: 1,
+                  info: false,
                   qrcode: false,
                 ),
                 SizedBox(height: 15.0),
@@ -372,6 +373,7 @@ class _EditDeviceState extends State<EditDevice> {
                 InputWidget(
                   namecontroller: ipcontroller,
                   label: "Pihole ip address",
+                  info: false,
                   placeholder: ipcontroller.text,
                   lines: 1,
                   qrcode: false,
@@ -381,6 +383,7 @@ class _EditDeviceState extends State<EditDevice> {
                   namecontroller: tokencontroller,
                   label: "Pihole api token",
                   placeholder: tokencontroller.text,
+                  info: false,
                   lines: 1,
                   qrcode: false,
                 ),

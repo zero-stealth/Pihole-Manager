@@ -21,6 +21,7 @@ class _AddDevicesState extends State<AddDevices> {
   TextEditingController ipcontroller = TextEditingController();
   TextEditingController tokencontroller = TextEditingController();
   TextEditingController namecontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
   int? protocol = 0;
 
   String buttonState = "notloading";
@@ -65,7 +66,7 @@ class _AddDevicesState extends State<AddDevices> {
     }
   }
 
-  test_ip(name, ip, token) async {
+  test_ip(name, ip, token, password) async {
     var prot = setprotocol();
     try {
       // var prot = setprotocol();
@@ -77,7 +78,7 @@ class _AddDevicesState extends State<AddDevices> {
           piholeStatus = true;
           piholeStatusMessage = "Pihole ip is active.";
         });
-        test_token(name, ip, token);
+        test_token(name, ip, token, password);
       } else {
         setState(() {
           piholeStatus = false;
@@ -95,7 +96,7 @@ class _AddDevicesState extends State<AddDevices> {
     }
   }
 
-  test_token(name, ip, token) async {
+  test_token(name, ip, token, password) async {
     final dbHelper = DatabaseHelper.instance;
     var prot = setprotocol();
     var url = '$prot://$ip';
@@ -132,6 +133,7 @@ class _AddDevicesState extends State<AddDevices> {
           "protocol": prot,
           "validtoken": true,
           "apitoken": token,
+          "password": password,
         };
 
         await dbHelper.insert(row, "devices");
@@ -213,6 +215,7 @@ class _AddDevicesState extends State<AddDevices> {
                   namecontroller: namecontroller,
                   label: "Device Name",
                   placeholder: "Raspberry pi",
+                  info: false,
                   lines: 1,
                   qrcode: false,
                 ),
@@ -220,8 +223,8 @@ class _AddDevicesState extends State<AddDevices> {
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(
-                    top: 5.0,
-                    bottom: 20.0,
+                    top: 0.0,
+                    bottom: 25.0,
                   ),
                   padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
@@ -274,6 +277,7 @@ class _AddDevicesState extends State<AddDevices> {
                   label: "Pihole ip address",
                   placeholder: "192.168.0.1",
                   lines: 1,
+                  info: false,
                   qrcode: false,
                 ),
                 const SizedBox(height: 15.0),
@@ -281,6 +285,16 @@ class _AddDevicesState extends State<AddDevices> {
                   namecontroller: tokencontroller,
                   label: "Pihole api token",
                   placeholder: "token",
+                  info: false,
+                  lines: 1,
+                  qrcode: false,
+                ),
+                const SizedBox(height: 15.0),
+                InputWidget(
+                  namecontroller: passwordcontroller,
+                  label: "Pihole admin password",
+                  placeholder: "password",
+                  info: true,
                   lines: 1,
                   qrcode: false,
                 ),
@@ -298,13 +312,14 @@ class _AddDevicesState extends State<AddDevices> {
                     child: buttonStatus(buttonState),
                     onPressed: () {
                       FocusManager.instance.primaryFocus?.unfocus();
-                      print(
-                        'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
-                      );
+                      // print(
+                      //   'ip address: ${ipcontroller.text} api token: ${tokencontroller.text}',
+                      // );
 
                       if (ipcontroller.text.isEmpty ||
                           tokencontroller.text.isEmpty ||
-                          namecontroller.text.isEmpty) {
+                          namecontroller.text.isEmpty ||
+                          passwordcontroller.text.isEmpty) {
                         setState(() {
                           piholeStatus = false;
                           piholeStatusMessage = "Fill all fields.";
@@ -318,11 +333,8 @@ class _AddDevicesState extends State<AddDevices> {
                           tokenStatusMessage = "";
                         });
 
-                        test_ip(
-                          namecontroller.text,
-                          ipcontroller.text,
-                          tokencontroller.text,
-                        );
+                        test_ip(namecontroller.text, ipcontroller.text,
+                            tokencontroller.text, passwordcontroller.text);
                       }
                     },
                   ),
@@ -336,6 +348,7 @@ class _AddDevicesState extends State<AddDevices> {
                   active: tokenStatus,
                   message: tokenStatusMessage,
                 ),
+                SizedBox(height: 30.0),
               ],
             ),
           ),

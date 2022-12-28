@@ -443,6 +443,7 @@ class _SettingsState extends State<Settings> {
                   InputWidget(
                     namecontroller: messagecontroller,
                     label: "Feedback",
+                    info: false,
                     placeholder: 'Talk to us...',
                     lines: 5,
                     qrcode: false,
