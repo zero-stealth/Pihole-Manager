@@ -399,7 +399,7 @@ class _EditDeviceState extends State<EditDevice> {
                   label: "Pihole admin password",
                   placeholder: "password",
                   obscured: true,
-                  info: false,
+                  info: true,
                   lines: 1,
                   qrcode: false,
                 ),
