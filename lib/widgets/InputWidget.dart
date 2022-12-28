@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:piremote/data/fonts.dart';
 
 class InputWidget extends StatefulWidget {
-  const InputWidget({
+  InputWidget({
     Key? key,
     required this.namecontroller,
     required this.label,
@@ -13,6 +14,7 @@ class InputWidget extends StatefulWidget {
     required this.lines,
     required this.qrcode,
     required this.info,
+    required this.obscured,
   }) : super(key: key);
 
   final TextEditingController namecontroller;
@@ -21,6 +23,7 @@ class InputWidget extends StatefulWidget {
   final int lines;
   final bool qrcode;
   final bool info;
+  bool obscured;
 
   @override
   State<InputWidget> createState() => _InputWidgetState();
@@ -140,24 +143,57 @@ class _InputWidgetState extends State<InputWidget> {
               color: const Color(0xFF161B22),
               borderRadius: BorderRadius.circular(6.0),
             ),
-            child: CupertinoTextField(
-              decoration: const BoxDecoration(
-                color: Color(0xFF161B22),
-              ),
-              scrollPhysics: const BouncingScrollPhysics(),
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-              controller: widget.namecontroller,
-              onChanged: (text) {},
-              maxLines: widget.lines,
-              placeholder: widget.placeholder,
-              obscureText: widget.placeholder == "password" ? true : false,
-              placeholderStyle: TextStyle(
-                color: Colors.grey.withOpacity(0.2),
-                fontFamily: pRegular,
-                fontSize: 14.0,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Flexible(
+                  child: CupertinoTextField(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF161B22),
+                    ),
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    controller: widget.namecontroller,
+                    onChanged: (text) {},
+                    maxLines: widget.lines,
+                    placeholder: widget.placeholder,
+                    obscureText: widget.placeholder == "password"
+                        ? widget.obscured
+                        : false,
+                    placeholderStyle: TextStyle(
+                      color: Colors.grey.withOpacity(0.2),
+                      fontFamily: pRegular,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
+                widget.placeholder == "password"
+                    ? InkWell(
+                        onTap: () {
+                          setState(() {
+                            widget.obscured = !widget.obscured;
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10.0),
+                          child: widget.obscured == false
+                              ? Icon(
+                                  CupertinoIcons.eye_slash_fill,
+                                  size: 18.0,
+                                  color: Color(0xff3FB950),
+                                )
+                              : Icon(
+                                  CupertinoIcons.eye_fill,
+                                  size: 18.0,
+                                  color: Color(0xff3FB950),
+                                ),
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
           ),
         ],

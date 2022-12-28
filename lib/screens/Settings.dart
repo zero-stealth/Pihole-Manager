@@ -445,6 +445,7 @@ class _SettingsState extends State<Settings> {
                     label: "Feedback",
                     info: false,
                     placeholder: 'Talk to us...',
+                    obscured: true,
                     lines: 5,
                     qrcode: false,
                   ),
