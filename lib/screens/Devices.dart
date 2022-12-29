@@ -235,9 +235,7 @@ class _DevicesState extends State<Devices> {
 
         for (var i = 0; i < 6; i++) {
           var table = document.getElementsByTagName('tr')[i];
-          log('TABLE');
           List<String> tables = ls.convert(table.text.trim());
-          print(tables);
 
           switch (i) {
             case 0:
