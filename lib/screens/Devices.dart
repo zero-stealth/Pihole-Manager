@@ -624,7 +624,7 @@ class _DevicesState extends State<Devices> {
                     margin: EdgeInsets.only(top: 15.0, bottom: 15.0),
                     width: double.infinity,
                     child: Text(
-                      'Add your pihole admin password to view system stats in the "Manage Devices" section',
+                      'Add your pihole admin password to view system stats in the "Manage Devices" section. \n\nIf you just updated the app, reinstall it for this to work!',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: 12.0,
