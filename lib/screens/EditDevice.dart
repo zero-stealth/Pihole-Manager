@@ -22,6 +22,7 @@ class _EditDeviceState extends State<EditDevice> {
   TextEditingController ipcontroller = TextEditingController();
   TextEditingController tokencontroller = TextEditingController();
   TextEditingController namecontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
 
   buttonStatus(buttonState) {
     switch (buttonState) {
@@ -59,6 +60,7 @@ class _EditDeviceState extends State<EditDevice> {
     namecontroller.text = device[0]['name'];
     ipcontroller.text = device[0]['ip'];
     tokencontroller.text = device[0]['apitoken'];
+    passwordcontroller.text = device[0]['password'];
 
     setState(() {
       id = device[0]['_id'];
@@ -99,6 +101,7 @@ class _EditDeviceState extends State<EditDevice> {
       "protocol": await setProtocol(),
       "validtoken": true,
       "apitoken": tokencontroller.text,
+      "password": passwordcontroller.text,
     };
 
     await dbHelper.update(row, "devices");
@@ -314,6 +317,8 @@ class _EditDeviceState extends State<EditDevice> {
                   label: "Device Name",
                   placeholder: namecontroller.text,
                   lines: 1,
+                  obscured: true,
+                  info: false,
                   qrcode: false,
                 ),
                 SizedBox(height: 15.0),
@@ -372,7 +377,9 @@ class _EditDeviceState extends State<EditDevice> {
                 InputWidget(
                   namecontroller: ipcontroller,
                   label: "Pihole ip address",
+                  info: false,
                   placeholder: ipcontroller.text,
+                  obscured: true,
                   lines: 1,
                   qrcode: false,
                 ),
@@ -381,6 +388,18 @@ class _EditDeviceState extends State<EditDevice> {
                   namecontroller: tokencontroller,
                   label: "Pihole api token",
                   placeholder: tokencontroller.text,
+                  info: false,
+                  obscured: true,
+                  lines: 1,
+                  qrcode: false,
+                ),
+                const SizedBox(height: 20.0),
+                InputWidget(
+                  namecontroller: passwordcontroller,
+                  label: "Pihole admin password",
+                  placeholder: "password",
+                  obscured: true,
+                  info: true,
                   lines: 1,
                   qrcode: false,
                 ),

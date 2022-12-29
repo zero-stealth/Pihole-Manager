@@ -259,7 +259,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v2.1',
+                        'v2.3',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -287,16 +287,12 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'Minor ui improvements',
-                        message: "Its not much but its honest work.",
+                        title: 'System stats',
+                        message: "You can now view your pihole system stats.",
                       ),
                       ChangelogItem(
-                        title: 'Donations',
-                        message: "You can now donate to us in monero.",
-                      ),
-                      ChangelogItem(
-                        title: 'Bug fix',
-                        message: "The back button will not take you back to the splash screen anymore.",
+                        title: 'Block services',
+                        message: "Added more services to the block list.",
                       ),
                     ],
                   ),
@@ -451,7 +447,9 @@ class _SettingsState extends State<Settings> {
                   InputWidget(
                     namecontroller: messagecontroller,
                     label: "Feedback",
+                    info: false,
                     placeholder: 'Talk to us...',
+                    obscured: true,
                     lines: 5,
                     qrcode: false,
                   ),

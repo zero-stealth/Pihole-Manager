@@ -46,6 +46,12 @@ class _DevicesState extends State<Devices> {
 
   bool tokenStatus = true;
 
+  var FTLVERSION = "";
+  var CPU_UTILIZATION = "";
+  var MEM_UTILIZATION = "";
+  var USED_MEMORY = "";
+  var FTL_STARTED = "";
+
   _getMyServices() async {
     var s = await dbHelper.queryAllRows("services");
 
@@ -82,6 +88,96 @@ class _DevicesState extends State<Devices> {
     }
   }
 
+  jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
+    for (var key in data.keys) {
+      request.fields[key] = data[key].toString();
+    }
+    return request;
+  }
+
+  void _popup() {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Color(0xFF0D1117).withOpacity(0.9),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width - 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.0),
+                      color: Color(0xFF161B22),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 5.0),
+                        StatTab(title: "FTL VERSION", value: '$FTLVERSION'),
+                        // Divider(),
+                        // StatTab(
+                        //     title: "PROCESS IDENTIFIER (PID)", value: '34'),
+                        Divider(),
+                        StatTab(
+                            title: "TIME FTL STARTED", value: '$FTL_STARTED'),
+                        // Divider(),
+                        // StatTab(title: "USER/GROUP", value: '34'),
+                        Divider(),
+                        StatTab(
+                            title: "TOTAL CPU UTILIZATION",
+                            value: '$CPU_UTILIZATION'),
+                        Divider(),
+                        StatTab(
+                            title: "MEMORY UTILIZATION",
+                            value: '$MEM_UTILIZATION'),
+                        // Divider(),
+                        // StatTab(title: "USED MEMORY", value: '$USED_MEMORY'),
+                        // Divider(),
+                        // StatTab(title: "DNS CACHE SIZE", value: '34'),
+                        // Divider(),
+                        // StatTab(title: "DNS CACHE INSERTIONS", value: '34'),
+                        // Divider(),
+                        // StatTab(title: "DNS CACHE EVICTIONS", value: '34'),
+                        SizedBox(height: 5.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(
+                      bottom: 10.0,
+                      left: 20.0,
+                      right: 20.0,
+                    ),
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(6.0),
+                      color: const Color(0xff3FB950),
+                      child: Text(
+                        'Close',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: "SFNSR",
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   fetchQueries() async {
     var mydevices = await checkDevices();
 
@@ -109,38 +205,93 @@ class _DevicesState extends State<Devices> {
     setState(() {
       myprotocol = devices[0]['protocol'];
     });
-    final resp = await http.Client()
-        .get(Uri.parse('$myprotocol://${devices[0]['ip']}/admin/'));
-    if (resp.statusCode == 200) {
-      var document = parser.parse(resp.body);
-      // try {
-      //   var temp = document.getElementsByClassName('pull-left info')[0];
 
-      //   LineSplitter ls = new LineSplitter();
-      //   List<String> lines = ls.convert(temp.text.trim());
+    Map<String, String> headers = {};
 
-      //   for (var n = 0; n < lines.length; n++) {
-      //     if (n == 4) {
-      //       var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
-      //       setState(() {
-      //         var mytemp = double.parse(ext);
-      //         assert(mytemp is double);
-      //         temperature = mytemp.toStringAsFixed(1);
-      //       });
-      //     }
+    var request = await http.MultipartRequest(
+        'POST', Uri.parse('$myprotocol://${devices[0]['ip']}/admin/login.php'));
+    request = jsonToFormData(request, {"pw": devices[0]['password']});
+    var res = await request.send();
+    print(res.headers['set-cookie']);
 
-      //     if (n == 3) {
-      //       var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
-      //       setState(() {
-      //         memory = '$ext2%';
-      //       });
-      //     }
-      //   }
-      // } catch (e) {
-      //   print(e);
-      // }
-    } else {
-      print("FETCH FAILED.");
+    var rawCookie = res.headers['set-cookie'];
+    if (rawCookie != null) {
+      int index = rawCookie.indexOf(';');
+      headers['cookie'] =
+          (index == -1) ? rawCookie : rawCookie.substring(0, index);
+    }
+
+    var sysdata = await http.post(
+      Uri.parse('$myprotocol://${devices[0]['ip']}/admin/settings.php'),
+      body: {},
+      encoding: Encoding.getByName('utf-8'),
+      headers: headers,
+    );
+
+    if (sysdata.statusCode == 200) {
+      var document = parser.parse(sysdata.body);
+      try {
+        LineSplitter ls = new LineSplitter();
+
+        for (var i = 0; i < 6; i++) {
+          var table = document.getElementsByTagName('tr')[i];
+          log('TABLE');
+          List<String> tables = ls.convert(table.text.trim());
+          print(tables);
+
+          switch (i) {
+            case 0:
+              setState(() {
+                FTLVERSION = tables[1].substring(56);
+              });
+              break;
+
+            case 2:
+              setState(() {
+                FTL_STARTED = tables[1].substring(56);
+              });
+              break;
+
+            case 4:
+              setState(() {
+                CPU_UTILIZATION = tables[1].substring(56);
+              });
+              break;
+
+            case 5:
+              setState(() {
+                MEM_UTILIZATION = tables[1].substring(56);
+              });
+              break;
+
+            default:
+          }
+        }
+
+        var temp = document.getElementsByClassName('pull-left info')[0];
+
+        List<String> lines = ls.convert(temp.text.trim());
+
+        for (var n = 0; n < lines.length; n++) {
+          if (n == 4) {
+            var ext = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
+            setState(() {
+              var mytemp = double.parse(ext);
+              assert(mytemp is double);
+              temperature = mytemp.toStringAsFixed(1);
+            });
+          }
+
+          if (n == 3) {
+            var ext2 = lines[n].replaceAll(new RegExp(r'[^\.0-9]'), '');
+            setState(() {
+              memory = '$ext2%';
+            });
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
     }
 
     var myurl = "$myprotocol://${devices[0]['ip']}";
@@ -470,12 +621,40 @@ class _DevicesState extends State<Devices> {
                 ],
               ),
             ),
-            const SizedBox(height: 0.0),
-            // Stats(
-            //   temperature: devices_data[i]['temperature'],
-            //   memoryUsage: devices_data[i]['memory'],
-            // ),
-            const SizedBox(height: 20.0),
+            devices_data[i]['temperature'] == "0°"
+                ? Container(
+                    margin: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    width: double.infinity,
+                    child: Text(
+                      'Add your pihole admin password to view system stats in the "Manage Devices" section',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontFamily: "SFSNR",
+                        color: Colors.red,
+                      ),
+                    ),
+                  )
+                : InkWell(
+                    onTap: () {
+                      _popup();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Stats(
+                          temperature: devices_data[i]['temperature'],
+                          memoryUsage: devices_data[i]['memory'],
+                        ),
+                        Icon(
+                          CupertinoIcons.chevron_right,
+                          size: 20.0,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+            // const SizedBox(height: 20.0),
             Panels(
               firstLabel: "Total queries",
               firstValue: devices_data[i]['totalQueries'],
@@ -777,6 +956,56 @@ class _DevicesState extends State<Devices> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class StatTab extends StatelessWidget {
+  const StatTab({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(
+        top: 10.0,
+        left: 20.0,
+        right: 20.0,
+        bottom: 10.0,
+      ),
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontFamily: 'SFNSR',
+              fontSize: 10.0,
+              color: Colors.white.withOpacity(0.5),
+            ),
+          ),
+          SizedBox(height: 10.0),
+          Text(
+            value,
+            textAlign: TextAlign.start,
+            overflow: TextOverflow.clip,
+            style: TextStyle(
+              fontFamily: 'AR',
+              fontSize: 16.0,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

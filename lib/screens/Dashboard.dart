@@ -216,7 +216,11 @@ class _DashboardState extends State<Dashboard> {
                                           color: selectedMenuItem == "home"
                                               ? Color(0xff3FB950)
                                               : Color.fromARGB(
-                                                  255, 161, 161, 161),
+                                                  255,
+                                                  161,
+                                                  161,
+                                                  161,
+                                                ),
                                         ),
                                       ),
                                     ],

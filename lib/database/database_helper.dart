@@ -49,6 +49,7 @@ class DatabaseHelper {
           name TEXT NOT NULL,
           ip TEXT NOT NULL,
           validtoken BOOLEAN NOT NULL,
+          password TEXT NOT NULL,
           apitoken TEXT NOT NULL
         )
         ''');
@@ -133,8 +134,7 @@ class DatabaseHelper {
   Future<int> update(Map<String, dynamic> row, mytable) async {
     Database? db = await instance.database;
     int id = row['_id'];
-    return await db!
-        .update(mytable, row, where: '_id = ?', whereArgs: [id]);
+    return await db!.update(mytable, row, where: '_id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id, mytable) async {

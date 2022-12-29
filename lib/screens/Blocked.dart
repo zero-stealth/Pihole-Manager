@@ -39,10 +39,10 @@ class _BlockedState extends State<Blocked> {
     });
   }
 
-  getService(name){
+  getService(name) {
     for (var i = 0; i < services.length; i++) {
-      if(services[i]['name'] == name){
-        if(services[i]['status'] == "blocked"){
+      if (services[i]['name'] == name) {
+        if (services[i]['status'] == "blocked") {
           log("${services[i]['name']} ${services[i]['status']}");
           return true;
         } else {
@@ -92,7 +92,17 @@ class _BlockedState extends State<Blocked> {
                   ),
                 ],
               ),
-              SizedBox(height: 25.0),
+              SizedBox(height: 15.0),
+              Text(
+                'Suggest more services in the feedback section.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.3),
+                  fontFamily: "SFSNR",
+                  fontSize: 12.0,
+                ),
+              ),
+              SizedBox(height: 15.0),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.only(
@@ -161,6 +171,27 @@ class _BlockedState extends State<Blocked> {
                       listsCount: 1,
                       icon: 'assets/facebook.svg',
                       status: getService("facebook"),
+                      bottomBorder: true,
+                    ),
+                    ServiceItem(
+                      service: "Hulu",
+                      listsCount: 1,
+                      icon: 'assets/hulu.svg',
+                      status: getService("hulu"),
+                      bottomBorder: true,
+                    ),
+                    ServiceItem(
+                      service: "Imgur",
+                      listsCount: 1,
+                      icon: 'assets/imgur.svg',
+                      status: getService("imgur"),
+                      bottomBorder: true,
+                    ),
+                    ServiceItem(
+                      service: "Disney+",
+                      listsCount: 1,
+                      icon: 'assets/disney.svg',
+                      status: getService("disney-plus"),
                       bottomBorder: false,
                     ),
                     // ServiceItem(
@@ -273,8 +304,8 @@ class _ServiceItemState extends State<ServiceItem> {
               CupertinoSwitch(
                 activeColor: Color(0xff3FB950),
                 value: widget.status,
-                onChanged: (value)async{
-                  if(widget.status == true){
+                onChanged: (value) async {
+                  if (widget.status == true) {
                     await enableService(widget.service.toLowerCase());
                   } else {
                     await blockService(widget.service.toLowerCase());
