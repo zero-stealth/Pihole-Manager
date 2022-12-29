@@ -259,7 +259,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v2.2',
+                        'v2.3',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -287,8 +287,12 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'Bug fix',
-                        message: "Fixed the dashboard not loading issue.",
+                        title: 'System stats',
+                        message: "You can now view your pihole system stats.",
+                      ),
+                      ChangelogItem(
+                        title: 'Block services',
+                        message: "Added more services to the block list.",
                       ),
                     ],
                   ),
