@@ -37,13 +37,31 @@ var myservices = [
     "name": "facebook",
     "status": "notblocked",
     "regex":
-        "%5E(.%2B%5C.)%3F%3F(facebook|fb|facebook.com|facebookmail|facebook-hardware|facebookenterprise|)%5C.(com|co|org|it|ca|au|ai|net)\$",
+        "%5E(.%2B%5C.)%3F%3F(facebook|fb|facebook.com|facebookmail|facebook-hardware|facebookenterprise)%5C.(com|co|org|it|ca|au|ai|net)\$",
   },
   {
     "name": "netflix",
     "status": "notblocked",
     "regex":
         "%5E(.%2B%5C.)%3F%3F(netflix|netflix.com|netflixstudios|netflixinvestor|netflixtechblog|nflxext|nflximg|nflxso|nflxvideo|nflxvpn)%5C.(com|net|ca|au)\$",
+  },
+  {
+    "name": "disney-plus",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(starott|search-api-disney.bamgrid|disneystreaming.service-now|disneyplus.disney.co|disney-vod-na-west-1.top.comcast|cds.s9y9e8r2.hwcdn|disneyplus|bamgrid|bam.nr-data|cdn.registerdisney.go|cws.conviva|d9.flashtalking|disney-portal.my.onetrust|disneyplus.bn5x|js-agent.newrelic|disney-plus|dssott|adobedtm)%5C.(com|net|jp)\$",
+  },
+  {
+    "name": "hulu",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(112263|payhulu|huluusa|thehulubraintrust|huluaction|huluteam|hulutv|myhulu|originalhulu|hulurussia|huluspain|hulusports|hulunet|hulunetwork|huluplus|hulupremium|hulupurchase|hulugo|huluinstantmessenger|huluitaly|huluapp|hulufree|hulugans|hulugermany|callhulu|findyourlimits|hooloo|hoolu|hu1u|huloo|hulu|huluad|huluim|hulumail|huluqa|hulustream)%5C.(com|co|org|it|ca|au|ai|net|jp|us|tv|cc)\$",
+  },
+  {
+    "name": "imgur",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(an.imgur|imgur|browserevents.imgur|rt.imgur|api.imgur|zrk.imgur|community.imgur|press.imgur|sen.imgur|status.imgur|links.msg.imgur|apidocs.imgur|g00.imgur|help.imgur|api.stack.imgur|8ybhy85kld9zp9xf84x6.imgur|and.imgur|ios.imgur|links.msg.imgur|api.stack.imgur|i.stack.imgur)%5C.(com|co|org|it|ca|au|ai|net|jp|us|tv|cc)\$",
   },
 ];
 
@@ -413,7 +431,7 @@ test_ip() async {
 testToken() async {
   final dbHelper = DatabaseHelper.instance;
   var devices = await dbHelper.queryAllRows('devices');
-  if(devices.length == 0){
+  if (devices.length == 0) {
     return;
   }
 
