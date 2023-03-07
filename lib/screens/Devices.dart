@@ -700,7 +700,7 @@ class _DevicesState extends State<Devices> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   for (var i = 0; i < _blockedServices.length; i++)
                     Padding(
                       padding: const EdgeInsets.only(
@@ -717,12 +717,12 @@ class _DevicesState extends State<Devices> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   CupertinoIcons.xmark_shield_fill,
                                   color: Colors.redAccent,
                                   size: 20.0,
                                 ),
-                                SizedBox(width: 10.0),
+                                const SizedBox(width: 10.0),
                                 Text(
                                   "${_blockedServices[i]['name']}",
                                   style: TextStyle(
