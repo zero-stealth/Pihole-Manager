@@ -63,6 +63,24 @@ var myservices = [
     "regex":
         "%5E(.%2B%5C.)%3F%3F(an.imgur|imgur|browserevents.imgur|rt.imgur|api.imgur|zrk.imgur|community.imgur|press.imgur|sen.imgur|status.imgur|links.msg.imgur|apidocs.imgur|g00.imgur|help.imgur|api.stack.imgur|8ybhy85kld9zp9xf84x6.imgur|and.imgur|ios.imgur|links.msg.imgur|api.stack.imgur|i.stack.imgur)%5C.(com|co|org|it|ca|au|ai|net|jp|us|tv|cc)\$",
   },
+  {
+    "name": "tiktok",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(abtest-sg-tiktok.byteoversea|abtest-va-tiktok.byteoversea|gts.byteoversea|isnssdk|lf1-ttcdn-tos.pstatp|muscdn|musemuse|musical|p1-tt-ipv6.byteimg|p16-tiktok-sg.ibyteimg|p16-tiktok-sign-va-h2.ibyteimg|p16-tiktok-va-h2.ibyteimg|p16-tiktok-va.ibyteimg|p16-va-tiktok.ibyteimg|p26-tt.byteimg|p3-tt-ipv6.byteimg|p9-tt.byteimg|pull-f3-hs.pstatp|pull-f5-hs.flive.pstatp|pull-f5-hs.pstatp|pull-f5-mus.pstatp|pull-flv-f1-hs.pstatp|pull-flv-f6-hs.pstatp|pull-flv-l1-hs.pstatp|pull-flv-l1-mus.pstatp|pull-flv-l6-hs.pstatp|pull-hls-l1-mus.pstatp|pull-l3-hs.pstatp|pull-rtmp-f1-hs.pstatp|pull-rtmp-f6-hs.pstatp|pull-rtmp-l1-hs.pstatp|pull-rtmp-l1-mus.pstatp|pull-rtmp-l6-hs.pstatp|quic-tiktok-core-proxy-i18n-gcpva.byteoversea|quic-tiktok-proxy-i18n-gcpva.byteoversea|sf1-ttcdn-tos.pstatp|sf16-ttcdn-tos.ipstatp|sf6-ttcdn-tos.pstatp|sgsnssdk|tiktok-lb-alisg.byteoversea|tiktok-lb-maliva.byteoversea|tiktok-platform-lb-alisg.byteoversea|tiktok|tiktokcdn-in|tiktokcdn-us|tiktokcdn-us.com.atomile|tiktokcdn|tiktokcdn.com.atomile|tiktokcdn.com.c.bytetcdn|tiktokcdn.com.c.worldfcdn|tiktokcdn.com.rocket-cdn|tiktokd|tiktokv|tiktokv.com.c.worldcdn|tiktokv.com.c.worldfcdn2|tlivecdn|ttlivecdn|ttlivecdn.com.c.worldcdn|ttoverseaus|ttoversea)%5C.(com|co|org|it|ca|cn|ly|net|au|ai|net|jp|us|tv|cc)\$"
+  },
+  {
+    "name": "twitter",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(ads-twitter|periscope|pscp|t|tweetdeck|twimg|twitpic|twitter|twitterinc|twitteroauth|twitterstat|twttr)%5C.(com|co|org|it|ca|cn|ly|net|au|ai|net|jp|us|tv|cc|tv)\$"
+  },
+  {
+    "name": "snapchat",
+    "status": "notblocked",
+    "regex":
+        "%5E(.%2B%5C.)%3F%3F(addlive|feelinsonice|sc-cdn|sc-corp|sc-gw|sc-jpl|sc-prod|sc-static|snap-dev|snap-storage-cdn.l.google|snapads|snapchat|snapkit|snapmap|snapmaps)%5C.(com|co|org|it|io|ca|cn|ly|net|au|ai|net|jp|us|tv|cc|tv)\$"
+  },
 ];
 
 blockService(name) async {
@@ -131,7 +149,9 @@ enableService(name) async {
 addServices() async {
   var s = await dbHelper.queryAllRows("services");
 
-  if (s.length > 0) {
+  log("[+] SERVICES LIST SIZE: ${s.length}");
+
+  if (s.length > 9) {
     log("SERVICES DB EXISTS");
     return;
   } else {

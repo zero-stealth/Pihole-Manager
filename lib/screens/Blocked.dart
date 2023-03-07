@@ -192,6 +192,27 @@ class _BlockedState extends State<Blocked> {
                       listsCount: 1,
                       icon: 'assets/disney.svg',
                       status: getService("disney-plus"),
+                      bottomBorder: true,
+                    ),
+                    ServiceItem(
+                      service: "Tiktok",
+                      listsCount: 1,
+                      icon: 'assets/tiktok.svg',
+                      status: getService("tiktok"),
+                      bottomBorder: true,
+                    ),
+                    ServiceItem(
+                      service: "Twitter",
+                      listsCount: 1,
+                      icon: 'assets/twitter.svg',
+                      status: getService("twitter"),
+                      bottomBorder: true,
+                    ),
+                    ServiceItem(
+                      service: "Snapchat",
+                      listsCount: 1,
+                      icon: 'assets/snapchat.svg',
+                      status: getService("snapchat"),
                       bottomBorder: false,
                     ),
                     // ServiceItem(

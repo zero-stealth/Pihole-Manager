@@ -101,7 +101,7 @@ class _SettingsState extends State<Settings> {
           ),
           SettingsItem(
             icon: CupertinoIcons.chat_bubble_fill,
-            name: "Feeback",
+            name: "Feedback",
             subtitle: "Tell us what you think",
             iconSize: 20.0,
             borderStatus: true,
@@ -259,7 +259,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
                     child: Center(
                       child: Text(
-                        'v2.3',
+                        'v2.4',
                         style: TextStyle(
                           color: Color(0xff3FB950),
                           fontSize: 16.0,
@@ -287,12 +287,23 @@ class _SettingsState extends State<Settings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ChangelogItem(
-                        title: 'System stats',
-                        message: "You can now view your pihole system stats.",
+                        title: 'Added tiktok',
+                        message:
+                            "Tiktok is now part of the blocked services. (Hurray!)",
                       ),
                       ChangelogItem(
-                        title: 'Block services',
-                        message: "Added more services to the block list.",
+                        title: 'Added twitter',
+                        message: "Twitter is now part of the blocked services.",
+                      ),
+                      ChangelogItem(
+                        title: 'Added snapchat',
+                        message:
+                            "Snapchat is now part of the blocked services.",
+                      ),
+                      ChangelogItem(
+                        title: 'Development status',
+                        message:
+                            "Updates are slow, currently working on graduating. Will add support for multiple devices soon.",
                       ),
                     ],
                   ),
